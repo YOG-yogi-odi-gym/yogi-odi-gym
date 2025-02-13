@@ -99,7 +99,6 @@ CREATE TABLE Comment (
     FOREIGN KEY (memberId) REFERENCES Member(id) ON DELETE CASCADE
 );
 
--- 캘린더 테이블
 -- 캘린더 식단 테이블
 CREATE TABLE Calendar_Food (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,  -- 식단 번호 (기본키)
