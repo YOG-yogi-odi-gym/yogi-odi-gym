@@ -3,5 +3,14 @@ spring:
     active: local
 
   flyway:
-    enabled: true
+    enabled: false
     baseline-on-migrate: true
+
+  devtools:
+    restart:
+      enabled: true
+    livereload:
+      enabled: true
+
+  thymeleaf:
+    cache: false
