@@ -4,8 +4,8 @@ CREATE TABLE data_gym (
     name VARCHAR(255) NOT NULL,  -- 헬스장 이름
     old_address VARCHAR(255),  -- 헬스장 옛 주소
     street_address VARCHAR(255),  -- 헬스장 도로명 주소
-    latitude DECIMAL(10, 7),  -- 위도
-    longitude DECIMAL(10, 7),  -- 경도
+    latitude FLOAT,  -- 위도
+    longitude FLOAT,  -- 경도
     phone_num VARCHAR(50),  -- 연락처
     total_area INT,  -- 건축 연면적
     trainers INT,  -- 지도자 수
