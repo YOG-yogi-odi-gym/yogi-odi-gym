@@ -1,7 +1,4 @@
 spring:
-  config:
-    activate:
-      on-profile: test
 
   datasource:
     url: jdbc:h2:mem:testdb;MODE=MYSQL
@@ -9,11 +6,10 @@ spring:
     username: sa
     password:
 
-  jpa:
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-        highlight_sql: true
-        use_sql_comments: true
-    open-in-view: false
+  flyway:
+    enabled: true
+
+jasypt:
+  encryptor:
+    bean: jasyptEncryptor
+    password: ${JASYPT_KEY}
