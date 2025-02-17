@@ -9,3 +9,8 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
+
+jasypt:
+  encryptor:
+    bean: jasyptEncryptor
+    password: ${JASYPT_KEY}
