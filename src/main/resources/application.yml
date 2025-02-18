@@ -1,9 +1,9 @@
 spring:
   profiles:
-    active: local
+    active: local, auth
 
   flyway:
-    enabled: false
+    enabled: true
     baseline-on-migrate: true
 
   devtools:
@@ -14,3 +14,4 @@ spring:
 
   thymeleaf:
     cache: false
+
