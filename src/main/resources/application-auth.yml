@@ -9,8 +9,8 @@ spring:
         registration:
           kakao:
             authorization-grant-type: authorization_code
-            client-id: 87ed6cb96dcaa9952b9931106d92c611
-            client-secret: PWfxQCJ7ary8R4wB8lQOKo2CyEThbMOq
+            client-id: ENC(0/jpGUSpyXXyUUSg7VUt43bNver51DSJdcSdaYzQLGzngOjYQH9gdTzK5kjS7Pee)
+            client-secret: ENC(vdxKrgpB5MYlI7LN9aFB/8DRKbzzXQQgZ1uPwxi/OYAAM1VX1NKcFydb55aunclB)
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
             scope:
               - profile_nickname
