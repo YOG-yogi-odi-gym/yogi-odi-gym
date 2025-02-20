@@ -9,8 +9,15 @@
 </head>
 <body>
 <h1>Hello!! SpringBoot!!</h1>
-    <a href="/oauth2/authorization/kakao">
+<form th:action="@{/login}" method="post">
+    <input type="text">
+    <input type="password">
+    <button type="submit">login</button>
+</form>
+    <a th:href="@{/oauth2/authorization/kakao}">
         <img src="/images/kakao_login_medium_narrow.png" alt="프로필 이미지" class="w-6 h-6 rounded-full">
-    </a>
+    </a><br>
+<button><a th:href="@{/member/join}">Join</a></button>
+
 </body>
 </html>

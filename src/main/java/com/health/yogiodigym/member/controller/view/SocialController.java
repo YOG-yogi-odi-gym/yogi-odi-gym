@@ -1,22 +1,29 @@
 package com.health.yogiodigym.member.controller.view;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
+@Slf4j
 @Controller
+@RequestMapping("/member")
 public class SocialController {
-    @GetMapping("/")
-    public String main(){
-        return "redirect:/member/login";
-    }
 
-    @GetMapping("/member/login")
+    @GetMapping("/login")
     public String login(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) {
+            return "redirect:/dashboard";
+        }
         return "/member/login";
     }
 
-    @GetMapping("/dashboard")
-    public String dashoboard(){
-        return "/dashboard";
+    @GetMapping("/join")
+    public String register(){
+        return "/member/join";
     }
 }
