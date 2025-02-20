@@ -27,7 +27,6 @@ public class AdminController {
         List<MemberResponseDto> members = adminService.searchMembers(keyword);
         model.addAttribute("members", members);
 
-
         return ResponseEntity.ok().body(new HttpResponseDto(HttpStatus.OK.value(), members));
     }
 

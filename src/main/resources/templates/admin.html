@@ -3,6 +3,8 @@
 <head>
     <meta charset="utf-8">
     <title>관리자 페이지</title>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
@@ -33,12 +35,9 @@
     <h1 class="mb-4 text-center">회원 목록</h1>
 
     <div class="search-container">
-        <form action="/api/admin/member/search" method="get">
-            <input type="text" id="searchInput" name="keyword" class="form-control" placeholder="이름 또는 이메일 검색...">
-            <button type="submit" class="btn btn-primary ml-2">검색</button>
-        </form>
+        <input type="text" id="searchInput" name="keyword" class="form-control" placeholder="이름 또는 이메일 검색...">
+        <button id="searchButton" class="btn btn-primary ml-2">검색</button>
     </div>
-
 
     <table class="table table-bordered table-striped table-hover">
         <thead class="thead-dark">
@@ -48,7 +47,7 @@
             <th>성별</th>
         </tr>
         </thead>
-        <tbody>
+        <tbody id="memberTableBody">
         <tr th:each="member : ${members}">
             <td th:text="${member.name}"></td>
             <td th:text="${member.email}"></td>
@@ -58,7 +57,60 @@
     </table>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    $(document).ready(function () {
+        function searchMembers() {
+            let keyword = $("#searchInput").val().trim();
+            let requestUrl = keyword === ""
+                ? "/api/members/search"
+                : `/api/members/search?keyword=${keyword}`;
+
+
+            $.ajax({
+                url: "/api/admin/member/search",
+                type: "GET",
+                data: { keyword: keyword },
+                success: function (response) {
+                    if (response.status !== 200) {
+                        alert("검색에 실패했습니다.");
+                        return;
+                    }
+
+                    let members = response.data; // HttpResponseDto의 data 필드
+                    let tableBody = $("#memberTableBody");
+                    tableBody.empty();
+
+                    if (members.length === 0) {
+                        tableBody.append("<tr><td colspan='3' class='text-center'>검색 결과가 없습니다.</td></tr>");
+                        return;
+                    }
+
+                    members.forEach(member => {
+                        let row = `<tr>
+                        <td>${member.name}</td>
+                        <td>${member.email}</td>
+                        <td>${member.gender}</td>
+                    </tr>`;
+                        tableBody.append(row);
+                    });
+                },
+                error: function () {
+                    alert("검색 중 오류가 발생했습니다.");
+                }
+            });
+        }
+
+        $("#searchButton").click(function () {
+            searchMembers();
+        });
+
+        $("#searchInput").keypress(function (event) {
+            if (event.which === 13) {
+                searchMembers();
+            }
+        });
+    });
+</script>
+
 </body>
 </html>
