@@ -58,7 +58,6 @@ public class Member {
     private String profile;
 
     @Column
-    @Enumerated(EnumType.STRING)
     private MemberStatus status;
 
     @ElementCollection(fetch = FetchType.EAGER)
