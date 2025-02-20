@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>관리자 페이지</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .table-container {
+            margin-top: 50px;
+        }
+        .table thead th {
+            vertical-align: middle;
+            text-align: center;
+        }
+        .table tbody td {
+            vertical-align: middle;
+        }
+        .search-container {
+            display: flex;
+            justify-content: right;
+            margin-bottom: 15px;
+        }
+        #searchInput {
+            width: 250px;
+        }
+    </style>
+</head>
+<body>
+<div class="container table-container">
+    <h1 class="mb-4 text-center">회원 목록</h1>
+
+    <div class="search-container">
+        <form action="/api/admin/member/search" method="get">
+            <input type="text" id="searchInput" name="keyword" class="form-control" placeholder="이름 또는 이메일 검색...">
+            <button type="submit" class="btn btn-primary ml-2">검색</button>
+        </form>
+    </div>
+
+
+    <table class="table table-bordered table-striped table-hover">
+        <thead class="thead-dark">
+        <tr>
+            <th>이름</th>
+            <th>이메일</th>
+            <th>성별</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="member : ${members}">
+            <td th:text="${member.name}"></td>
+            <td th:text="${member.email}"></td>
+            <td th:text="${member.gender}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
