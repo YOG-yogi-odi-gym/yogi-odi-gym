@@ -98,15 +98,15 @@
                     <th>선택</th>
                     <th>이름</th>
                     <th>이메일</th>
-                    <th>성별</th>
+                    <th>상태</th>
                 </tr>
                 </thead>
                 <tbody id="memberTableBody">
                 <tr th:each="member : ${members}">
-                    <td><input type="checkbox"> </td>
+                    <td><input type="checkbox" class="memberCheckbox" th:value="${member.id}"></td>
                     <td th:text="${member.name}"></td>
                     <td th:text="${member.email}"></td>
-                    <td th:text="${member.gender}"></td>
+                    <td th:text="${member.status}"></td>
                 </tr>
                 </tbody>
         </table>
@@ -144,12 +144,13 @@
                     }
 
                     members.forEach(member => {
-                        let row = `<tr>
-                        <td><input type="checkbox"> </td>
-                        <td>${member.name}</td>
-                        <td>${member.email}</td>
-                        <td>${member.gender}</td>
-                    </tr>`;
+                        let row = `
+                            <tr>
+                                <td><input type="checkbox" class="memberCheckbox" value="${member.id}"></td>
+                                <td>${member.name}</td>
+                                <td>${member.email}</td>
+                                <td>${member.status}</td>
+                            </tr>`;
                         tableBody.append(row);
                     });
                 },
@@ -166,6 +167,40 @@
         $("#searchInput").keypress(function (event) {
             if (event.which === 13) {
                 searchMembers();
+            }
+        });
+    });
+
+    $("#deleteButton").click(function () {
+        let selectMembers = [];
+        $(".memberCheckbox:checked").each(function () {
+            selectMembers.push(Number($(this).val()));
+        });
+
+        console.log(selectMembers);
+
+        if (selectMembers.length === 0) {
+            alert("삭제할 회원을 선택해 주세요!")
+            return;
+        }
+
+        console.log(JSON.stringify({memberIds: selectMembers}));
+
+        $.ajax({
+            url: "/api/admin/member/delete",
+            type: "POST",
+            data: JSON.stringify({memberIds: selectMembers}),
+            contentType: "application/json",
+            success: function (response) {
+                if (response.status === 200) {
+                    alert("회원 삭제가 완료되었습니다.");
+                    searchMembers();
+                }else {
+                    alert("회원 삭제에 실패했습니다.");
+                }
+            },
+            error: function () {
+                alert("삭제 중 오류가 발생했습니다.");
             }
         });
     });

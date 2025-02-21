@@ -1,7 +1,10 @@
 package com.health.yogiodigym.admin.dto;
 
+import com.health.yogiodigym.member.auth.MemberStatus;
 import com.health.yogiodigym.member.entity.Member;
 import lombok.*;
+
+import java.util.List;
 
 public class MemberDto {
 
@@ -12,16 +15,27 @@ public class MemberDto {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class MemberResponseDto {
+        private Long id;
         private String name;
         private String email;
-        private String gender;
+        private MemberStatus status;
 
         public static MemberResponseDto from(Member member) {
             return MemberResponseDto.builder()
+                    .id(member.getId())
                     .name(member.getName())
                     .email(member.getEmail())
-                    .gender(member.getGender())
+                    .status(member.getStatus())
                     .build();
         }
+    }
+
+    @Setter
+    @Getter
+    @ToString
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class MemberDeleteRequestDto {
+        private List<Long> memberIds;
     }
 }
