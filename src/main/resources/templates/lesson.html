@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>강의 상세 정보</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+
+<div class="container mt-5">
+    <h2 class="mb-4">강의 상세 정보</h2>
+
+    <div class="card">
+        <div class="card-body">
+
+            <p class="card-text"><strong>강의 ID : </strong> <span th:text="${id.id}"></span></p>
+            <p class="card-text"><strong>강의 제목 : </strong> <span th:text="${id.title}"></span></p>
+            <p class="card-text"><strong>카테고리 ID : </strong> <span th:text="${id.category.id}"></span>
+            <p class="card-text"><strong>요일 : </strong> <span th:text="${id.day}"></span></p>
+            <p class="card-text"><strong>장소 : </strong> <span th:text="${id.location}"></span></p>
+            <p class="card-text"><strong>위도 : </strong> <span th:text="${id.latitude}"></span></p>
+            <p class="card-text"><strong>경도 : </strong> <span th:text="${id.longitude}"></span></p>
+            <p class="card-text"><strong>자세한 위치 : </strong> <span th:text="${id.detailedLocation}"></span></p>
+            <p class="card-text"><strong>시작시간 : </strong> <span th:text="${id.startTime}"></span></p>
+            <p class="card-text"><strong>종료시간 : </strong> <span th:text="${id.endTime}"></span></p>
+            <p class="card-text"><strong>강의 내용 : </strong> <span th:text="${id.description}"></span></p>
+            <p class="card-text"><strong>현재 인원 : </strong> <span th:text="${id.current}"></span></p>
+            <p class="card-text"><strong>최대 인원 :</strong> <span th:text="${id.max}"></span></p>
+            <p class="card-text"><strong>강사 ID : </strong> <span th:text="${id.master.id}"></span></p>
+            <p class="card-text"><strong>생성 날짜 : </strong> <span th:text="${id.createDateTime}"></span></p>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

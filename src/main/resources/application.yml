@@ -6,10 +6,6 @@ spring:
     enabled: true
     baseline-on-migrate: true
 
-  jpa:
-    hibernate:
-      ddl-auto: validate
-
 jasypt:
   encryptor:
     bean: jasyptEncryptor
