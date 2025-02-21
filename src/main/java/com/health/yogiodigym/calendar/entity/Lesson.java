@@ -29,7 +29,7 @@ public class Lesson {
     private Category category; // 카테고리 (외래키)
 
     @Column(nullable = false)
-    private String day; // 강의일
+    private int day; // 강의요일
 
     private String location; // 위치
 
