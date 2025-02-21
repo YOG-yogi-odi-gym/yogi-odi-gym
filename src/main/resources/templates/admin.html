@@ -10,51 +10,109 @@
         body {
             background-color: #f8f9fa;
         }
-        .table-container {
+        .table-list {
+            width: 70%;
             margin-top: 50px;
+            margin-left: auto;
+            margin-right: auto;
         }
+
+        .member-controller {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            width: 50%;
+        }
+
+        .table-container{
+            width: 100%;
+            max-height: 600px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+        }
+
         .table thead th {
+            position: sticky;
+            z-index: 1;
+            top: 0;
             vertical-align: middle;
             text-align: center;
         }
+
         .table tbody td {
             vertical-align: middle;
+            text-align: center;
         }
+
+        .table th, .table td {
+            word-wrap: break-word;
+        }
+
+        .table th:nth-child(1), .table td:nth-child(1) {
+            width: 50px;
+        }
+
+        .table th:nth-child(2), .table td:nth-child(2) {
+            width: 100px;
+        }
+
+        .table th:nth-child(3), .table td:nth-child(3) {
+            width: 200px;
+        }
+
+        .table th:nth-child(4), .table td:nth-child(4) {
+            width: 100px;
+        }
+
         .search-container {
+            width: 100%;
             display: flex;
-            justify-content: right;
+            justify-content: flex-end;
             margin-bottom: 15px;
         }
+
         #searchInput {
             width: 250px;
+        }
+
+        #deleteButton {
+            width: 100px;
+            margin-top: 15px;
+            align-self: flex-end;
         }
     </style>
 </head>
 <body>
-<div class="container table-container">
+<div class="container table-list">
     <h1 class="mb-4 text-center">회원 목록</h1>
 
-    <div class="search-container">
-        <input type="text" id="searchInput" name="keyword" class="form-control" placeholder="이름 또는 이메일 검색...">
-        <button id="searchButton" class="btn btn-primary ml-2">검색</button>
+    <div class="member-controller">
+        <div class="search-container">
+            <input type="text" id="searchInput" name="keyword" class="form-control" placeholder="이름 또는 이메일 검색...">
+            <button id="searchButton" class="btn btn-primary ml-2">검색</button>
+        </div>
+        <div class="table-container">
+            <table class="table table-bordered table-striped table-hover">
+                <thead class="thead-dark">
+                <tr>
+                    <th>선택</th>
+                    <th>이름</th>
+                    <th>이메일</th>
+                    <th>성별</th>
+                </tr>
+                </thead>
+                <tbody id="memberTableBody">
+                <tr th:each="member : ${members}">
+                    <td><input type="checkbox"> </td>
+                    <td th:text="${member.name}"></td>
+                    <td th:text="${member.email}"></td>
+                    <td th:text="${member.gender}"></td>
+                </tr>
+                </tbody>
+        </table>
+        </div>
+        <button class="btn btn-danger" id="deleteButton">회원 삭제</button>
     </div>
-
-    <table class="table table-bordered table-striped table-hover">
-        <thead class="thead-dark">
-        <tr>
-            <th>이름</th>
-            <th>이메일</th>
-            <th>성별</th>
-        </tr>
-        </thead>
-        <tbody id="memberTableBody">
-        <tr th:each="member : ${members}">
-            <td th:text="${member.name}"></td>
-            <td th:text="${member.email}"></td>
-            <td th:text="${member.gender}"></td>
-        </tr>
-        </tbody>
-    </table>
 </div>
 
 <script>
@@ -87,6 +145,7 @@
 
                     members.forEach(member => {
                         let row = `<tr>
+                        <td><input type="checkbox"> </td>
                         <td>${member.name}</td>
                         <td>${member.email}</td>
                         <td>${member.gender}</td>

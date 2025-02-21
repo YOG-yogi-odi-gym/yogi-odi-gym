@@ -18,6 +18,7 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public List<MemberResponseDto> searchMembers(String keyword) {
         List<Member> members = memberRepository.findMembers(keyword);
+
         return members.stream().map(MemberResponseDto::from).toList();
     }
 
