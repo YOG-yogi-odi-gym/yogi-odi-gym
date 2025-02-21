@@ -1,5 +1,6 @@
 package com.health.yogiodigym.member.entity;
 
+import com.health.yogiodigym.member.auth.MemberStatus;
 import com.health.yogiodigym.member.auth.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -57,7 +58,8 @@ public class Member {
     private String profile;
 
     @Column
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private MemberStatus status;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
