@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Slf4j
 @Controller
 @RequestMapping("/member")
-public class SocialController {
+public class memberController {
 
     @GetMapping("/login")
     public String login(){
@@ -23,7 +23,7 @@ public class SocialController {
     }
 
     @GetMapping("/join")
-    public String register(){
+    public String join(){
         return "/member/join";
     }
 }

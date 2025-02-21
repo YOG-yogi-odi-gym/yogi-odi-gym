@@ -1,5 +1,6 @@
 package com.health.yogiodigym.member.controller.view;
 
+import com.health.yogiodigym.member.auth.MemberStatus;
 import com.health.yogiodigym.member.entity.MemberOAuth2User;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +23,8 @@ public class MainController {
     @GetMapping("/")
     public String main(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        log.info("\n\n\n\n\n"+authentication+"\n\n\n\n\n");
         if(authentication != null && !(authentication instanceof AnonymousAuthenticationToken)){
             return "redirect:/dashboard";
         }else{
@@ -30,26 +33,15 @@ public class MainController {
     }
 
     @GetMapping("/dashboard")
-    public String dashoboard(Model model){
+    public String dashoboard(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication.getPrincipal() instanceof OAuth2User) {
-            MemberOAuth2User oauth2User = (MemberOAuth2User) authentication.getPrincipal();
-            Map<String, Object> profile = oauth2User.getAttribute("profile");
-
-            model.addAttribute("nickname", oauth2User.getMember().getName());
-            model.addAttribute("email", oauth2User.getMember().getEmail());
-            model.addAttribute("thumbnail_image", oauth2User.getMember().getProfile());
             return "/dashboard";
         } else if (authentication.getPrincipal() instanceof UserDetails) {
 //            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             return "/dashboard";
         }
         return "/member/login";
-    }
-
-    @GetMapping("/denied")
-    public String denied(){
-        return "/denied";
     }
 }

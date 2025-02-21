@@ -1,5 +1,6 @@
 <!doctype html>
-<html lang="en" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -10,23 +11,19 @@
 </head>
 <body>
 <h1 class="text-4xl font-bold text-gray-900">Dashboard</h1>
-<div sec:authorize="isAuthenticated()">
-    <img class="w-24 h-24 rounded-full object-cover" th:src="${thumbnail_image}" alt="Profile Image">
-    <h2 class="text-2xl font-semibold text-gray-800" th:text="${nickname}"></h2>
-    <p class="text-gray-600 mt-2" th:text="${email}"></p>
+    <div sec:authorize="isAuthenticated()">
+        <p><span th:text="${#authentication.name}"></span></p>
+        <p><img th:src="${#authentication.principal.member.profile}"></p>
+        <p><span th:text="${#authentication.principal.member.name}"></span></p>
+    </div>
 
     <form th:action="@{/logout}" method="post">
-        <button type="submit">Logout</button>
+        <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 focus:outline-none">로그아웃</button>
     </form>
-</div>
-<br><br>
 
-<p>로그인한 사용자: <span sec:authentication="name"></span></p>
-<p>권한 목록: <span sec:authentication="authorities"></span></p>
-
-
-
-
+    <div sec:authorize="!isAuthenticated()">
+        <p>로그인 해주세요!</p>
+    </div>
 
 
 </body>

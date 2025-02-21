@@ -56,7 +56,7 @@ public class MemberOAuth2User implements UserDetails, OAuth2User {
 
     @Override
     public boolean isEnabled() {
-        return member.getStatus().equals("ACTIVE");
+        return member.getStatus().equals("ACTIVE") || member.getStatus().equals("INACTIVE");
     }
 
     @Override
