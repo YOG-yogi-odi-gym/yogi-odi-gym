@@ -18,10 +18,15 @@
         }
 
         .member-controller {
+            border: 3px solid #cccccc;
+            padding: 15px;
+            border-radius: 10px;
             display: flex;
             flex-direction: column;
             align-items: flex-start;
             width: 50%;
+            background-color: white;
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
         }
 
         .table-container{
@@ -119,10 +124,7 @@
     $(document).ready(function () {
         function searchMembers() {
             let keyword = $("#searchInput").val().trim();
-            let requestUrl = keyword === ""
-                ? "/api/members/search"
-                : `/api/members/search?keyword=${keyword}`;
-
+            let requestUrl = keyword === "" ? "/api/members/search" : `/api/members/search?keyword=${keyword}`;
 
             $.ajax({
                 url: "/api/admin/member/search",

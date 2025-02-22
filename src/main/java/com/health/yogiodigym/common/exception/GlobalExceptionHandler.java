@@ -10,8 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Component
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-
-    // TODO ExceptionHandler 알아보기!
+    
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<?> handleCustomException(CustomException e) {
         HttpResponseDto responseDto = new HttpResponseDto(HttpStatus.BAD_REQUEST.value(), e.getMessage());

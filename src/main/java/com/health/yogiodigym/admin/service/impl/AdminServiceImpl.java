@@ -18,6 +18,11 @@ public class AdminServiceImpl implements AdminService {
     private final MemberRepository memberRepository;
 
     @Override
+    public List<Member> getAllMembers() {
+        return memberRepository.getAllMembers();
+    }
+
+    @Override
     public List<MemberResponseDto> searchMembers(String keyword) {
         List<Member> members = memberRepository.findMembers(keyword);
 
