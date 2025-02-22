@@ -10,32 +10,41 @@
         body {
             background-color: #f8f9fa;
         }
+        .container.table-list {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            width: 90%;
+            margin-top: 50px;
+        }
+
         .table-list {
             width: 70%;
             margin-top: 50px;
             margin-left: auto;
             margin-right: auto;
         }
-
-        .member-controller {
+        .member-container, .lesson-container {
             border: 3px solid #cccccc;
             padding: 15px;
             border-radius: 10px;
             display: flex;
             flex-direction: column;
             align-items: flex-start;
-            width: 50%;
+            width: 48%;
             background-color: white;
             box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
         }
-
+        .member-container h3, .lesson-container h3 {
+            text-align: center;
+            width: 100%;
+        }
         .table-container{
             width: 100%;
             max-height: 600px;
             overflow-y: auto;
             border: 1px solid #ccc;
         }
-
         .table thead th {
             position: sticky;
             z-index: 1;
@@ -43,31 +52,20 @@
             vertical-align: middle;
             text-align: center;
         }
-
         .table tbody td {
             vertical-align: middle;
             text-align: center;
         }
-
         .table th, .table td {
             word-wrap: break-word;
         }
-
-        .table th:nth-child(1), .table td:nth-child(1) {
-            width: 50px;
-        }
-
-        .table th:nth-child(2), .table td:nth-child(2) {
-            width: 100px;
-        }
-
-        .table th:nth-child(3), .table td:nth-child(3) {
-            width: 200px;
-        }
-
-        .table th:nth-child(4), .table td:nth-child(4) {
-            width: 100px;
-        }
+        #memberTable th:nth-child(1), .table td:nth-child(1) { width: 50px; }
+        #memberTable th:nth-child(2), .table td:nth-child(2) { width: 100px; }
+        #memberTable th:nth-child(3), .table td:nth-child(3) { width: 200px; }
+        #memberTable th:nth-child(4), .table td:nth-child(4) { width: 100px; }
+        #lessonTable th:nth-child(1), .table td:nth-child(1) { width: 50px; }
+        #lessonTable th:nth-child(2), .table td:nth-child(2) { width: 200px; }
+        #lessonTable th:nth-child(3), .table td:nth-child(3) { width: 100px; }
 
         .search-container {
             width: 100%;
@@ -75,29 +73,29 @@
             justify-content: flex-end;
             margin-bottom: 15px;
         }
-
-        #searchInput {
+        #searchInput, #lessonSearchInput {
             width: 250px;
         }
-
-        #deleteButton {
+        #deleteMemberButton, #deleteLessonButton {
             width: 100px;
             margin-top: 15px;
             align-self: flex-end;
         }
+
+
     </style>
 </head>
 <body>
 <div class="container table-list">
-    <h1 class="mb-4 text-center">회원 목록</h1>
 
-    <div class="member-controller">
+    <div class="member-container">
+        <h3>회원 목록</h3>
         <div class="search-container">
             <input type="text" id="searchInput" name="keyword" class="form-control" placeholder="이름 또는 이메일 검색...">
             <button id="searchButton" class="btn btn-primary ml-2">검색</button>
         </div>
         <div class="table-container">
-            <table class="table table-bordered table-striped table-hover">
+            <table id="memberTable" class="table table-bordered table-striped table-hover">
                 <thead class="thead-dark">
                 <tr>
                     <th>선택</th>
@@ -114,9 +112,36 @@
                     <td th:text="${member.status}"></td>
                 </tr>
                 </tbody>
-        </table>
+            </table>
         </div>
-        <button class="btn btn-danger" id="deleteButton">회원 삭제</button>
+        <button class="btn btn-danger" id="deleteMemberButton">회원 삭제</button>
+    </div>
+
+    <div class="lesson-container">
+        <h3>강의 관리</h3>
+        <div class="search-container">
+            <input type="text" id="lessonSearchInput" class="form-control" placeholder="강의명 검색...">
+            <button id="lessonSearchButton" class="btn btn-primary ml-2">검색</button>
+        </div>
+        <div class="table-container">
+            <table id="lessonTable" class="table table-bordered table-striped table-hover">
+                <thead class="thead-dark">
+                <tr>
+                    <th>선택</th>
+                    <th>강의명</th>
+                    <th>강사</th>
+                </tr>
+                </thead>
+                <tbody id="lessonTableBody">
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td>예제 강의</td>
+                    <td>홍길동</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <button class="btn btn-danger" id="deleteLessonButton">강의 삭제</button>
     </div>
 </div>
 
@@ -136,7 +161,7 @@
                         return;
                     }
 
-                    let members = response.data; // HttpResponseDto의 data 필드
+                    let members = response.data;
                     let tableBody = $("#memberTableBody");
                     tableBody.empty();
 
@@ -173,7 +198,7 @@
         });
     });
 
-    $("#deleteButton").click(function () {
+    $("#deleteMemberButton").click(function () {
         let selectMembers = [];
         $(".memberCheckbox:checked").each(function () {
             selectMembers.push(Number($(this).val()));
@@ -207,6 +232,5 @@
         });
     });
 </script>
-
 </body>
 </html>
