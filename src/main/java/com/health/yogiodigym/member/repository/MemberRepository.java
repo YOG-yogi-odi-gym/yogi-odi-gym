@@ -48,4 +48,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     int setInactiveStatus(@Param("memberIds") List<Long> memberIds,
                           @Param("status") MemberStatus memberStatus,
                           @Param("dropDate") LocalDate dropDate);
+
+//    List<Member> findByStatusAndDropDateBefore(MemberStatus status, LocalDate dropdate);
 }
