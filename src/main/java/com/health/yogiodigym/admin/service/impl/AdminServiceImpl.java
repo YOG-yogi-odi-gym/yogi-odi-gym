@@ -31,8 +31,8 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     @Transactional
-    public void deleteMembers(List<Long> memberIds, MemberStatus status) {
-        memberRepository.deleteMembers(memberIds, MemberStatus.INACTIVE);  // 회원 상태 업데이트
+    public void deleteMembers(List<Long> memberIds) {
+        memberRepository.deleteMembers(memberIds, MemberStatus.INACTIVE);
     }
 
 }
