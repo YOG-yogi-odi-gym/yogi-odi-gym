@@ -14,11 +14,11 @@ public class DataFoodService {
     private DataFoodRepository dataFoodRepository;
 
     // 음식명 검색 메서드
-    public List<DataFood> searchFoodByName(String name) {
+    public List<DataFood> findByNameContainingIgnoreCase(String name) {
         return dataFoodRepository.findByNameContainingIgnoreCase(name);
     }
 
-    public List<DataFood> searchFoodAll() {
+    public List<DataFood> findAll() {
         return dataFoodRepository.findAll();
     }
 

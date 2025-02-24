@@ -1,6 +1,5 @@
 package com.health.yogiodigym.calendar.entity;
 
-import com.health.yogiodigym.calendar.entity.Lesson;
 import lombok.Getter;
 import lombok.Setter;
 

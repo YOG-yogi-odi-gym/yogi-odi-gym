@@ -16,13 +16,12 @@ public class DataFoodController {
     private DataFoodService dataFoodService;
 
     @GetMapping("/all")
-    public List<DataFood> getAll() {
-        return dataFoodService.searchFoodAll();
+    public List<DataFood> findAll() {
+        return dataFoodService.findAll();
     }
 
-    // 음식명 검색 API (Ajax 요청을 처리)
     @GetMapping("/search")
-    public List<DataFood> searchFood(@RequestParam String name) {
-        return dataFoodService.searchFoodByName(name);
+    public List<DataFood> findByNameContainingIgnoreCase(@RequestParam("name") String name) {
+        return dataFoodService.findByNameContainingIgnoreCase(name);
     }
 }

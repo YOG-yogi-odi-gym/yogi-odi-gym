@@ -14,9 +14,8 @@ public class LessonEnrollmentService {
     private LessonEnrollmentRepository lessonEnrollmentRepository;
 
     public List<LessonEnrollment> getLessonsByMemberId(Long memberId) {
-        return lessonEnrollmentRepository.findEnrollByMemberId(memberId);
+        return lessonEnrollmentRepository.findByMemberId(memberId);
     }
-
 
 
 }

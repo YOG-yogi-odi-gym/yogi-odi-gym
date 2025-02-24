@@ -23,7 +23,7 @@ public class LessonService {
     private LessonRepository lessonRepository;
 
     public Lesson selectLesson(Long lessonId) {
-        return lessonRepository.getById(lessonId);
+        return lessonRepository.findById(lessonId).orElseThrow(() -> new IllegalArgumentException("강의가 존재하지 않습니다"));
     }
 
     // 요일을 비트마스크로 변환하는 메서드
@@ -47,13 +47,13 @@ public class LessonService {
 
     // 특정 회원이 신청한 강의 일정 조회
     public List<LessonDTO> getLessonsByMemberId(Long memberId) {
-        List<LessonEnrollment> enrollments = lessonEnrollmentRepository.findEnrollByMemberId(memberId);
+        List<LessonEnrollment> enrollments = lessonEnrollmentRepository.findByMemberId(memberId);
         List<LessonDTO> result = new ArrayList<>();
 
         for (LessonEnrollment enrollment : enrollments) {
             Lesson lesson = enrollment.getLesson();
             LocalDate current = lesson.getStartDay();
-            int dayBitmask = lesson.getDay(); // 비트마스크 값 사용
+            int dayBitmask = lesson.getDay();
 
             while (!current.isAfter(lesson.getEndDay())) {
                 if (isMatchingDay(current, dayBitmask)) {
@@ -66,12 +66,12 @@ public class LessonService {
     }
 
     public List<LessonDTO> getLessonsByMemberAndDate(Long memberId, LocalDate selectedDate) {
-        List<LessonEnrollment> enrollments = lessonEnrollmentRepository.findEnrollByMemberId(memberId);
+        List<LessonEnrollment> enrollments = lessonEnrollmentRepository.findByMemberId(memberId);
         List<LessonDTO> result = new ArrayList<>();
 
         for (LessonEnrollment enrollment : enrollments) {
             Lesson lesson = enrollment.getLesson();
-            int dayBitmask = lesson.getDay(); 
+            int dayBitmask = lesson.getDay();
 
             if (!selectedDate.isBefore(lesson.getStartDay()) &&
                     !selectedDate.isAfter(lesson.getEndDay()) &&

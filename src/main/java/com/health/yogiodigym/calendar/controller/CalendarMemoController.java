@@ -1,7 +1,7 @@
 package com.health.yogiodigym.calendar.controller;
 
 import com.health.yogiodigym.calendar.entity.CalendarMemo;
-import com.health.yogiodigym.calendar.service.CallendarMemoService;
+import com.health.yogiodigym.calendar.service.CalendarMemoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,19 +13,19 @@ import java.util.List;
 public class CalendarMemoController {
 
     @Autowired
-    private CallendarMemoService calendarMemoService;
+    private CalendarMemoService calendarMemoService;
 
     @GetMapping
-    public List<CalendarMemo> findMemoById(@RequestParam("memberId") Long memberId) {
-        return calendarMemoService.findMemoById(memberId);
+    public List<CalendarMemo> findByMemberId(@RequestParam("memberId") Long memberId) {
+        return calendarMemoService.findByMemberId(memberId);
     }
 
     @GetMapping("/date")
-    public List<CalendarMemo> findMemoByDate(@RequestParam("date") String selectedDate, @RequestParam("memberId") Long memberId) {
+    public List<CalendarMemo> findByDateAndMemberId(@RequestParam("date") String selectedDate, @RequestParam("memberId") Long memberId) {
 
         LocalDate requestedDate = LocalDate.parse(selectedDate);
 
-        return calendarMemoService.findMemoByDate(requestedDate,memberId);
+        return calendarMemoService.findByDateAndMemberId(requestedDate,memberId);
     }
 
     @PostMapping("/date/post")
@@ -42,7 +42,7 @@ public class CalendarMemoController {
 
 
     @PutMapping("/date/put")
-    public CalendarMemo putMemoByDate(@RequestParam("id") Long id,
+    public CalendarMemo PutMemoByDate(@RequestParam("id") Long id,
                                       @RequestParam("title") String title,
                                       @RequestParam("context") String context,
                                       @RequestParam("date") String selectedDate,

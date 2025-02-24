@@ -13,7 +13,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
-public class CalendarExcerciseService {
+public class CalendarExerciseService {
 
     @Autowired
     private CalendarExerciseRepository calendarExerciseRepository;
@@ -24,12 +24,12 @@ public class CalendarExcerciseService {
     @Autowired
     private DataExerciseRepository dataExerciseRepository;
 
-    public List<CalendarExercise> findExerciseById(Long memberId) {
-        return calendarExerciseRepository.findExerciseById(memberId);
+    public List<CalendarExercise> findByMemberId(Long memberId) {
+        return calendarExerciseRepository.findByMemberId(memberId);
     }
 
-    public List<CalendarExercise> findExerciseByDate(LocalDate selectedDate, Long memberId) {
-        return calendarExerciseRepository.findExerciseByDate(selectedDate,memberId);
+    public List<CalendarExercise> findByDateAndMemberId(LocalDate selectedDate, Long memberId) {
+        return calendarExerciseRepository.findByDateAndMemberId(selectedDate,memberId);
     }
 
     public CalendarExercise PostExerciseByDate(String name, Float time, Float calories, LocalDate selectedDate, Long memberId) {
@@ -68,13 +68,11 @@ public class CalendarExcerciseService {
             exercise.setMember(member);
         }
 
-        // 값 변경
         exercise.setName(name);
         exercise.setTime(time);
         exercise.setCalories(calories);
         exercise.setDate(selectedDate);
 
-        // 저장 후 반환
         return calendarExerciseRepository.save(exercise);
     }
 

@@ -1,12 +1,9 @@
 package com.health.yogiodigym.calendar.controller;
 
 import com.health.yogiodigym.calendar.entity.CalendarExercise;
-import com.health.yogiodigym.calendar.entity.CalendarFood;
-import com.health.yogiodigym.calendar.entity.CalendarMemo;
-import com.health.yogiodigym.calendar.service.CalendarExcerciseService;
+
+import com.health.yogiodigym.calendar.service.CalendarExerciseService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -17,11 +14,11 @@ import java.util.List;
 public class CalendarExerciseController {
 
     @Autowired
-    private CalendarExcerciseService calendarExerciseService;
+    private CalendarExerciseService calendarExerciseService;
 
     @GetMapping
-    public List<CalendarExercise> findExerciseById(@RequestParam("memberId") Long memberId) {
-        return calendarExerciseService.findExerciseById(memberId);
+    public List<CalendarExercise> findByMemberId(@RequestParam("memberId") Long memberId) {
+        return calendarExerciseService.findByMemberId(memberId);
     }
 
     @GetMapping("/date")
@@ -29,7 +26,7 @@ public class CalendarExerciseController {
 
         LocalDate requestedDate = LocalDate.parse(selectedDate);
 
-        return calendarExerciseService.findExerciseByDate(requestedDate,memberId);
+        return calendarExerciseService.findByDateAndMemberId(requestedDate,memberId);
     }
 
     @PostMapping("/date/post")
@@ -45,7 +42,7 @@ public class CalendarExerciseController {
     }
 
     @PutMapping("/date/put")
-    public CalendarExercise PutFoodByDate(@RequestParam("id") Long id,
+    public CalendarExercise PutExerciseByDate(@RequestParam("id") Long id,
                                       @RequestParam("name") String name,
                                       @RequestParam("time") Float time,
                                       @RequestParam("calories") Float calories,
@@ -58,7 +55,7 @@ public class CalendarExerciseController {
     }
 
     @DeleteMapping("/date/delete")
-    public void DeleteFoodByDate(@RequestParam("id") Long id) {
+    public void DeleteExerciseByDate(@RequestParam("id") Long id) {
 
         calendarExerciseService.DeleteExerciseByDate(id);
     }

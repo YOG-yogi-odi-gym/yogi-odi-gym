@@ -1,7 +1,5 @@
 package com.health.yogiodigym.calendar.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.health.yogiodigym.calendar.entity.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

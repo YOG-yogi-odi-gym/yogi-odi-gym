@@ -3,7 +3,7 @@ package com.health.yogiodigym.calendar.service;
 import com.health.yogiodigym.calendar.entity.CalendarFood;
 import com.health.yogiodigym.calendar.entity.DataFood;
 import com.health.yogiodigym.calendar.entity.Member;
-import com.health.yogiodigym.calendar.repository.CaleadarFoodRepository;
+import com.health.yogiodigym.calendar.repository.CalendarFoodRepository;
 import com.health.yogiodigym.calendar.repository.DataFoodRepository;
 import com.health.yogiodigym.calendar.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,7 @@ import java.util.List;
 public class CalendarFoodService {
 
     @Autowired
-    private CaleadarFoodRepository caleadarFoodRepository;
+    private CalendarFoodRepository calendarFoodRepository;
 
     @Autowired
     private MemberRepository memberRepository;
@@ -24,13 +24,12 @@ public class CalendarFoodService {
     @Autowired
     private DataFoodRepository dataFoodRepository;
 
-    public List<CalendarFood> findFoodById(Long memberId)
-    {
-        return caleadarFoodRepository.findFoodById(memberId);
+    public List<CalendarFood>  findByMemberId(Long memberId) {
+        return calendarFoodRepository.findByMemberId(memberId);
     }
 
-    public List<CalendarFood> findFoodByDate(LocalDate selectedDate, Long memberId) {
-        return caleadarFoodRepository.findFoodByDate(selectedDate,memberId);
+    public List<CalendarFood> findByDateAndMemberId(LocalDate selectedDate, Long memberId) {
+        return calendarFoodRepository.findByDateAndMemberId(selectedDate,memberId);
     }
 
     public CalendarFood PostFoodByDate(String name, Float hundredGram, Float calories, LocalDate selectedDate, Long memberId) {
@@ -49,13 +48,13 @@ public class CalendarFoodService {
         food.setMember(member);
         food.setDataFood(dataFood);
 
-        return caleadarFoodRepository.save(food);
+        return calendarFoodRepository.save(food);
     }
 
     public CalendarFood PutFoodByDate(Long id, String name, Float hundredGram, Float calories, LocalDate selectedDate, Long memberId) {
         // 기존 메모 조회
 
-        CalendarFood food = caleadarFoodRepository.findById(id)
+        CalendarFood food = calendarFoodRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 식단이 존재하지 않습니다."));
 
         if (!food.getDataFood().getName().equals(name)) {
@@ -70,17 +69,15 @@ public class CalendarFoodService {
             food.setMember(member);
         }
 
-        // 값 변경
         food.setName(name);
         food.setHundredGram(hundredGram);
         food.setCalories(calories);
         food.setDate(selectedDate);
 
-        // 저장 후 반환
-        return caleadarFoodRepository.save(food);
+        return calendarFoodRepository.save(food);
     }
 
     public void DeleteFoodByDate(Long id) {
-        caleadarFoodRepository.deleteById(id);
+        calendarFoodRepository.deleteById(id);
     }
 }

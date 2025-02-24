@@ -10,7 +10,7 @@ import java.util.Optional;
 @Repository
 public interface DataFoodRepository extends JpaRepository<DataFood, Long> {
 
-    // 음식명으로 검색하는 메서드 (LIKE 검색)
+    // ContainingIgnoreCase : 대소문자 무시
     List<DataFood> findByNameContainingIgnoreCase(String name);
 
     Optional<DataFood> findByName(String name);

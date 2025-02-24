@@ -29,10 +29,4 @@ public class MemberService {
     }
 
 
-    public Long getMemberIdByEmail(String email) {
-
-        Optional<Long> memberIdOpt = memberRepository.findIdByEmail(email);
-        return memberIdOpt.orElse(null);
-    }
-
 }
