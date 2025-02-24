@@ -29,13 +29,4 @@ public class MemberDto {
                     .build();
         }
     }
-
-    @Setter
-    @Getter
-    @ToString
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class MemberDeleteRequestDto {
-        private List<Long> memberIds;
-    }
 }

@@ -9,6 +9,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -31,7 +32,8 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     @Transactional
-    public void deleteMembers(List<Long> memberIds) {
-        memberRepository.deleteMembers(memberIds, MemberStatus.INACTIVE);
+    public void setInactiveStatus(List<Long> memberIds) {
+        LocalDate dropDate = LocalDate.now();
+        memberRepository.setInactiveStatus(memberIds, MemberStatus.INACTIVE, dropDate);
     }
 }
