@@ -15,4 +15,6 @@ public interface AdminService {
     List<MemberResponseDto> searchMembers(String keyword);
 
     void setInactiveStatus(List<Long> memberIds);
+
+//    void deleteInactiveStatus();
 }

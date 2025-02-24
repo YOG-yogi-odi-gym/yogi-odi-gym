@@ -7,6 +7,7 @@ import com.health.yogiodigym.member.entity.Member;
 import com.health.yogiodigym.member.repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -36,4 +37,16 @@ public class AdminServiceImpl implements AdminService {
         LocalDate dropDate = LocalDate.now();
         memberRepository.setInactiveStatus(memberIds, MemberStatus.INACTIVE, dropDate);
     }
+
+//    @Scheduled(cron = "00 00 00 * * *")
+//    @Override
+//    public void deleteInactiveStatus() {
+//        LocalDate threeDaysAgo = LocalDate.now().minusDays(3);
+//        List<Member> membersToDelete = memberRepository.findByStatusAndDropDateBefore(MemberStatus.INACTIVE, threeDaysAgo);
+//
+//        if(!membersToDelete.isEmpty()) {
+//            memberRepository.deleteAll(membersToDelete);
+//            System.out.println("삭제된 회원 수 : "+ membersToDelete.size());
+//        }
+//    }
 }
