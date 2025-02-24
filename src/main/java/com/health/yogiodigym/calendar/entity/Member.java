@@ -64,8 +64,8 @@
 //}
 package com.health.yogiodigym.calendar.entity;
 
-import com.health.yogiodigym.member.auth.MemberStatus;
-import com.health.yogiodigym.member.auth.Role;
+import com.health.yogiodigym.calendar.auth.MemberStatus;
+import com.health.yogiodigym.calendar.auth.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -112,10 +112,10 @@ public class Member {
     @Column
     private Float longitude;
 
-    @Column
+    @Column(name = "join_date")
     private LocalDate joinDate;
 
-    @Column
+    @Column(name = "drop_date")
     private LocalDate dropDate;
 
     @Column
