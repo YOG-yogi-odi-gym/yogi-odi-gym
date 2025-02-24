@@ -37,7 +37,7 @@ public class AdminController {
             adminService.deleteMembers(memberIds, status);
             return ResponseEntity.ok().body(new HttpResponseDto(HttpStatus.OK.value(), "회원 삭제 완료"));
         } catch (Exception e) {
-            e.printStackTrace();  // 예외 로그 출력
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("회원 삭제 실패" + e.getMessage());
         }
     }
