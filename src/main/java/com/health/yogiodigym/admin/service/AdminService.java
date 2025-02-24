@@ -10,7 +10,7 @@ import java.util.List;
 public interface AdminService {
 
 
-    public List<Member> getAllMembers();
+    List<Member> getAllMembers();
 
     List<MemberResponseDto> searchMembers(String keyword);
 
