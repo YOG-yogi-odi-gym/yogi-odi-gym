@@ -21,5 +21,6 @@ public class HttpResponse {
         this.status = status.value();
         this.message = message;
         this.data = data;
+
     }
 }
