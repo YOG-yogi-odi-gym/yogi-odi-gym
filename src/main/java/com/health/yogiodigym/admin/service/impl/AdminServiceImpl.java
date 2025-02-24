@@ -34,5 +34,4 @@ public class AdminServiceImpl implements AdminService {
     public void deleteMembers(List<Long> memberIds) {
         memberRepository.deleteMembers(memberIds, MemberStatus.INACTIVE);
     }
-
 }

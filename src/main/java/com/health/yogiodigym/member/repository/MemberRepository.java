@@ -40,7 +40,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     @Transactional
     @Modifying
-    @Query("UPDATE Member m SET m.status = :status WHERE m.id IN :memberIds")
+    @Query("UPDATE Member m SET m.status = :status, m.dropDate = CURRENT DATE WHERE m.id IN :memberIds")
     int deleteMembers(@Param("memberIds") List<Long> memberIds, @Param("status") MemberStatus memberStatus);
 
 }
