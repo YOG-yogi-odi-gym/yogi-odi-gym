@@ -14,5 +14,5 @@ public interface AdminService {
 
     List<MemberResponseDto> searchMembers(String keyword);
 
-    void deleteMembers(List<Long> memberIds, MemberStatus status);
+    void deleteMembers(List<Long> memberIds);
 }
