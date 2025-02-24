@@ -1,19 +1,17 @@
 package com.health.yogiodigym.common.exception;
 
-import com.health.yogiodigym.common.response.HttpResponseDto;
-import org.springframework.http.HttpStatus;
+import com.health.yogiodigym.common.response.HttpResponse;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@Component
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    
+
     @ExceptionHandler(CustomException.class)
-    public ResponseEntity<?> handleCustomException(CustomException e) {
-        HttpResponseDto responseDto = new HttpResponseDto(HttpStatus.BAD_REQUEST.value(), e.getMessage());
-        return new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<?> globalExceptionHandler(CustomException e) {
+        return ResponseEntity
+                .ok()
+                .body(new HttpResponse(e.getStatus(), e.getMessage(), null));
     }
 }
