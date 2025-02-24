@@ -19,9 +19,9 @@ public class CalendarExercise {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // 운동 번호 (기본키)
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    //@ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "d_exercise_id", nullable = false)
-    @JsonIgnore // 수정필요
     private DataExercise dataExercise; // 운동 데이터 참조 (외래키)
 
     @Column(nullable = false)

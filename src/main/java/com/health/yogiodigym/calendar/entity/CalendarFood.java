@@ -40,6 +40,5 @@ public class CalendarFood {
     //@ManyToOne(fetch = FetchType.LAZY)
     @ManyToOne
     @JoinColumn(name = "member_id", nullable = false)
-    //@JsonIgnore
     private Member member; // 회원 아이디 (외래키)
 }

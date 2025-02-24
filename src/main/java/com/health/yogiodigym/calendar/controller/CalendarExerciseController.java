@@ -1,9 +1,15 @@
 package com.health.yogiodigym.calendar.controller;
 
+import com.health.yogiodigym.calendar.dto.CalendarExerciseDto.UpdateRequest;
+import com.health.yogiodigym.calendar.dto.CalendarExerciseDto.InsertRequest;
 import com.health.yogiodigym.calendar.entity.CalendarExercise;
 
 import com.health.yogiodigym.calendar.service.CalendarExerciseService;
+import com.health.yogiodigym.calendar.service.impl.CalendarExerciseServiceImpl;
+import com.health.yogiodigym.common.response.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -14,48 +20,52 @@ import java.util.List;
 public class CalendarExerciseController {
 
     @Autowired
-    private CalendarExerciseService calendarExerciseService;
+    private CalendarExerciseServiceImpl calendarExerciseService;
+
 
     @GetMapping
-    public List<CalendarExercise> findByMemberId(@RequestParam("memberId") Long memberId) {
-        return calendarExerciseService.findByMemberId(memberId);
+    public ResponseEntity<?> findByMemberId(@RequestParam("memberId") Long memberId) {
+        List<CalendarExercise> calendarExercises = calendarExerciseService.findByMemberId(memberId);
+        return ResponseEntity
+                .ok()
+                .body(new HttpResponse(HttpStatus.OK, "회원 조회에 성공하였습니다.", calendarExercises));
+
     }
 
     @GetMapping("/date")
-    public List<CalendarExercise> findExerciseByName(@RequestParam("date") String selectedDate, @RequestParam("memberId") Long memberId) {
+    public ResponseEntity<?> findByDateAndMemberId(@RequestParam("date") String selectedDate, @RequestParam("memberId") Long memberId) {
 
         LocalDate requestedDate = LocalDate.parse(selectedDate);
 
-        return calendarExerciseService.findByDateAndMemberId(requestedDate,memberId);
+        List<CalendarExercise> calendarExercises = calendarExerciseService.findByDateAndMemberId(requestedDate,memberId);
+
+        return ResponseEntity
+                .ok()
+                .body(new HttpResponse(HttpStatus.OK, "회원 및 멤버 조회에 성공하였습니다.", calendarExercises));
+
     }
 
+
     @PostMapping("/date/post")
-    public CalendarExercise PostExerciseByDate(@RequestParam("name") String name,
-                                       @RequestParam("time") Float time,
-                                       @RequestParam("calories") Float calories,
-                                       @RequestParam("date") String selectedDate,
-                                       @RequestParam("memberId") Long memberId) {
+    public ResponseEntity<?> PostExerciseByDate(@RequestBody InsertRequest dto) {
+        CalendarExercise exercise = calendarExerciseService.PostExerciseByDate(dto);
 
-        LocalDate requestedDate = LocalDate.parse(selectedDate);
-
-        return calendarExerciseService.PostExerciseByDate(name,time,calories,requestedDate,memberId);
+        return ResponseEntity
+                .ok()
+                .body(new HttpResponse(HttpStatus.OK, "회원 삽입에 성공하였습니다.", exercise));
     }
 
     @PutMapping("/date/put")
-    public CalendarExercise PutExerciseByDate(@RequestParam("id") Long id,
-                                      @RequestParam("name") String name,
-                                      @RequestParam("time") Float time,
-                                      @RequestParam("calories") Float calories,
-                                      @RequestParam("date") String selectedDate,
-                                      @RequestParam("memberId") Long memberId) {
+    public ResponseEntity<?> PutExerciseByDate(@RequestBody UpdateRequest dto) {
+        CalendarExercise exercise = calendarExerciseService.PutExerciseByDate(dto);
 
-        LocalDate requestedDate = LocalDate.parse(selectedDate);
-
-        return calendarExerciseService.PutExerciseByDate(id,name,time,calories,requestedDate,memberId);
+        return ResponseEntity
+                .ok()
+                .body(new HttpResponse(HttpStatus.OK, "회원 수정에 성공하였습니다.", exercise));
     }
 
-    @DeleteMapping("/date/delete")
-    public void DeleteExerciseByDate(@RequestParam("id") Long id) {
+    @DeleteMapping("/date/delete/{id}")
+    public void DeleteExerciseByDate(@PathVariable("id") Long id) {
 
         calendarExerciseService.DeleteExerciseByDate(id);
     }

@@ -243,45 +243,54 @@
         });
     }
 
+
     function saveExercise(selectedDate, memberId) {
         let name = $("#exerciseName").val();
         let time = $("#exerciseTime").val();
         let calories = $("#exerciseCalories").val();
 
+        let requestData = {
+            name: name,
+            time: time,
+            calories: calories,
+            requestedDate: selectedDate,
+            memberId: memberId
+        };
+
         $.ajax({
             url: "/exercise/date/post",
             method: "POST",
-            data: {
-                name: name,
-                time: time,
-                calories: calories,
-                date: selectedDate,
-                memberId: memberId
+            contentType: "application/json",  // content-type을 application/json으로 설정
+            data: JSON.stringify(requestData),  // 데이터를 JSON 형식으로 변환하여 전송
+            success: function(response) {
+
+                console.log(response);
             },
-            success: function(response) {},
             error: function() {
                 alert("운동 저장 실패");
             }
         });
     }
 
-
     function updateExercise(exerciseId, selectedDate, memberId) {
         let name = $(`#exerciseName_${exerciseId}`).val(); // 각 메모의 ID를 가져오기
         let time = $(`#exerciseTime_${exerciseId}`).val();
         let calories = $(`#exerciseCalories_${exerciseId}`).val();
 
+        let requestData = {
+            id: exerciseId,
+            name: name,
+            time: time,
+            calories: calories,
+            requestedDate: selectedDate,
+            memberId: memberId
+        };
+
         $.ajax({
             url: "/exercise/date/put",
             method: "PUT",
-            data: {
-                id: exerciseId,
-                name: name,
-                time: time,
-                calories: calories,
-                date: selectedDate,
-                memberId: memberId
-            },
+            contentType: "application/json",  // content-type을 application/json으로 설정
+            data: JSON.stringify(requestData),  // 데이터를 JSON 형식으로 변환하여 전송
             success: function(response) {
             },
             error: function(xhr) {
@@ -293,11 +302,8 @@
     function deleteExercise(exerciseId) {
 
         $.ajax({
-            url: "/exercise/date/delete",
+            url: "/exercise/date/delete/"+exerciseId,
             method: "DELETE",
-            data: {
-                id: exerciseId
-            },
             success: function(response) {
             },
             error: function(xhr) {
@@ -505,7 +511,6 @@
             });
         }
 
-
         function ExerciseAction() {
             status = 3;
             let memberId = document.getElementById('memberId').value;
@@ -514,15 +519,20 @@
                 url: '/exercise',  // 실제 API URL로 변경
                 method: 'GET',
                 data: { memberId: memberId },
-                success: function (data) {
-                    let events = data.map(item => ({
-                        title: item.name,
-                        start: new Date(item.date),
-                        description: item.context || "",
-                        allDay: true
-                    }));
-                    calendar.removeAllEvents();
-                    calendar.addEventSource(events);
+                success: function (response) {
+                    if (response.status === 200) {
+                        let events = response.data.map(item => ({
+                            title: item.name,
+                            start: new Date(item.date),
+                            description: item.context || "",
+                            allDay: true
+                        }));
+
+                        calendar.removeAllEvents();
+                        calendar.addEventSource(events);
+                    } else {
+                        alert('일정을 불러오는 데 실패했습니다.');
+                    }
                 },
                 error: function () {
                     alert('일정을 불러오는 데 실패했습니다.');
@@ -542,14 +552,14 @@
                     date: selectedDate,
                     memberId: memberId
                 },
-                success: function (data) {
-                    console.log('Received Lessons:', data);
+
+                success: function (response) {
 
                     let content = `<strong>${selectedDate}의 운동</strong><br>`;
                     let energyConsumptionValue = $("#selectedExerciseEnergy").val(); // 기본값 설정
 
-                    if (data.length > 0) {
-                        data.forEach(item => {
+                    if (response.data.length > 0) {
+                        response.data.forEach(item => {
                             content += `<strong>운동 수정</strong><br>`;
                             content += `운동명 : <input type="text" class="exerciseName" id="exerciseName_${item.id}" value="${item.name}" onkeyup="updateEnergyConsumption(${item.id})" disabled/><br>`;
                             content += `운동시간 : <input type="text" class="exerciseTime" id="exerciseTime_${item.id}" value="${item.time}" onkeyup="calculateCalories(${item.id})" onfocus="calculateCalories(${item.id})"/>`;
@@ -569,18 +579,20 @@
                                 url: "/api/exercise/search",
                                 method: "GET",
                                 data: { name: selectedExerciseName },
-                                success: function (responseData) {
-                                    // 배열이 반환되었으므로 첫 번째 요소를 가져와서 'energyConsumption' 값을 추출
-                                    if (responseData && responseData.length > 0) {
-                                        let energyConsumption = responseData[0].energyConsumption;  // 첫 번째 요소의 energyConsumption 값
-                                        console.log(energyConsumption);  // energyConsumption 값 확인
 
-                                        // energyConsumption 값을 화면에 반영
-                                        $(`#energy_consumption_${item.id}`).val(energyConsumption);
-                                    } else {
-                                        // 값이 없으면 빈 값 처리
-                                        $(`#energy_consumption_${item.id}`).val('');
-                                    }
+                                success: function (responseData) {
+                                        // 배열이 반환되었으므로 첫 번째 요소를 가져와서 'energyConsumption' 값을 추출
+                                        if (responseData && responseData.length > 0) {
+                                            let energyConsumption = responseData[0].energyConsumption;  // 첫 번째 요소의 energyConsumption 값
+                                            console.log(energyConsumption);  // energyConsumption 값 확인
+
+                                            // energyConsumption 값을 화면에 반영
+                                            $(`#energy_consumption_${item.id}`).val(energyConsumption);
+                                        } else {
+                                            // 값이 없으면 빈 값 처리
+                                            $(`#energy_consumption_${item.id}`).val('');
+                                        }
+
                                 },
                                 error: function (error) {
                                     console.error("Error fetching energy consumption:", error);
