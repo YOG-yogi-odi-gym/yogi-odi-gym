@@ -42,7 +42,11 @@ dependencies {
     // jasypt
     implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'
 
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    // websocket
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
+    // kafka
+    implementation 'org.springframework.kafka:spring-kafka'
 }
 
 tasks.named('test') {
