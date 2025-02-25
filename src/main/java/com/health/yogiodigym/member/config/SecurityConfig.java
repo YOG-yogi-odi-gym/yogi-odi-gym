@@ -29,7 +29,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public CustomAuthorizationRequestResolver kakaoAuthorizationRequestResolver() {
+    public CustomAuthorizationRequestResolver CustomAuthorizationRequestResolver() {
         return new CustomAuthorizationRequestResolver(clientRegistrationRepository);
     }
 
@@ -37,10 +37,12 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .cors(withDefaults())
+                .csrf(withDefaults())
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/images/**", "/css/**", "/js/**", "/", "/member/join").permitAll()
+                        .requestMatchers("/images/source/**", "/css/**", "/js/**", "/", "/member/regist", "/api/member/regist").permitAll()
+                        .requestMatchers("/images/license/**").hasRole("ADMIN")
                         .requestMatchers("/member/login", "/login").not().authenticated()
-                        .requestMatchers("/logout", "/dashboard").authenticated()
+                        .requestMatchers("/logout", "/dashboard", "/images/license/**").authenticated()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
@@ -48,12 +50,16 @@ public class SecurityConfig {
                         .loginProcessingUrl("/login")
                         .permitAll()
                         .defaultSuccessUrl("/dashboard", true)
+                        .failureHandler((request, response, exception) -> {
+                            log.error("🚨 로그인 실패: " + exception.getMessage(), exception);
+                            response.sendRedirect("/member/login?error");
+                        })
                 )
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/member/login")
                         .defaultSuccessUrl("/dashboard", true)
                         .authorizationEndpoint(authorization ->
-                                authorization.authorizationRequestResolver(kakaoAuthorizationRequestResolver())
+                                authorization.authorizationRequestResolver(CustomAuthorizationRequestResolver())
                         )
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(oAuth2UserService)
@@ -71,7 +77,7 @@ public class SecurityConfig {
                         .accessDeniedHandler((request, response, accessDeniedException) -> {
                             response.sendRedirect("/dashboard");
                         })
-                ).addFilterBefore(new InactiveUserFilter(), UsernamePasswordAuthenticationFilter.class);
+                ).addFilterBefore(new IncompleteUserFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 

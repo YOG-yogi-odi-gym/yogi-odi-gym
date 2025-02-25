@@ -1,5 +1,6 @@
 package com.health.yogiodigym.member.entity;
 
+import com.health.yogiodigym.member.auth.MemberStatus;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
@@ -20,6 +21,11 @@ public class MemberOAuth2User implements UserDetails, OAuth2User {
     public MemberOAuth2User(Member member, Map<String, Object> attributes) {
         this.member = member;
         this.attributes = attributes;
+    }
+
+    public MemberOAuth2User(Member member) {
+        this.member = member;
+        this.attributes = null;
     }
 
     @Override
@@ -56,7 +62,7 @@ public class MemberOAuth2User implements UserDetails, OAuth2User {
 
     @Override
     public boolean isEnabled() {
-        return member.getStatus().equals("ACTIVE") || member.getStatus().equals("INACTIVE");
+        return member.getStatus() == MemberStatus.ACTIVE || member.getStatus() == MemberStatus.INCOMPLETE;
     }
 
     @Override
