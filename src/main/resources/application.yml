@@ -8,7 +8,22 @@ spring:
 
   jpa:
     hibernate:
+<<<<<<< HEAD
       ddl-auto: update
+=======
+      ddl-auto: none
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonDeserializer
+    consumer:
+      auto-offset-reset: latest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      group-id: chat-room
+>>>>>>> eb4b1872b2cb11711a74d09f9e28f2d5541c0122
 
 jasypt:
   encryptor:
