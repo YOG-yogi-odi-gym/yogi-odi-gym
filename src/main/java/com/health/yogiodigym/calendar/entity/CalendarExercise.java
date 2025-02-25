@@ -6,7 +6,7 @@ import lombok.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "Calendar_Exercise")
+@Table(name = "calendar_exercise")
 @Getter
 @ToString
 @Builder

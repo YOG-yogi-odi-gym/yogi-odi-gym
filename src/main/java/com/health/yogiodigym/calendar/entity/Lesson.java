@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
-@Table(name = "Lesson")
+@Table(name = "lesson")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -29,7 +29,7 @@ public class Lesson {
     private Category category; // 카테고리 (외래키)
 
     @Column(nullable = false)
-    private int day; // 강의요일
+    private int days; // 강의요일
 
     private String location; // 위치
 

@@ -53,7 +53,7 @@ public class LessonService {
         for (LessonEnrollment enrollment : enrollments) {
             Lesson lesson = enrollment.getLesson();
             LocalDate current = lesson.getStartDay();
-            int dayBitmask = lesson.getDay();
+            int dayBitmask = lesson.getDays();
 
             while (!current.isAfter(lesson.getEndDay())) {
                 if (isMatchingDay(current, dayBitmask)) {
@@ -71,7 +71,7 @@ public class LessonService {
 
         for (LessonEnrollment enrollment : enrollments) {
             Lesson lesson = enrollment.getLesson();
-            int dayBitmask = lesson.getDay();
+            int dayBitmask = lesson.getDays();
 
             if (!selectedDate.isBefore(lesson.getStartDay()) &&
                     !selectedDate.isAfter(lesson.getEndDay()) &&

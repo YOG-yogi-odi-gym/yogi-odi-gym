@@ -5,7 +5,7 @@ import lombok.*;
 
 import java.time.LocalDate;
 
-public class CalendarExerciseDto {
+public class CalendarFoodDto {
 
     @Getter
     @Setter
@@ -16,7 +16,7 @@ public class CalendarExerciseDto {
     public static class InsertRequest {
 
         private String name;
-        private Float time;
+        private Float hundredGram;
         private Float calories;
         private String selectedDate;
         private Long memberId;
@@ -28,6 +28,7 @@ public class CalendarExerciseDto {
             this.selectedDate = selectedDate;
             this.requestedDate = LocalDate.parse(selectedDate);
         }
+
     }
 
     @Getter
@@ -39,7 +40,7 @@ public class CalendarExerciseDto {
 
         private Long id;
         private String name;
-        private Float time;
+        private Float hundredGram;
         private Float calories;
         private String selectedDate;
         private Long memberId;

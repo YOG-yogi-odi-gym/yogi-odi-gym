@@ -2,17 +2,17 @@ package com.health.yogiodigym.calendar.entity;
 
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "Calendar_Food")
+@Table(name = "calendar_food")
 @Getter
-@Setter
+@ToString
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class CalendarFood {
 
     @Id

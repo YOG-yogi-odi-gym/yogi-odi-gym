@@ -4,7 +4,6 @@ import com.health.yogiodigym.calendar.dto.CalendarExerciseDto.InsertRequest;
 import com.health.yogiodigym.calendar.dto.CalendarExerciseDto.UpdateRequest;
 import com.health.yogiodigym.calendar.entity.CalendarExercise;
 
-
 import java.time.LocalDate;
 import java.util.List;
 

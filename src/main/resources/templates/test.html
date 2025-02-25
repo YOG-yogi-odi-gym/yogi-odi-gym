@@ -184,17 +184,21 @@
         let hundredGram = $("#foodHundredGram").val();
         let calories = $("#foodCalories").val();
 
+        let requestData = {
+            name: name,
+            hundredGram: hundredGram,
+            calories: calories,
+            requestedDate: selectedDate,
+            memberId: memberId
+        };
+
         $.ajax({
             url: "/food/date/post",
             method: "POST",
-            data: {
-                name: name,
-                hundredGram: hundredGram,
-                calories: calories,
-                date: selectedDate,
-                memberId: memberId
-            },
+            contentType: "application/json",  // content-type을 application/json으로 설정
+            data: JSON.stringify(requestData),  // 데이터를 JSON 형식으로 변환하여 전송
             success: function(response) {
+                console.log(response);
             },
             error: function() {
                 alert("식단 저장 실패");
@@ -207,18 +211,21 @@
         let hundredGram = $(`#foodHundredGram_${foodId}`).val();
         let calories = $(`#foodCalories_${foodId}`).val();
 
+        let requestData = {
+            id: foodId,
+            name: name,
+            hundredGram: hundredGram,
+            calories: calories,
+            requestedDate: selectedDate,
+            memberId: memberId
+        };
+
 
         $.ajax({
             url: "/food/date/put",
             method: "PUT",
-            data: {
-                id: foodId,
-                name: name,
-                hundredGram: hundredGram,
-                calories: calories,
-                date: selectedDate,
-                memberId: memberId
-            },
+            contentType: "application/json",
+            data: JSON.stringify(requestData),
             success: function(response) {
             },
             error: function(xhr) {
@@ -230,11 +237,8 @@
     function deleteFood(foodId) {
 
         $.ajax({
-            url: "/food/date/delete",
+            url: "/food/date/delete/"+foodId,
             method: "DELETE",
-            data: {
-                id: foodId
-            },
             success: function(response) {
             },
             error: function(xhr) {
@@ -263,7 +267,6 @@
             contentType: "application/json",  // content-type을 application/json으로 설정
             data: JSON.stringify(requestData),  // 데이터를 JSON 형식으로 변환하여 전송
             success: function(response) {
-
                 console.log(response);
             },
             error: function() {
@@ -289,8 +292,8 @@
         $.ajax({
             url: "/exercise/date/put",
             method: "PUT",
-            contentType: "application/json",  // content-type을 application/json으로 설정
-            data: JSON.stringify(requestData),  // 데이터를 JSON 형식으로 변환하여 전송
+            contentType: "application/json",
+            data: JSON.stringify(requestData),
             success: function(response) {
             },
             error: function(xhr) {
@@ -527,7 +530,6 @@
                             description: item.context || "",
                             allDay: true
                         }));
-
                         calendar.removeAllEvents();
                         calendar.addEventSource(events);
                     } else {
@@ -543,7 +545,6 @@
         function Exercise2Action(date) {
             let selectedDate = date.toISOString().split('T')[0];
             let memberId = document.getElementById('memberId').value;
-            console.log("받은날짜", selectedDate);
 
             $.ajax({
                 url: '/exercise/date',
@@ -570,21 +571,19 @@
 
                             $("#modalContent").html(content);
 
-
                             let selectedExerciseName = $(`#exerciseName_${item.id}`).val();
                             console.log(selectedExerciseName);
 
-                            // /api/exercise/search 호출
                             $.ajax({
                                 url: "/api/exercise/search",
                                 method: "GET",
                                 data: { name: selectedExerciseName },
 
                                 success: function (responseData) {
-                                        // 배열이 반환되었으므로 첫 번째 요소를 가져와서 'energyConsumption' 값을 추출
+
                                         if (responseData && responseData.length > 0) {
-                                            let energyConsumption = responseData[0].energyConsumption;  // 첫 번째 요소의 energyConsumption 값
-                                            console.log(energyConsumption);  // energyConsumption 값 확인
+                                            let energyConsumption = responseData[0].energyConsumption;
+                                            console.log(energyConsumption);
 
                                             // energyConsumption 값을 화면에 반영
                                             $(`#energy_consumption_${item.id}`).val(energyConsumption);
@@ -629,15 +628,19 @@
                 url: '/food',  // 실제 API URL로 변경
                 method: 'GET',
                 data: {memberId: memberId},
-                success: function (data) {
-                    let events = data.map(item => ({
-                        title: item.name,
-                        start: new Date(item.date),
-                        description: item.context || "",
-                        allDay: true
-                    }));
-                    calendar.removeAllEvents();
-                    calendar.addEventSource(events);
+                success: function (response) {
+                    if (response.status === 200) {
+                        let events = response.data.map(item => ({
+                            title: item.name,
+                            start: new Date(item.date),
+                            description: item.context || "",
+                            allDay: true
+                        }));
+                        calendar.removeAllEvents();
+                        calendar.addEventSource(events);
+                    } else {
+                        alert('일정을 불러오는 데 실패했습니다.');
+                    }
                 },
                 error: function () {
                     alert('일정을 불러오는 데 실패했습니다.');
@@ -656,19 +659,18 @@
                     date: selectedDate,
                     memberId: memberId
                 },
-                success: function (data) {
-                    console.log('Received Lessons:', data);
+                success: function (response) {
 
                     let content = `<strong>${selectedDate}의 식단</strong><br>`;
                     let foodConsumptionValue = $("#selectedFoodEnergy").val(); // 기본값 설정
 
 
-                    if (data.length > 0) {
-                        data.forEach(item => {
+                    if (response.data.length > 0) {
+                        response.data.forEach(item => {
                             content += `<strong>식단 수정</strong><br>`;
                             content += `음식명 : <input type="text" class="foodName" id="foodName_${item.id}" value="${item.name}" onkeyup="updateFoodConsumption(${item.id})" disabled /><br>`;
+                            content += `섭취량 : <input type="text" class="foodHundredGram" id="foodHundredGram_${item.id}" value="${item.hundredGram}" onkeyup="calculateFoodCalories(${item.id})" onfocus="calculateFoodCalories(${item.id})" />`;
                             content += `<input type="text" class="foodConsumption" id="food_consumption_${item.id}" value="${foodConsumptionValue}" disabled/><br>`;
-                            content += `섭취량 : <input type="text" class="foodHundredGram" id="foodHundredGram_${item.id}" value="${item.hundredGram}" onkeyup="calculateFoodCalories(${item.id})" onfocus="calculateFoodCalories(${item.id})" /><br>`;
                             content += `섭취 칼로리 : <input type="text" id="foodCalories_${item.id}" value="${item.calories}" disabled onkeyup="calculateFoodCalories(${item.id})" /><br>`;
                             content += `<button onclick="updateFood(${item.id}, '${selectedDate}', ${memberId})">수정</button>`;
                             content += `<button onclick="deleteFood(${item.id})">삭제</button>`;
@@ -678,22 +680,19 @@
                             let selectedFoodName = $(`#foodName_${item.id}`).val();
                             console.log(selectedFoodName);
 
-
-                            // /api/exercise/search 호출
                             $.ajax({
                                 url: "/api/food/search",
                                 method: "GET",
                                 data: { name: selectedFoodName },
                                 success: function (responseData) {
-                                    // 배열이 반환되었으므로 첫 번째 요소를 가져와서 'energyConsumption' 값을 추출
-                                    if (responseData && responseData.length > 0) {
-                                        let foodConsumption = responseData[0].calories;  // 첫 번째 요소의 energyConsumption 값
-                                        console.log(foodConsumption);  // energyConsumption 값 확인
 
-                                        // energyConsumption 값을 화면에 반영
+                                    if (responseData && responseData.length > 0) {
+                                        let foodConsumption = responseData[0].calories;
+                                        console.log(foodConsumption);
+
                                         $(`#food_consumption_${item.id}`).val(foodConsumption);
                                     } else {
-                                        // 값이 없으면 빈 값 처리
+
                                         $(`#food_consumption_${item.id}`).val('');
                                     }
                                 },
@@ -705,9 +704,9 @@
 
                     } else {
                         content += `<strong>새 식단 추가</strong><br>`;
-                        content += `음식명 : <input type="text" class="foodName" id="foodName" onkeyup="updateFoodConsumption()" disabled/>`;
+                        content += `음식명 : <input type="text" class="foodName" id="foodName" onkeyup="updateFoodConsumption()" disabled/><br>`;
+                        content += `섭취량 : <input type="text" class="foodHundredGram" id="foodHundredGram" onkeyup="calculateFoodCalories()" onfocus="calculateCalories()" />`;
                         content += `<input type="text" class="foodConsumption" id="food_consumption" value="${foodConsumptionValue}" disabled/><br>`;
-                        content += `섭취량 : <input type="text" class="foodHundredGram" id="foodHundredGram" onkeyup="calculateFoodCalories()" onfocus="calculateCalories()" /><br>`;
                         content += `섭취 칼로리 : <input type="text" id="foodCalories" onkeyup="calculateFoodCalories()" disabled /><br>`;
                         content += `<button onclick="saveFood('${selectedDate}', ${memberId})">저장</button>`;
                     }

@@ -18,8 +18,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class CalendarExerciseServiceImpl implements CalendarExerciseService {
-
-
+    
     private final CalendarExerciseRepository calendarExerciseRepository;
 
     private final MemberRepository memberRepository;
