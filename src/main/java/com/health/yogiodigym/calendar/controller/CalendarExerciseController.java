@@ -20,12 +20,12 @@ import java.util.List;
 public class CalendarExerciseController {
 
     @Autowired
-    private CalendarExerciseServiceImpl calendarExerciseService;
+    private CalendarExerciseServiceImpl calendarExerciseServiceimpl;
 
 
     @GetMapping
     public ResponseEntity<?> findByMemberId(@RequestParam("memberId") Long memberId) {
-        List<CalendarExercise> calendarExercises = calendarExerciseService.findByMemberId(memberId);
+        List<CalendarExercise> calendarExercises = calendarExerciseServiceimpl.findByMemberId(memberId);
         return ResponseEntity
                 .ok()
                 .body(new HttpResponse(HttpStatus.OK, "회원 조회에 성공하였습니다.", calendarExercises));
@@ -37,7 +37,7 @@ public class CalendarExerciseController {
 
         LocalDate requestedDate = LocalDate.parse(selectedDate);
 
-        List<CalendarExercise> calendarExercises = calendarExerciseService.findByDateAndMemberId(requestedDate,memberId);
+        List<CalendarExercise> calendarExercises = calendarExerciseServiceimpl.findByDateAndMemberId(requestedDate,memberId);
 
         return ResponseEntity
                 .ok()
@@ -48,7 +48,7 @@ public class CalendarExerciseController {
 
     @PostMapping("/date/post")
     public ResponseEntity<?> PostExerciseByDate(@RequestBody InsertRequest dto) {
-        CalendarExercise exercise = calendarExerciseService.PostExerciseByDate(dto);
+        CalendarExercise exercise = calendarExerciseServiceimpl.PostExerciseByDate(dto);
 
         return ResponseEntity
                 .ok()
@@ -57,7 +57,7 @@ public class CalendarExerciseController {
 
     @PutMapping("/date/put")
     public ResponseEntity<?> PutExerciseByDate(@RequestBody UpdateRequest dto) {
-        CalendarExercise exercise = calendarExerciseService.PutExerciseByDate(dto);
+        CalendarExercise exercise = calendarExerciseServiceimpl.PutExerciseByDate(dto);
 
         return ResponseEntity
                 .ok()
@@ -67,6 +67,6 @@ public class CalendarExerciseController {
     @DeleteMapping("/date/delete/{id}")
     public void DeleteExerciseByDate(@PathVariable("id") Long id) {
 
-        calendarExerciseService.DeleteExerciseByDate(id);
+        calendarExerciseServiceimpl.DeleteExerciseByDate(id);
     }
 }

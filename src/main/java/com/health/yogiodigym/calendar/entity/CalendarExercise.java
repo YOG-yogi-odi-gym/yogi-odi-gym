@@ -1,18 +1,17 @@
 package com.health.yogiodigym.calendar.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "Calendar_Exercise")
 @Getter
-@Setter
+@ToString
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class CalendarExercise {
 
     @Id
@@ -40,4 +39,5 @@ public class CalendarExercise {
     @ManyToOne
     @JoinColumn(name = "member_id", nullable = false)
     private Member member; // 회원 아이디 (외래키)
+
 }

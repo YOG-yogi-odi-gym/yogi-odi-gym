@@ -11,6 +11,7 @@ public class CalendarExerciseDto {
 
     @Getter
     @Setter
+    @Builder
     @ToString
     @AllArgsConstructor
     @NoArgsConstructor
@@ -23,6 +24,7 @@ public class CalendarExerciseDto {
 
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
         private LocalDate requestedDate;
+
 
         public void setSelectedDate(String selectedDate) {
             this.selectedDate = selectedDate;

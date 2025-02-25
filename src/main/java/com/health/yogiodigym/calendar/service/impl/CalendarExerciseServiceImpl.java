@@ -10,7 +10,6 @@ import com.health.yogiodigym.calendar.repository.DataExerciseRepository;
 import com.health.yogiodigym.calendar.repository.MemberRepository;
 import com.health.yogiodigym.calendar.service.CalendarExerciseService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -20,14 +19,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CalendarExerciseServiceImpl implements CalendarExerciseService {
 
-    @Autowired
-    private CalendarExerciseRepository calendarExerciseRepository;
 
-    @Autowired
-    private MemberRepository memberRepository;
+    private final CalendarExerciseRepository calendarExerciseRepository;
 
-    @Autowired
-    private DataExerciseRepository dataExerciseRepository;
+    private final MemberRepository memberRepository;
+
+    private final DataExerciseRepository dataExerciseRepository;
 
     @Override
     public List<CalendarExercise> findByMemberId(Long memberId) {
@@ -48,42 +45,50 @@ public class CalendarExerciseServiceImpl implements CalendarExerciseService {
         DataExercise dataExercise = dataExerciseRepository.findByName(dto.getName())
                 .orElseThrow(() -> new RuntimeException("운동을 찾을 수 없습니다."));
 
-        CalendarExercise exercise = new CalendarExercise();
-        exercise.setName(dto.getName());
-        exercise.setTime(dto.getTime());
-        exercise.setCalories(dto.getCalories());
-        exercise.setDate(dto.getRequestedDate());
-        exercise.setMember(member);
-        exercise.setDataExercise(dataExercise);
+        CalendarExercise exercise = CalendarExercise.builder()
+                .name(dto.getName())
+                .time(dto.getTime())
+                .calories(dto.getCalories())
+                .date(dto.getRequestedDate())
+                .member(member)
+                .dataExercise(dataExercise)
+                .build();
 
         return calendarExerciseRepository.save(exercise);
     }
 
-    @Override
-    public CalendarExercise PutExerciseByDate(UpdateRequest dto) {
 
-        CalendarExercise exercise = calendarExerciseRepository.findById(dto.getId())
-                .orElseThrow(() -> new IllegalArgumentException("해당 운동일정 이 존재하지 않습니다."));
 
-        if (!exercise.getDataExercise().getName().equals(dto.getName())) {
-            DataExercise dataExercise = dataExerciseRepository.findByName(dto.getName())
-                    .orElseThrow(() -> new RuntimeException("운동을 찾을 수 없습니다: "));
-            exercise.setDataExercise(dataExercise);
-        }
+@Override
+public CalendarExercise PutExerciseByDate(UpdateRequest dto) {
 
-        if (!exercise.getMember().getId().equals(dto.getMemberId())) {
-            Member member = memberRepository.findById(dto.getMemberId())
-                    .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
-            exercise.setMember(member);
-        }
+    CalendarExercise exercise = calendarExerciseRepository.findById(dto.getId())
+            .orElseThrow(() -> new IllegalArgumentException("해당 운동일정이 존재하지 않습니다."));
 
-        exercise.setName(dto.getName());
-        exercise.setTime(dto.getTime());
-        exercise.setCalories(dto.getCalories());
-        exercise.setDate(dto.getRequestedDate());
-
-        return calendarExerciseRepository.save(exercise);
+    DataExercise dataExercise = exercise.getDataExercise();
+    if (!dataExercise.getName().equals(dto.getName())) {
+        dataExercise = dataExerciseRepository.findByName(dto.getName())
+                .orElseThrow(() -> new RuntimeException("운동을 찾을 수 없습니다: " ));
     }
+
+    Member member = exercise.getMember();
+    if (!member.getId().equals(dto.getMemberId())) {
+        member = memberRepository.findById(dto.getMemberId())
+                .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
+    }
+
+    CalendarExercise updatedExercise = CalendarExercise.builder()
+            .id(exercise.getId())
+            .dataExercise(dataExercise)
+            .member(member)
+            .name(dto.getName())
+            .time(dto.getTime())
+            .calories(dto.getCalories())
+            .date(dto.getRequestedDate())
+            .build();
+
+    return calendarExerciseRepository.save(updatedExercise);
+}
 
     @Override
     public void DeleteExerciseByDate(Long id) {
