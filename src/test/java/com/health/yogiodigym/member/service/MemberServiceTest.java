@@ -1,8 +1,7 @@
 package com.health.yogiodigym.member.service;
 
 import com.health.yogiodigym.admin.dto.MemberDto.*;
-import com.health.yogiodigym.admin.service.AdminService;
-import com.health.yogiodigym.admin.service.impl.AdminServiceImpl;
+import com.health.yogiodigym.admin.service.impl.AdminMemberServiceImpl;
 import com.health.yogiodigym.member.entity.Member;
 import com.health.yogiodigym.member.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -16,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -27,7 +25,7 @@ class MemberServiceTest {
     private MemberRepository memberRepository;
 
     @InjectMocks
-    private AdminServiceImpl adminService;
+    private AdminMemberServiceImpl adminService;
 
     @Test
     @DisplayName("회원리스트 조회")
