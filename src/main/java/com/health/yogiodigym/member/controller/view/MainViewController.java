@@ -6,24 +6,23 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 @Slf4j
 @Controller
-@RequestMapping("/member")
-public class memberController {
-
-    @GetMapping("/login")
-    public String login(){
+public class MainViewController {
+    @GetMapping("/")
+    public String main(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) {
+
+        if(authentication != null && !(authentication instanceof AnonymousAuthenticationToken)){
             return "redirect:/dashboard";
+        }else{
+            return "redirect:/member/login";
         }
-        return "/member/login";
     }
 
-    @GetMapping("/join")
-    public String join(){
-        return "/member/join";
+    @GetMapping("/dashboard")
+    public String dashoboard(){
+        return "/dashboard";
     }
 }

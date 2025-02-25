@@ -23,36 +23,36 @@ import java.util.Map;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class oAuth2UserService extends DefaultOAuth2UserService {
+public class OAuth2UserService extends DefaultOAuth2UserService {
     private final MemberRepository memberRepository;
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
-        Map<String, Object> attributes = oAuth2User.getAttributes();
+        Map<String, Object> oAuthAttributes = oAuth2User.getAttributes();
 
         OAuth2UserInfo oAuth2UserInfo = null;
+
         if (userRequest.getClientRegistration().getRegistrationId().equals("kakao")) {
-            oAuth2UserInfo = new KakaoUserInfo(attributes);
+            oAuth2UserInfo = new KakaoUserInfo(oAuthAttributes);
         } else if(userRequest.getClientRegistration().getRegistrationId().equals("naver")) {
-            oAuth2UserInfo = new NaverUserInfo(attributes);
+            oAuth2UserInfo = new NaverUserInfo(oAuthAttributes);
         } else if(userRequest.getClientRegistration().getRegistrationId().equals("google")) {
-            oAuth2UserInfo = new GoogleUserInfo(attributes);
+            oAuth2UserInfo = new GoogleUserInfo(oAuthAttributes);
         }
 
-        Member OAuthloginMember = memberRepository.findByEmail(oAuth2UserInfo.getEmail());
+        Member OAuthloginMember = memberRepository.findByEmail(oAuth2UserInfo.getEmail()).orElse(null);
         if(OAuthloginMember != null){
-            return new MemberOAuth2User(OAuthloginMember, attributes);
+            return new MemberOAuth2User(OAuthloginMember, oAuthAttributes);
         }else{
             Member newOAuthMember = Member.builder()
                     .name(oAuth2UserInfo.getName())
                     .email(oAuth2UserInfo.getEmail())
                     .profile(oAuth2UserInfo.getProfile())
                     .roles(EnumSet.of(Role.ROLE_USER))
-                    .status(MemberStatus.INACTIVE)
+                    .status(MemberStatus.INCOMPLETE)
                     .build();
 
-            log.info("\n\n\n\n\n\n"+newOAuthMember.getStatus()+"\n\n\n\n\n");
-            return new MemberOAuth2User(newOAuthMember, attributes);
+            return new MemberOAuth2User(newOAuthMember, oAuthAttributes);
         }
     }
 }

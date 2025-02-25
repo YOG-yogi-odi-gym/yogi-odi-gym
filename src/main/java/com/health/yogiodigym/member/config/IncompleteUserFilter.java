@@ -15,9 +15,9 @@ import java.io.IOException;
 import java.util.List;
 
 @Slf4j
-public class InactiveUserFilter extends OncePerRequestFilter {
+public class IncompleteUserFilter extends OncePerRequestFilter {
     private static final List<String> EXCLUDED_PATHS = List.of(
-            "/member/join", "/member/login", "/login",
+            "/member/regist", "/member/login", "/login", "/api/member/regist",
             "/images/", "/css/", "/js/"
     );
 
@@ -34,8 +34,8 @@ public class InactiveUserFilter extends OncePerRequestFilter {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication != null && authentication.getPrincipal() instanceof MemberOAuth2User user) {
-            if (user.getMember().getStatus() == MemberStatus.INACTIVE) {
-                response.sendRedirect("/member/join");
+            if (user.getMember().getStatus() == MemberStatus.INCOMPLETE) {
+                response.sendRedirect("/member/regist");
                 return;
             }
         }
