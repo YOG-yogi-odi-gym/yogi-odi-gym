@@ -133,10 +133,10 @@
                 </tr>
                 </thead>
                 <tbody id="lessonTableBody">
-                <tr>
-                    <td><input type="checkbox"></td>
-                    <td>예제 강의</td>
-                    <td>홍길동</td>
+                <tr th:each="lesson : ${lessons}">
+                    <td><input type="checkbox" class="lessonCheckbox" th:value="${lesson.id}"></td>
+                    <td th:text="${lesson.title}"></td>
+                    <td th:text="${lesson.masterName}"></td>
                 </tr>
                 </tbody>
             </table>
