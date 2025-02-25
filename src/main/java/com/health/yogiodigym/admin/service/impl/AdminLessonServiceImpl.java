@@ -32,6 +32,7 @@ public class AdminLessonServiceImpl implements AdminLessonService {
         for (Lesson lesson : lessons) {
             lessonDtos.add(LessonDto.LessonResponseDto.from(lesson));
         }
+        return lessonDtos;
 //      return lessons.stream().map(l -> LessonDto.LessonResponseDto.from(l)).collect(Collectors.toList());
 
     }
