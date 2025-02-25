@@ -8,9 +8,40 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-@Repository
+import java.util.List;
+
 public interface LessonRepository extends JpaRepository<Lesson, Long> {
 
     @Query("SELECT l FROM Lesson l JOIN FETCH l.master WHERE l.title LIKE %:title%")
     Page<Lesson> findByTitleContaining(@Param("title") String title, Pageable pageable);
+
+    @Query("""
+        SELECT l FROM Lesson l JOIN FETCH l.master 
+        WHERE (:keyword IS NULL OR (CASE WHEN :column = 'name' THEN l.title ELSE l.location END) LIKE %:keyword%)
+        AND (:days IS NULL OR BITAND(l.days, :days) > 0)
+    """)
+    Page<Lesson> searchLessons(@Param("keyword") String keyword,
+                               @Param("column") String column,
+                               @Param("days") Integer days,
+                               Pageable pageable);
+
+    @Query(value = "SELECT * FROM lesson l WHERE " +
+            "(:keyword IS NULL OR :keyword = '' OR " +
+            "(:column = 'name' AND l.title LIKE CONCAT('%', :keyword, '%')) OR " +
+            "(:column = 'location' AND l.location LIKE CONCAT('%', :keyword, '%'))) " +
+            "AND (:days IS NULL OR (l.days & :days) > 0) " +
+            "AND (:categories IS NULL OR l.category_id IN :categories)",
+            countQuery = "SELECT count(*) FROM lesson l WHERE " +
+                    "(:keyword IS NULL OR :keyword = '' OR " +
+                    "(:column = 'name' AND l.title LIKE CONCAT('%', :keyword, '%')) OR " +
+                    "(:column = 'location' AND l.location LIKE CONCAT('%', :keyword, '%'))) " +
+                    "AND (:days IS NULL OR (l.days & :days) > 0) " +
+                    "AND (:categories IS NULL OR l.category_id IN :categories)",
+            nativeQuery = true)
+    Page<Lesson> searchLessonsByCategories(
+            @Param("keyword") String keyword,
+            @Param("column") String column,
+            @Param("days") Integer days,
+            @Param("categories") List<Long> categories,
+            Pageable pageable);
 }

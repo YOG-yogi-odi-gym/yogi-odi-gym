@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>강의 수정</title>
+    <script type="text/javascript" th:src="@{'//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js'}"></script>
+    <script type="text/javascript" th:src="@{'//dapi.kakao.com/v2/maps/sdk.js?appkey=' + ${@environment.getProperty('kakao.api.scriptKey')} + '&libraries=services'}"></script>
+    <script type="text/javascript" th:src="@{'/js/lessonRegister.js'}"></script>
+    <script type="text/javascript" th:src="@{'/js/latLonApi.js'}"></script>
+</head>
+<body>
+<h2>강의 수정</h2>
+<form th:action="@{/api/lesson/edit}" method="post">
+    <input type="hidden" name="id" th:value="${lesson.id}">
+    <input type="hidden" name="latitude" th:value="${lesson.latitude}">
+    <input type="hidden" name="longitude" th:value="${lesson.longitude}">
+
+    <label>강의 제목:</label>
+    <input type="text" name="title" th:value="${lesson.title}" required><br>
+
+    <label>카테고리:</label>
+    <select name="categoryId">
+        <option th:each="category : ${categories}"
+                th:value="${category.id}"
+                th:text="${category.name}"
+                th:selected="${category.id == lesson.categoryId}">
+        </option>
+    </select><br>
+
+    <label>요일:</label>
+    <input type="checkbox" name="bitDays" value="1" th:checked="${daysSelected[0]}"> 월
+    <input type="checkbox" name="bitDays" value="2" th:checked="${daysSelected[1]}"> 화
+    <input type="checkbox" name="bitDays" value="4" th:checked="${daysSelected[2]}"> 수
+    <input type="checkbox" name="bitDays" value="8" th:checked="${daysSelected[3]}"> 목
+    <input type="checkbox" name="bitDays" value="16" th:checked="${daysSelected[4]}"> 금
+    <input type="checkbox" name="bitDays" value="32" th:checked="${daysSelected[5]}"> 토
+    <input type="checkbox" name="bitDays" value="64" th:checked="${daysSelected[6]}"> 일<br>
+
+    <label>위치:</label>
+    <input type="text" name="location" th:value="${lesson.location}" required><br>
+    <button type="button" onclick="searchAddress('location')">주소 검색</button><br>
+
+    <label>상세 위치:</label>
+    <input type="text" name="detailedLocation" th:value="${lesson.detailedLocation}" required><br>
+
+    <label>강의 시작 시간:</label>
+    <input type="time" name="startTime" th:value="${lesson.startTime}" required><br>
+
+    <label>강의 종료 시간:</label>
+    <input type="time" name="endTime" th:value="${lesson.endTime}" required><br>
+
+    <label>강의 시작일:</label>
+    <input type="date" name="startDay" th:value="${lesson.startDay}" required><br>
+
+    <label>강의 종료일:</label>
+    <input type="date" name="endDay" th:value="${lesson.endDay}" required><br>
+
+    <label>최대 수강 인원:</label>
+    <input type="number" name="max" th:value="${lesson.max}" required><br>
+
+    <label>강의 소개:</label><br>
+    <textarea name="description" rows="5" cols="50" required>[[${lesson.description}]]</textarea><br>
+
+    <button type="submit">수정 완료</button>
+    <button type="button" onclick="history.back()">취소</button>
+</form>
+</body>
+</html>

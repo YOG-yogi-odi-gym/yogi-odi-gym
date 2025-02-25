@@ -1,5 +1,6 @@
 package com.health.yogiodigym.lesson.entity;
 
+import com.health.yogiodigym.lesson.dto.LessonEditDto;
 import com.health.yogiodigym.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.*;
@@ -9,21 +10,18 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "lesson")
 public class Lesson {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     private String title;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
@@ -32,29 +30,51 @@ public class Lesson {
     private float latitude;
     private float longitude;
     private String detailedLocation;
-
-    @Column(name = "start_time", nullable = false)
     private LocalTime startTime;
-
-    @Column(name = "end_time", nullable = false)
     private LocalTime endTime;
-
-    @Column(name = "start_day", nullable = false)
     private LocalDate startDay;
-
-    @Column(name = "end_day", nullable = false)
     private LocalDate endDay;
 
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    private Integer current = 1;
+    private Integer current;
     private Integer max;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "master_id", nullable = false)
     private Member master;
 
-    @Column(name = "create_date_time")
-    private LocalDateTime createDateTime = LocalDateTime.now();
+    private LocalDateTime createDateTime;
+
+    public void incrementCurrent() {
+        if (this.current < this.max) {
+            this.current++;
+        } else {
+            throw new IllegalStateException("수강 인원이 이미 최대입니다.");
+        }
+    }
+
+    public void decrementCurrent() {
+        if (this.current > 0) {
+            this.current--;
+        }
+    }
+
+    public void updateLesson(LessonEditDto dto, Category category) {
+        this.title = dto.getTitle();
+        this.days = dto.getDays();
+        this.category = category;
+        this.location = dto.getLocation();
+        this.latitude = dto.getLatitude();
+        this.longitude = dto.getLongitude();
+        this.detailedLocation = dto.getDetailedLocation();
+        this.startTime = dto.getStartTime();
+        this.endTime = dto.getEndTime();
+        this.startDay = dto.getStartDay();
+        this.endDay = dto.getEndDay();
+        this.max = dto.getMax();
+        this.description = dto.getDescription();
+    }
+
 }
