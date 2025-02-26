@@ -22,7 +22,10 @@ public enum SuccessMessage {
     GET_ONE_CALENDAR_MEMO_SUCCESS("해당날짜의 메모를 불러오는데 성공하였습니다."),
     POST_CALENDAR_MEMO_SUCCESS("유저의 메모를 삽입하는데 성공하였습니다."),
     PUT_CALENDAR_MEMO_SUCCESS("유저의 메모를 수정하는데 성공하였습니다."),
-    DELETE_CALENDAR_MEMO_SUCCESS("유저의 메모를 삭제하는데 성공하였습니다."),;
+    DELETE_CALENDAR_MEMO_SUCCESS("유저의 메모를 삭제하는데 성공하였습니다."),
+
+    MEMBER_SEARCH_SUCCESS("회원목록 검색에 성공하였습니다."),
+    MEMBER_STATUS_CHANGE_SUCCESS("회원 비활성화 성공하였습니다.");
 
     private final String message;
 }
