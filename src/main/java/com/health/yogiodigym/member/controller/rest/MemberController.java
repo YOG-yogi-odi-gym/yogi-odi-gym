@@ -1,4 +1,4 @@
-package com.health.yogiodigym.member.controller.view;
+package com.health.yogiodigym.member.controller.rest;
 
 import com.health.yogiodigym.member.dto.RegistMemberDto;
 import com.health.yogiodigym.member.entity.MemberOAuth2User;
