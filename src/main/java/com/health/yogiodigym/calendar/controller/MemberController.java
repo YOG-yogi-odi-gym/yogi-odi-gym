@@ -37,6 +37,7 @@ public class MemberController {
             session.setAttribute("userWeight", member.getWeight());
 
             return "redirect:/test";
+
         } else {
             model.addAttribute("error", "Invalid email or password");
             return "login";
