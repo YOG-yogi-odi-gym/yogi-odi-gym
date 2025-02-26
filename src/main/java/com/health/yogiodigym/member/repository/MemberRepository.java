@@ -1,5 +1,6 @@
 package com.health.yogiodigym.member.repository;
 
+import com.health.yogiodigym.admin.dto.MemberDto.*;
 import com.health.yogiodigym.member.auth.MemberStatus;
 import com.health.yogiodigym.member.entity.Member;
 import jakarta.transaction.Transactional;
@@ -25,7 +26,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
             "WHEN m.status = 'SUSPENDED' THEN 4 " +
             "WHEN m.status = 'BAN' THEN 5 " +
             "ELSE 6 END, m.name ASC")
-    List<Member> getAllMembers();
+    List<MemberResponseDto> getAllMembers();
 
 
     @Query("select m from Member m " +

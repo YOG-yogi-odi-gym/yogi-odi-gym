@@ -1,8 +1,8 @@
 package com.health.yogiodigym.admin.controller;
 
 
+import com.health.yogiodigym.admin.dto.MemberDto.*;
 import com.health.yogiodigym.admin.service.AdminService;
-import com.health.yogiodigym.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,7 +19,7 @@ public class AdminViewController {
     @GetMapping("/admin")
     public String showAdminPage(Model model) {
 
-        List<Member> members = adminService.getAllMembers();
+        List<MemberResponseDto> members = adminService.getAllMembers();
         model.addAttribute("members", members);
 
         return "admin";

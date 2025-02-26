@@ -7,7 +7,6 @@ import com.health.yogiodigym.member.entity.Member;
 import com.health.yogiodigym.member.repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -20,7 +19,7 @@ public class AdminServiceImpl implements AdminService {
     private final MemberRepository memberRepository;
 
     @Override
-    public List<Member> getAllMembers() {
+    public List<MemberResponseDto> getAllMembers() {
         return memberRepository.getAllMembers();
     }
 
