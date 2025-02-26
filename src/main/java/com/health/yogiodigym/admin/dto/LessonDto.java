@@ -7,7 +7,6 @@ import lombok.*;
 
 public class LessonDto {
 
-
     @Setter
     @Getter
     @Builder
@@ -25,7 +24,6 @@ public class LessonDto {
                     .title(lesson.getTitle())
                     .masterName(lesson.getMaster().getName())
                     .build();
-
         }
     }
 }

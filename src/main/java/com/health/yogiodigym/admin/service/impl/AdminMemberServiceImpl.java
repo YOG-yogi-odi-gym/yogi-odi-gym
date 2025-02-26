@@ -13,13 +13,14 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class AdminMemberServiceImpl implements AdminMemberService {
 
     private final MemberRepository memberRepository;
 
     @Override
-    public List<Member> getAllMembers() {
+    public List<MemberResponseDto> getAllMembers() {
         return memberRepository.getAllMembers();
     }
 
