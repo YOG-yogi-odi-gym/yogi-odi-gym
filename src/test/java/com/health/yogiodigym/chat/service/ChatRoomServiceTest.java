@@ -7,6 +7,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -24,7 +25,6 @@ import com.health.yogiodigym.chat.repository.ChatRoomRepository;
 import com.health.yogiodigym.chat.service.impl.ChatRoomServiceImpl;
 import com.health.yogiodigym.common.exception.AlreadyChatParticipantException;
 import com.health.yogiodigym.common.exception.ChatRoomNotFoundException;
-import com.health.yogiodigym.common.exception.MemberNotFoundException;
 import com.health.yogiodigym.common.exception.MemberNotInChatRoomException;
 import com.health.yogiodigym.member.entity.Member;
 import com.health.yogiodigym.member.repository.MemberRepository;
@@ -85,16 +85,13 @@ class ChatRoomServiceTest {
         @DisplayName("채팅방 입장 성공")
         void testEnterChatRoom() {
             // given
-            Member mockMember = Member.builder().id(memberId).build();
-            when(memberRepository.findById(anyLong())).thenReturn(Optional.of(mockMember));
-
             ChatRoom mockChatRoom = ChatRoom.builder().id(chatRoomId).build();
             when(chatRoomRepository.findByRoomId(anyString())).thenReturn(Optional.of(mockChatRoom));
             when(chatParticipantRepository.existsByMemberAndChatRoom(any(Member.class), any(ChatRoom.class)))
                     .thenReturn(false);
 
             // when
-            chatRoomService.enterChatRoom(memberId, roomId);
+            chatRoomService.enterChatRoom(mock(Member.class), roomId);
 
             // then
             verify(chatParticipantRepository, times(1)).save(any(ChatParticipant.class));
@@ -102,30 +99,14 @@ class ChatRoomServiceTest {
         }
 
         @Test
-        @DisplayName("회원이 존재하지 않을 경우 예외 발생")
-        void testMemberNotFoundWhenEnterChatRoom() {
-            // given
-            when(memberRepository.findById(anyLong())).thenReturn(Optional.empty());
-
-            // when
-            // then
-            assertThatThrownBy(() -> chatRoomService.enterChatRoom(memberId, roomId))
-                    .isInstanceOf(MemberNotFoundException.class)
-                    .hasMessage(MEMBER_NOT_FOUND.getMessage() + "-> " + memberId);
-        }
-
-        @Test
         @DisplayName("채팅방이 존재하지 않을 경우 예외 발생")
         void testChatRoomNotFoundWhenEnterChatRoom() {
             // given
-            Member mockMember = Member.builder().id(memberId).build();
-            when(memberRepository.findById(anyLong())).thenReturn(Optional.of(mockMember));
-
             when(chatRoomRepository.findByRoomId(anyString())).thenReturn(Optional.empty());
 
             // when
             // then
-            assertThatThrownBy(() -> chatRoomService.enterChatRoom(memberId, roomId))
+            assertThatThrownBy(() -> chatRoomService.enterChatRoom(mock(Member.class), roomId))
                     .isInstanceOf(ChatRoomNotFoundException.class)
                     .hasMessage(CHAT_ROOM_NOT_FOUND.getMessage() + "-> " + roomId);
         }
@@ -134,18 +115,14 @@ class ChatRoomServiceTest {
         @DisplayName("채팅참여여부가 이미 존재할 경우 예외 발생")
         void testChatParticipantExistsWhenEnterChatRoom() {
             // given
-            Member mockMember = Member.builder().id(memberId).build();
-            when(memberRepository.findById(anyLong())).thenReturn(Optional.of(mockMember));
-
             ChatRoom mockChatRoom = ChatRoom.builder().id(chatRoomId).build();
             when(chatRoomRepository.findByRoomId(anyString())).thenReturn(Optional.of(mockChatRoom));
-
             when(chatParticipantRepository.existsByMemberAndChatRoom(any(Member.class), any(ChatRoom.class)))
                     .thenReturn(true);
 
             // when
             // then
-            assertThatThrownBy(() -> chatRoomService.enterChatRoom(memberId, roomId))
+            assertThatThrownBy(() -> chatRoomService.enterChatRoom(mock(Member.class), roomId))
                     .isInstanceOf(AlreadyChatParticipantException.class)
                     .hasMessage(ALREADY_CHAT_PARTICIPANT.getMessage());
         }
@@ -219,7 +196,6 @@ class ChatRoomServiceTest {
             Member mockMember = Member.builder()
                     .id(memberId)
                     .build();
-            when(memberRepository.findById(anyLong())).thenReturn(Optional.of(mockMember));
 
             ChatRoom chatRoom1 = ChatRoom.builder()
                     .id(1L)
@@ -238,26 +214,26 @@ class ChatRoomServiceTest {
                     .build();
 
             List<LessonEnrollment> enrolls = List.of(
-            LessonEnrollment.builder()
-                    .id(1L)
-                    .member(mockMember)
-                    .lesson(Lesson.builder().title("lesson1").chatRoom(chatRoom1).build())
-                    .build(),
-            LessonEnrollment.builder()
-                    .id(2L)
-                    .member(mockMember)
-                    .lesson(Lesson.builder().title("lesson2").chatRoom(chatRoom2).build())
-                    .build(),
-            LessonEnrollment.builder()
-                    .id(3L)
-                    .member(mockMember)
-                    .lesson(Lesson.builder().title("lesson3").chatRoom(chatRoom3).build())
-                    .build()
+                    LessonEnrollment.builder()
+                            .id(1L)
+                            .member(mockMember)
+                            .lesson(Lesson.builder().title("lesson1").chatRoom(chatRoom1).build())
+                            .build(),
+                    LessonEnrollment.builder()
+                            .id(2L)
+                            .member(mockMember)
+                            .lesson(Lesson.builder().title("lesson2").chatRoom(chatRoom2).build())
+                            .build(),
+                    LessonEnrollment.builder()
+                            .id(3L)
+                            .member(mockMember)
+                            .lesson(Lesson.builder().title("lesson3").chatRoom(chatRoom3).build())
+                            .build()
             );
             when(lessonEnrollmentRepository.findAllByMember(any(Member.class))).thenReturn(enrolls);
 
             // when
-            List<ChatRoomResponseDto> chatRoomsResponse = chatRoomService.getChatRooms(memberId);
+            List<ChatRoomResponseDto> chatRoomsResponse = chatRoomService.getChatRooms(mock(Member.class));
 
             // then
             assertThat(chatRoomsResponse.size()).isEqualTo(3);
@@ -269,18 +245,6 @@ class ChatRoomServiceTest {
             assertThat(chatRoomsResponse.get(1).isGroupChat()).isEqualTo(true);
         }
 
-        @Test
-        @DisplayName("채팅방 목록 조회시 회원이 존재하지 않을 경우 예외 발생")
-        void testMemberNotFoundWhenGetChatRooms() {
-            // given
-            when(memberRepository.findById(anyLong())).thenReturn(Optional.empty());
-
-            // when
-            // then
-            assertThatThrownBy(() -> chatRoomService.getChatRooms(memberId))
-                    .isInstanceOf(MemberNotFoundException.class)
-                    .hasMessage(MEMBER_NOT_FOUND.getMessage() + "-> " + memberId);
-        }
     }
 
     @Nested
@@ -308,7 +272,7 @@ class ChatRoomServiceTest {
             when(chatParticipantRepository.findByMemberAndChatRoom(any(), any())).thenReturn(Optional.of(chatParticipant));
 
             // when
-            chatRoomService.kickMember(instructorId, memberId, roomId);
+            chatRoomService.kickMember(mockInstructor, memberId, roomId);
 
             // then
             verify(chatParticipantRepository, times(1)).delete(chatParticipant);
@@ -318,8 +282,7 @@ class ChatRoomServiceTest {
         @DisplayName("회원 강퇴시 회원이 채팅방 구성원이 아닐 경우 예외 발생")
         void testInstructorNotInChatRoomWhenKickMember() {
             // given
-            Member mockInstructor = Member.builder().id(instructorId).build();
-            when(memberRepository.findById(anyLong())).thenReturn(Optional.of(mockInstructor));
+            Member instructor = Member.builder().id(instructorId).build();
 
             ChatRoom mockChatRoom = ChatRoom.builder()
                     .id(chatRoomId)
@@ -327,43 +290,25 @@ class ChatRoomServiceTest {
                     .isGroupChat(true)
                     .build();
             when(chatRoomRepository.findByRoomId(anyString())).thenReturn(Optional.of(mockChatRoom));
-
             when(chatParticipantRepository.findByMemberAndChatRoom(any(), any())).thenReturn(Optional.empty());
 
             // when
             // then
-            assertThatThrownBy(() -> chatRoomService.kickMember(instructorId, memberId, roomId))
+            assertThatThrownBy(() -> chatRoomService.kickMember(instructor, memberId, roomId))
                     .isInstanceOf(MemberNotInChatRoomException.class)
                     .hasMessage(MEMBER_NOT_IN_CHAT_ROOM.getMessage() + "-> " + instructorId);
-        }
-
-        @Test
-        @DisplayName("회원 강퇴시 강사가 존재하지 않을 경우 예외 발생")
-        void testInstructorNotFoundWhenKickMember() {
-            // given
-            when(memberRepository.findById(anyLong())).thenReturn(Optional.empty());
-
-            // when
-            // then
-            assertThatThrownBy(() -> chatRoomService.kickMember(instructorId, memberId, roomId))
-                    .isInstanceOf(MemberNotFoundException.class)
-                    .hasMessage(MEMBER_NOT_FOUND.getMessage() + "-> " + instructorId);
         }
 
         @Test
         @DisplayName("회원 강퇴시 채팅방이 존재하지 않을 경우 예외 발생")
         void testChatRoomNotFoundWhenKickMember() {
             // given
-            Member mockInstructor = Member.builder().id(instructorId).build();
-            when(memberRepository.findById(anyLong())).thenReturn(Optional.of(mockInstructor));
-
             Member mockMember = Member.builder().id(memberId).build();
-            when(memberRepository.findById(anyLong())).thenReturn(Optional.of(mockMember));
             when(chatRoomRepository.findByRoomId(anyString())).thenReturn(Optional.empty());
 
             // when
             // then
-            assertThatThrownBy(() -> chatRoomService.kickMember(instructorId, memberId, roomId))
+            assertThatThrownBy(() -> chatRoomService.kickMember(mockMember, memberId, roomId))
                     .isInstanceOf(ChatRoomNotFoundException.class)
                     .hasMessage(CHAT_ROOM_NOT_FOUND.getMessage() + "-> " + roomId);
         }
@@ -381,7 +326,6 @@ class ChatRoomServiceTest {
                     .id(memberId)
                     .name("test member")
                     .build();
-            when(memberRepository.findById(anyLong())).thenReturn(Optional.of(mockMember));
 
             ChatRoom mockChatRoom = ChatRoom.builder().id(chatRoomId).build();
             when(chatRoomRepository.findByRoomId(anyString())).thenReturn(Optional.of(mockChatRoom));
@@ -393,7 +337,7 @@ class ChatRoomServiceTest {
             when(chatParticipantRepository.findByMemberAndChatRoom(any(), any())).thenReturn(Optional.of(mockChatParticipant));
 
             // when
-            chatRoomService.quitChatRoom(memberId, roomId);
+            chatRoomService.quitChatRoom(mockMember, roomId);
 
             // then
             verify(chatParticipantRepository, times(1)).delete(mockChatParticipant);
@@ -407,29 +351,15 @@ class ChatRoomServiceTest {
         }
 
         @Test
-        @DisplayName("채팅방 탈퇴시 회원이 존재하지 않을 경우 예외 발생")
-        void testMemberNotFoundWhenQuitChatRoom() {
-            // given
-            when(memberRepository.findById(anyLong())).thenReturn(Optional.empty());
-
-            // when
-            // then
-            assertThatThrownBy(() -> chatRoomService.quitChatRoom(memberId, roomId))
-                    .isInstanceOf(MemberNotFoundException.class)
-                    .hasMessage(MEMBER_NOT_FOUND.getMessage() + "-> " + memberId);
-        }
-
-        @Test
         @DisplayName("채팅방 탈퇴시 채팅방이 존재하지 않을 경우 예외 발생")
         void testChatRoomNotFoundWhenQuitChatRoom() {
             // given
             Member mockMember = Member.builder().id(memberId).build();
-            when(memberRepository.findById(anyLong())).thenReturn(Optional.of(mockMember));
             when(chatRoomRepository.findByRoomId(anyString())).thenReturn(Optional.empty());
 
             // when
             // then
-            assertThatThrownBy(() -> chatRoomService.quitChatRoom(memberId, roomId))
+            assertThatThrownBy(() -> chatRoomService.quitChatRoom(mockMember, roomId))
                     .isInstanceOf(ChatRoomNotFoundException.class)
                     .hasMessage(CHAT_ROOM_NOT_FOUND.getMessage() + "-> " + roomId);
         }
@@ -439,7 +369,6 @@ class ChatRoomServiceTest {
         void testMemberNotInChatRoomWhenQuitChatRoom() {
             // given
             Member mockMember = Member.builder().id(memberId).build();
-            when(memberRepository.findById(anyLong())).thenReturn(Optional.of(mockMember));
 
             ChatRoom mockChatRoom = ChatRoom.builder()
                     .id(chatRoomId)
@@ -452,7 +381,7 @@ class ChatRoomServiceTest {
 
             // when
             // then
-            assertThatThrownBy(() -> chatRoomService.quitChatRoom(memberId, roomId))
+            assertThatThrownBy(() -> chatRoomService.quitChatRoom(mockMember, roomId))
                     .isInstanceOf(MemberNotInChatRoomException.class)
                     .hasMessage(MEMBER_NOT_IN_CHAT_ROOM.getMessage() + "-> " + memberId);
         }

@@ -3,6 +3,7 @@ package com.health.yogiodigym.chat.controller.rest;
 import static com.health.yogiodigym.common.message.ErrorMessage.*;
 import static com.health.yogiodigym.common.message.SuccessMessage.*;
 import static org.hamcrest.Matchers.equalTo;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
@@ -18,6 +19,9 @@ import com.health.yogiodigym.chat.service.ChatRoomService;
 import com.health.yogiodigym.common.exception.ChatRoomNotFoundException;
 import com.health.yogiodigym.common.exception.MemberNotFoundException;
 import com.health.yogiodigym.common.exception.MemberNotInChatRoomException;
+import com.health.yogiodigym.member.entity.Member;
+import com.health.yogiodigym.util.TestSecurityConfig;
+import com.health.yogiodigym.util.WithCustomMockUser;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -25,11 +29,14 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-@WebMvcTest(controllers = {ChatRoomController.class})
+@WithCustomMockUser
+@Import(TestSecurityConfig.class)
+@WebMvcTest(controllers = ChatRoomController.class)
 class ChatRoomControllerTest {
 
     @Autowired
@@ -62,7 +69,7 @@ class ChatRoomControllerTest {
                     ChatRoomResponseDto.builder().build(),
                     ChatRoomResponseDto.builder().build()
             );
-            when(chatRoomService.getChatRooms(anyLong())).thenReturn(chatRooms);
+            when(chatRoomService.getChatRooms(any(Member.class))).thenReturn(chatRooms);
 
             // when
             // then
@@ -79,13 +86,13 @@ class ChatRoomControllerTest {
         @DisplayName("회원이 존재하지 않을 경우 예외 메시지 전송")
         void testMemberNotFoundWhenGetMyChatRooms() throws Exception {
             // given
-            doThrow(new MemberNotFoundException(memberId)).when(chatRoomService).getChatRooms(anyLong());
+            doThrow(new MemberNotFoundException(memberId)).when(chatRoomService).getChatRooms(any(Member.class));
 
             // when
             // then
             mvc.perform(get("/api/chat-rooms")
-                    .param("memberId", String.valueOf(memberId))
-                    .contentType(MediaType.APPLICATION_JSON))
+                            .param("memberId", String.valueOf(memberId))
+                            .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.status", equalTo(400)))
                     .andExpect(jsonPath("$.message", equalTo(MEMBER_NOT_FOUND.getMessage() + "-> " + memberId)))
@@ -102,7 +109,7 @@ class ChatRoomControllerTest {
         @DisplayName("회원 강퇴 성공")
         void testKickMember() throws Exception {
             // given
-            doNothing().when(chatRoomService).kickMember(anyLong(), anyLong(), anyString());
+            doNothing().when(chatRoomService).kickMember(any(Member.class), anyLong(), anyString());
 
             // when
             // then
@@ -119,7 +126,7 @@ class ChatRoomControllerTest {
         @DisplayName("회원이 존재하지 않을 경우 예외 메시지 전송")
         void testMemberNotFoundWhenKickMember() throws Exception {
             // given
-            doThrow(new MemberNotFoundException(memberId)).when(chatRoomService).kickMember(anyLong(), anyLong(), anyString());
+            doThrow(new MemberNotFoundException(memberId)).when(chatRoomService).kickMember(any(Member.class), anyLong(), anyString());
 
             // when
             // then
@@ -136,7 +143,7 @@ class ChatRoomControllerTest {
         @DisplayName("채팅방이 존재하지 않을 경우 예외 메시지 전송")
         void testChatRoomNotFoundWhenKickMember() throws Exception {
             // given
-            doThrow(new ChatRoomNotFoundException(roomId)).when(chatRoomService).kickMember(anyLong(), anyLong(), anyString());
+            doThrow(new ChatRoomNotFoundException(roomId)).when(chatRoomService).kickMember(any(Member.class), anyLong(), anyString());
 
             // when
             // then
@@ -153,7 +160,7 @@ class ChatRoomControllerTest {
         @DisplayName("채팅 참여여부가 존재하지 않을 경우 예외 메시지 전송")
         void testChatParticipantNotFoundWhenKickMember() throws Exception {
             // given
-            doThrow(new MemberNotInChatRoomException(memberId)).when(chatRoomService).kickMember(anyLong(), anyLong(), anyString());
+            doThrow(new MemberNotInChatRoomException(memberId)).when(chatRoomService).kickMember(any(Member.class), anyLong(), anyString());
 
             // when
             // then
@@ -175,7 +182,7 @@ class ChatRoomControllerTest {
         @DisplayName("채팅방 나가기 성공")
         void testQuitChatRoom() throws Exception {
             // given
-            doNothing().when(chatRoomService).quitChatRoom(anyLong(), anyString());
+            doNothing().when(chatRoomService).quitChatRoom(any(Member.class), anyString());
 
             // when
             // then
@@ -192,7 +199,7 @@ class ChatRoomControllerTest {
         @DisplayName("회원이 존재하지 않을 경우 예외 메시지 전송")
         void testMemberNotFoundWhenQuitChatRoom() throws Exception {
             // given
-            doThrow(new MemberNotFoundException(memberId)).when(chatRoomService).quitChatRoom(anyLong(), anyString());
+            doThrow(new MemberNotFoundException(memberId)).when(chatRoomService).quitChatRoom(any(Member.class), anyString());
 
             // when
             // then
@@ -209,7 +216,7 @@ class ChatRoomControllerTest {
         @DisplayName("채팅방이 존재하지 않을 경우 예외 메시지 전송")
         void testChatRoomNotFoundWhenQuitChatRoom() throws Exception {
             // given
-            doThrow(new ChatRoomNotFoundException(roomId)).when(chatRoomService).quitChatRoom(anyLong(), anyString());
+            doThrow(new ChatRoomNotFoundException(roomId)).when(chatRoomService).quitChatRoom(any(Member.class), anyString());
 
             // when
             // then
@@ -226,7 +233,7 @@ class ChatRoomControllerTest {
         @DisplayName("채팅참여여부가 존재하지 않을 경우 예외 메시지 전송")
         void testChatParticipantNotFoundWhenQuitChatRoom() throws Exception {
             // given
-            doThrow(new MemberNotInChatRoomException(memberId)).when(chatRoomService).quitChatRoom(anyLong(), anyString());
+            doThrow(new MemberNotInChatRoomException(memberId)).when(chatRoomService).quitChatRoom(any(Member.class), anyString());
 
             // when
             // then
