@@ -8,4 +8,6 @@ import java.util.List;
 public interface AdminLessonService {
 
     List<LessonDto.LessonResponseDto> getAllLessons();
+
+    List<LessonDto.LessonResponseDto> searchLessons(String lessonKeyword);
 }
