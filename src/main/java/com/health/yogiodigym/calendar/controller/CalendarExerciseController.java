@@ -1,11 +1,9 @@
 package com.health.yogiodigym.calendar.controller;
 
-import com.health.yogiodigym.calendar.dto.CalendarExerciseDto.UpdateRequest;
-import com.health.yogiodigym.calendar.dto.CalendarExerciseDto.InsertRequest;
-import com.health.yogiodigym.calendar.entity.CalendarExercise;
+import com.health.yogiodigym.calendar.dto.CalendarExerciseDto.*;
 import com.health.yogiodigym.calendar.service.impl.CalendarExerciseServiceImpl;
 import com.health.yogiodigym.common.response.HttpResponse;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,20 +11,23 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 
+import static com.health.yogiodigym.common.message.SuccessMessage.*;
+
 @RestController
 @RequestMapping("/exercise")
+@RequiredArgsConstructor
 public class CalendarExerciseController {
 
-    @Autowired
-    private CalendarExerciseServiceImpl calendarExerciseServiceimpl;
-
+    private final CalendarExerciseServiceImpl calendarExerciseServiceimpl;
 
     @GetMapping
     public ResponseEntity<?> findByMemberId(@RequestParam("memberId") Long memberId) {
-        List<CalendarExercise> calendarExercises = calendarExerciseServiceimpl.findByMemberId(memberId);
+
+        List<SelectRequest> calendarExercises = calendarExerciseServiceimpl.findByMemberId(memberId);
+
         return ResponseEntity
                 .ok()
-                .body(new HttpResponse(HttpStatus.OK, "회원 조회에 성공하였습니다.", calendarExercises));
+                .body(new HttpResponse(HttpStatus.OK, GET_CALENDAR_EXERCISE_SUCCESS.getMessage(), calendarExercises));
 
     }
 
@@ -35,36 +36,39 @@ public class CalendarExerciseController {
 
         LocalDate requestedDate = LocalDate.parse(selectedDate);
 
-        List<CalendarExercise> calendarExercises = calendarExerciseServiceimpl.findByDateAndMemberId(requestedDate,memberId);
+        List<SelectRequest> calendarExercises = calendarExerciseServiceimpl.findByDateAndMemberId(requestedDate,memberId);
 
         return ResponseEntity
                 .ok()
-                .body(new HttpResponse(HttpStatus.OK, "회원 및 멤버 조회에 성공하였습니다.", calendarExercises));
+                .body(new HttpResponse(HttpStatus.OK, GET_ONE_CALENDAR_EXERCISE_SUCCESS.getMessage(), calendarExercises));
 
     }
 
-
     @PostMapping("/date/post")
-    public ResponseEntity<?> PostExerciseByDate(@RequestBody InsertRequest dto) {
-        CalendarExercise exercise = calendarExerciseServiceimpl.PostExerciseByDate(dto);
+    public ResponseEntity<?> postExerciseByDate(@RequestBody InsertRequest dto) {
+
+        calendarExerciseServiceimpl.postExerciseByDate(dto);
 
         return ResponseEntity
                 .ok()
-                .body(new HttpResponse(HttpStatus.OK, "회원 삽입에 성공하였습니다.", exercise));
+                .body(new HttpResponse(HttpStatus.OK, POST_CALENDAR_EXERCISE_SUCCESS.getMessage(), null));
     }
 
     @PutMapping("/date/put")
-    public ResponseEntity<?> PutExerciseByDate(@RequestBody UpdateRequest dto) {
-        CalendarExercise exercise = calendarExerciseServiceimpl.PutExerciseByDate(dto);
+    public ResponseEntity<?> putExerciseByDate(@RequestBody UpdateRequest dto) {
+        calendarExerciseServiceimpl.putExerciseByDate(dto);
 
         return ResponseEntity
                 .ok()
-                .body(new HttpResponse(HttpStatus.OK, "회원 수정에 성공하였습니다.", exercise));
+                .body(new HttpResponse(HttpStatus.OK, PUT_CALENDAR_EXERCISE_SUCCESS.getMessage(), null));
     }
 
     @DeleteMapping("/date/delete/{id}")
-    public void DeleteExerciseByDate(@PathVariable("id") Long id) {
+    public ResponseEntity<?> deleteExerciseByDate(@PathVariable("id") Long id) {
+        calendarExerciseServiceimpl.deleteExerciseByDate(id);
 
-        calendarExerciseServiceimpl.DeleteExerciseByDate(id);
+        return ResponseEntity
+                .ok()
+                .body(new HttpResponse(HttpStatus.OK, DELETE_CALENDAR_EXERCISE_SUCCESS.getMessage(),null));
     }
 }

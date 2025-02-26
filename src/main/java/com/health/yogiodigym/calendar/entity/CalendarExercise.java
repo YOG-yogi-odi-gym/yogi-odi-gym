@@ -18,8 +18,7 @@ public class CalendarExercise {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // 운동 번호 (기본키)
 
-    //@ManyToOne(fetch = FetchType.LAZY)
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "d_exercise_id", nullable = false)
     private DataExercise dataExercise; // 운동 데이터 참조 (외래키)
 
@@ -35,8 +34,7 @@ public class CalendarExercise {
     @Column(nullable = false)
     private LocalDate date; // 날짜
 
-    // @ManyToOne(fetch = FetchType.LAZY)
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member; // 회원 아이디 (외래키)
 

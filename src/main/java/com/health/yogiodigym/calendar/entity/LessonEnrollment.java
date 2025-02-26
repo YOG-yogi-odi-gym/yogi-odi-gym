@@ -1,15 +1,15 @@
 package com.health.yogiodigym.calendar.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name = "lesson_enrollment")
 @Getter
-@Setter
+@ToString
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class LessonEnrollment {
 
     @Id

@@ -1,62 +1,77 @@
 package com.health.yogiodigym.calendar.controller;
 
-import com.health.yogiodigym.calendar.entity.CalendarMemo;
-import com.health.yogiodigym.calendar.service.CalendarMemoService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.health.yogiodigym.calendar.dto.CalendarMemoDto.*;
+import com.health.yogiodigym.calendar.service.impl.CalendarMemoServiceImpl;
+import com.health.yogiodigym.common.response.HttpResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
 
+import static com.health.yogiodigym.common.message.SuccessMessage.*;
+
 @RestController
 @RequestMapping("/memo")
+@RequiredArgsConstructor
 public class CalendarMemoController {
 
-    @Autowired
-    private CalendarMemoService calendarMemoService;
+    private final CalendarMemoServiceImpl calendarMemoServiceimpl;
 
     @GetMapping
-    public List<CalendarMemo> findByMemberId(@RequestParam("memberId") Long memberId) {
-        return calendarMemoService.findByMemberId(memberId);
+    public ResponseEntity<?> findByMemberId(@RequestParam("memberId") Long memberId) {
+
+        List<SelectRequest> calendarMemo =  calendarMemoServiceimpl.findByMemberId(memberId);
+
+        return ResponseEntity
+                .ok()
+                .body(new HttpResponse(HttpStatus.OK,GET_CALENDAR_MEMO_SUCCESS.getMessage(), calendarMemo));
     }
 
     @GetMapping("/date")
-    public List<CalendarMemo> findByDateAndMemberId(@RequestParam("date") String selectedDate, @RequestParam("memberId") Long memberId) {
+    public ResponseEntity<?> findByDateAndMemberId(@RequestParam("date") String selectedDate, @RequestParam("memberId") Long memberId) {
 
         LocalDate requestedDate = LocalDate.parse(selectedDate);
 
-        return calendarMemoService.findByDateAndMemberId(requestedDate,memberId);
+        List<SelectRequest> calendarMemo =  calendarMemoServiceimpl.findByDateAndMemberId(requestedDate, memberId);
+
+        return ResponseEntity
+                .ok()
+                .body(new HttpResponse(HttpStatus.OK, GET_ONE_CALENDAR_MEMO_SUCCESS.getMessage(), calendarMemo));
     }
 
     @PostMapping("/date/post")
-    public CalendarMemo PostMemoByDate(@RequestParam("title") String title,
-                                       @RequestParam("context") String context,
-                                       @RequestParam("date") String selectedDate,
-                                       @RequestParam("memberId") Long memberId) {
+    public ResponseEntity<?> postMemoByDate(@RequestBody InsertRequest dto) {
 
-        LocalDate requestedDate = LocalDate.parse(selectedDate);
+        calendarMemoServiceimpl.postMemoByDate(dto);
 
-        return calendarMemoService.PostMemoByDate(title,context,requestedDate,memberId);
+        return ResponseEntity
+                .ok()
+                .body(new HttpResponse(HttpStatus.OK, POST_CALENDAR_MEMO_SUCCESS.getMessage(), null));
     }
 
 
 
     @PutMapping("/date/put")
-    public CalendarMemo PutMemoByDate(@RequestParam("id") Long id,
-                                      @RequestParam("title") String title,
-                                      @RequestParam("context") String context,
-                                      @RequestParam("date") String selectedDate,
-                                      @RequestParam("memberId") Long memberId) {
+    public ResponseEntity<?> putMemoByDate(@RequestBody UpdateRequest dto) {
 
-        LocalDate requestedDate = LocalDate.parse(selectedDate);
+        calendarMemoServiceimpl.putMemoByDate(dto);
 
-        return calendarMemoService.PutMemoByDate(id, title, context, requestedDate, memberId);
+        return ResponseEntity
+                .ok()
+                .body(new HttpResponse(HttpStatus.OK, PUT_CALENDAR_MEMO_SUCCESS.getMessage(), null));
     }
 
-    @DeleteMapping("/date/delete")
-    public void DeleteMemoByDate(@RequestParam("id") Long id) {
+    @DeleteMapping("/date/delete/{id}")
+    public ResponseEntity<?> DeleteMemoByDate(@PathVariable("id") Long id) {
 
-        calendarMemoService.DeleteMemoByDate(id);
+        calendarMemoServiceimpl.deleteMemoByDate(id);
+
+        return ResponseEntity
+                .ok()
+                .body(new HttpResponse(HttpStatus.OK, DELETE_CALENDAR_MEMO_SUCCESS.getMessage(), null));
     }
 
 }

@@ -3,7 +3,7 @@ package com.health.yogiodigym.common.exception;
 import com.health.yogiodigym.common.message.ErrorMessage;
 import org.springframework.http.HttpStatus;
 
-public class DataExerciseNotFoundException extends CustomException {
+public class FoodNotFoundException extends CustomException {
 
     @Override
     public HttpStatus getStatus() {
@@ -12,6 +12,6 @@ public class DataExerciseNotFoundException extends CustomException {
 
     @Override
     public String getMessage() {
-        return ErrorMessage.DATA_EXERCISE_NOT_FOUND.getMessage();
+        return ErrorMessage.FOOD_NOT_FOUND.getMessage();
     }
 }

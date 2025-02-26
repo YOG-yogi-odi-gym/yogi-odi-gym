@@ -123,16 +123,20 @@
         let title = $("#memoTitle").val();
         let context = $("#memoContent").val();
 
+        let requestData = {
+            title: title,
+            context: context,
+            date: selectedDate,
+            memberId: memberId
+        };
+
         $.ajax({
             url: "/memo/date/post",
             method: "POST",
-            data: {
-                title: title,
-                context: context,
-                date: selectedDate,
-                memberId: memberId
-            },
+            contentType: "application/json",
+            data: JSON.stringify(requestData),
             success: function(response) {
+                console.log(response);
             },
             error: function() {
                 alert("메모 저장 실패");
@@ -143,19 +147,25 @@
     function updateMemo(memoId, selectedDate, memberId) {
         let title = $(`#memoTitle_${memoId}`).val(); // 각 메모의 ID를 가져오기
         let context = $(`#memoContent_${memoId}`).val();
-        console.log("가져온 값 : "+title+context);
+
+        let requestData = {
+            id: memoId,
+            title: title,
+            context: context,
+            date: selectedDate,
+            memberId: memberId
+        };
+
+        console.log(requestData);
+
 
         $.ajax({
             url: "/memo/date/put",
             method: "PUT",
-            data: {
-                id: memoId,
-                title: title,
-                context: context,
-                date: selectedDate,
-                memberId: memberId
-            },
+            contentType: "application/json",
+            data: JSON.stringify(requestData),
             success: function(response) {
+                console.log(response);
             },
             error: function(xhr) {
                 alert("메모 업데이트 실패: " + xhr.responseText);
@@ -166,12 +176,10 @@
     function deleteMemo(memoId) {
 
         $.ajax({
-            url: "/memo/date/delete",
+            url: "/memo/date/delete/"+memoId,
             method: "DELETE",
-            data: {
-                id: memoId
-            },
             success: function(response) {
+                console.log(response);
             },
             error: function(xhr) {
                 alert("메모 삭제 실패: " + xhr.responseText);
@@ -188,7 +196,7 @@
             name: name,
             hundredGram: hundredGram,
             calories: calories,
-            requestedDate: selectedDate,
+            date: selectedDate,
             memberId: memberId
         };
 
@@ -216,7 +224,7 @@
             name: name,
             hundredGram: hundredGram,
             calories: calories,
-            requestedDate: selectedDate,
+            date: selectedDate,
             memberId: memberId
         };
 
@@ -227,6 +235,7 @@
             contentType: "application/json",
             data: JSON.stringify(requestData),
             success: function(response) {
+                console.log(response);
             },
             error: function(xhr) {
                 alert("식단 업데이트 실패: " + xhr.responseText);
@@ -240,6 +249,7 @@
             url: "/food/date/delete/"+foodId,
             method: "DELETE",
             success: function(response) {
+                console.log(response);
             },
             error: function(xhr) {
                 alert("식단 삭제 실패: " + xhr.responseText);
@@ -257,7 +267,7 @@
             name: name,
             time: time,
             calories: calories,
-            requestedDate: selectedDate,
+            date: selectedDate,
             memberId: memberId
         };
 
@@ -285,7 +295,7 @@
             name: name,
             time: time,
             calories: calories,
-            requestedDate: selectedDate,
+            date: selectedDate,
             memberId: memberId
         };
 
@@ -295,6 +305,7 @@
             contentType: "application/json",
             data: JSON.stringify(requestData),
             success: function(response) {
+                console.log(response);
             },
             error: function(xhr) {
                 alert("운동 업데이트 실패: " + xhr.responseText);
@@ -308,6 +319,7 @@
             url: "/exercise/date/delete/"+exerciseId,
             method: "DELETE",
             success: function(response) {
+                console.log(response);
             },
             error: function(xhr) {
                 alert("운동 삭제 실패: " + xhr.responseText);
@@ -451,8 +463,8 @@
                 url: '/memo',
                 method: 'GET',
                 data: { memberId: memberId },
-                success: function (data) {
-                    let events = data.map(item => ({
+                success: function (response) {
+                        let events = response.data.map(item => ({
                         title: item.title,
                         start: new Date(item.date),
                         description: item.context || "",
@@ -466,12 +478,9 @@
                 }
             });
         }
-
-
         function Memo2Action(date) {
             let selectedDate = date.toISOString().split('T')[0];
             let memberId = document.getElementById('memberId').value;
-            console.log("받은 날짜:", selectedDate);
 
             $.ajax({
                 url: '/memo/date',
@@ -480,21 +489,18 @@
                     date: selectedDate,
                     memberId: memberId
                 },
-                success: function (data) {
-                    console.log('Received Memos:', data);
+                success: function (response) {
 
                     let content = `<strong>${selectedDate}의 메모</strong><br>`;
 
-                    if (data.length > 0) {
-                        // 기존 메모가 있을 경우 수정 UI 생성
-                        data.forEach(item => {
+                    if (response.data.length > 0) {
+                        response.data.forEach(item => {
                             content += `<strong>메모 수정</strong><br>`;
                             content += `제목 : <input type="text" id="memoTitle_${item.id}" value="${item.title}" /><br>`;
                             content += `내용 : <textarea id="memoContent_${item.id}">${item.context}</textarea><br>`;
                             content += `<button onclick="updateMemo(${item.id}, '${selectedDate}', ${memberId})">수정</button>`;
                             content += `<button onclick="deleteMemo(${item.id})">삭제</button>`;
                         });
-
                     } else {
                         // 기존 메모가 없을 경우 입력 폼 추가
                         content += `<strong>새 메모 추가</strong><br>`;
@@ -523,7 +529,6 @@
                 method: 'GET',
                 data: { memberId: memberId },
                 success: function (response) {
-                    if (response.status === 200) {
                         let events = response.data.map(item => ({
                             title: item.name,
                             start: new Date(item.date),
@@ -532,16 +537,12 @@
                         }));
                         calendar.removeAllEvents();
                         calendar.addEventSource(events);
-                    } else {
-                        alert('일정을 불러오는 데 실패했습니다.');
-                    }
                 },
                 error: function () {
                     alert('일정을 불러오는 데 실패했습니다.');
                 }
             });
         }
-
         function Exercise2Action(date) {
             let selectedDate = date.toISOString().split('T')[0];
             let memberId = document.getElementById('memberId').value;
@@ -663,7 +664,6 @@
 
                     let content = `<strong>${selectedDate}의 식단</strong><br>`;
                     let foodConsumptionValue = $("#selectedFoodEnergy").val(); // 기본값 설정
-
 
                     if (response.data.length > 0) {
                         response.data.forEach(item => {

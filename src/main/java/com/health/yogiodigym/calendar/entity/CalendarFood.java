@@ -19,10 +19,8 @@ public class CalendarFood {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // 식단 번호 (기본키)
 
-    //@ManyToOne(fetch = FetchType.LAZY)
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "d_food_id", nullable = false)
-    //@JsonIgnore
     private DataFood dataFood; // 음식 데이터 참조 (외래키)
 
     @Column(nullable = false)
@@ -37,8 +35,7 @@ public class CalendarFood {
     @Column(nullable = false)
     private LocalDate date; // 날짜
 
-    //@ManyToOne(fetch = FetchType.LAZY)
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member; // 회원 아이디 (외래키)
 }

@@ -6,7 +6,14 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum ErrorMessage {
-    SERVER_ERROR("서버 내부 오류");
+
+    SERVER_ERROR("서버 내부 오류"),
+    MEMBER_NOT_FOUND("회원이 존재하지 않습니다."),
+    FOOD_NOT_FOUND("식단이 존재하지 않습니다."),
+    EXERCISE_NOT_FOUND("운동 기록이 존재하지 않습니다."),
+    DATA_FOOD_NOT_FOUND("음식 데이터가 존재하지 않습니다."),
+    DATA_EXERCISE_NOT_FOUND("운동 데이터가 존재하지 않습니다."),
+    MEMO_NOT_FOUND("메모가 존재하지 않습니다.");
 
     private final String message;
 }

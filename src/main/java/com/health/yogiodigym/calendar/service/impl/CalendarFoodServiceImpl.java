@@ -1,7 +1,6 @@
 package com.health.yogiodigym.calendar.service.impl;
 
-import com.health.yogiodigym.calendar.dto.CalendarFoodDto.InsertRequest;
-import com.health.yogiodigym.calendar.dto.CalendarFoodDto.UpdateRequest;
+import com.health.yogiodigym.calendar.dto.CalendarFoodDto.*;
 import com.health.yogiodigym.calendar.entity.CalendarFood;
 import com.health.yogiodigym.calendar.entity.DataFood;
 import com.health.yogiodigym.calendar.entity.Member;
@@ -9,14 +8,20 @@ import com.health.yogiodigym.calendar.repository.CalendarFoodRepository;
 import com.health.yogiodigym.calendar.repository.DataFoodRepository;
 import com.health.yogiodigym.calendar.repository.MemberRepository;
 import com.health.yogiodigym.calendar.service.CalendarFoodService;
+import com.health.yogiodigym.common.exception.DataFoodNotFoundException;
+import com.health.yogiodigym.common.exception.FoodNotFoundException;
+import com.health.yogiodigym.common.exception.MemberNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CalendarFoodServiceImpl implements CalendarFoodService {
 
     private final CalendarFoodRepository calendarFoodRepository;
@@ -26,53 +31,76 @@ public class CalendarFoodServiceImpl implements CalendarFoodService {
     private final DataFoodRepository dataFoodRepository;
 
     @Override
-    public List<CalendarFood> findByMemberId(Long memberId) {
-        return calendarFoodRepository.findByMemberId(memberId);
+    @Transactional(readOnly = true)
+    public List<SelectRequest> findByMemberId(Long memberId) {
+        return calendarFoodRepository.findByMemberId(memberId)
+                .stream()
+                .map(food -> SelectRequest.builder()
+                        .id(food.getId())
+                        .name(food.getName())
+                        .hundredGram(food.getHundredGram())
+                        .calories(food.getCalories())
+                        .date(food.getDate())
+                        .memberId(food.getMember().getId())
+                        .build()
+                )
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<CalendarFood> findByDateAndMemberId(LocalDate selectedDate, Long memberId) {
-        return calendarFoodRepository.findByDateAndMemberId(selectedDate,memberId);
+    @Transactional(readOnly = true)
+    public List<SelectRequest> findByDateAndMemberId(LocalDate selectedDate, Long memberId) {
+        return calendarFoodRepository.findByDateAndMemberId(selectedDate,memberId)
+                .stream()
+                .map(food -> SelectRequest.builder()
+                        .id(food.getId())
+                        .name(food.getName())
+                        .hundredGram(food.getHundredGram())
+                        .calories(food.getCalories())
+                        .date(food.getDate())
+                        .memberId(food.getMember().getId())
+                        .build()
+                )
+                .collect(Collectors.toList());
     }
 
     @Override
-    public CalendarFood PostFoodByDate(InsertRequest dto) {
+    public void postFoodByDate(InsertRequest dto) {
 
         Member member = memberRepository.findById(dto.getMemberId())
-                .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
+                .orElseThrow(() -> new MemberNotFoundException(dto.getMemberId()));
 
         DataFood dataFood = dataFoodRepository.findByName(dto.getName())
-                .orElseThrow(() -> new RuntimeException("음식을 찾을 수 없습니다: "));
+                .orElseThrow(() -> new DataFoodNotFoundException());
 
-        CalendarFood food = CalendarFood.builder()
+        CalendarFood postFood = CalendarFood.builder()
                 .name(dto.getName())
                 .hundredGram(dto.getHundredGram())
                 .calories(dto.getCalories())
-                .date(dto.getRequestedDate())
+                .date(dto.getDate())
                 .member(member)
                 .dataFood(dataFood)
                 .build();
 
-        return calendarFoodRepository.save(food);
+        calendarFoodRepository.save(postFood);
     }
 
     @Override
-    public CalendarFood PutFoodByDate(UpdateRequest dto) {
-        // 기존 메모 조회
+    public void putFoodByDate(UpdateRequest dto) {
 
         CalendarFood food = calendarFoodRepository.findById(dto.getId())
-                .orElseThrow(() -> new IllegalArgumentException("해당 식단이 존재하지 않습니다."));
+                .orElseThrow(() -> new FoodNotFoundException());
 
         DataFood dataFood=food.getDataFood();
         if (!food.getDataFood().getName().equals(dto.getName())) {
             dataFood = dataFoodRepository.findByName(dto.getName())
-                    .orElseThrow(() -> new RuntimeException("음식을 찾을 수 없습니다: "));
+                    .orElseThrow(() -> new DataFoodNotFoundException());
         }
 
         Member member = food.getMember();
         if (!member.getId().equals(dto.getMemberId())) {
             member = memberRepository.findById(dto.getMemberId())
-                    .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
+                    .orElseThrow(() -> new MemberNotFoundException(dto.getMemberId()));
         }
 
         CalendarFood updatedFood = CalendarFood.builder()
@@ -82,14 +110,14 @@ public class CalendarFoodServiceImpl implements CalendarFoodService {
                 .name(dto.getName())
                 .hundredGram(dto.getHundredGram())
                 .calories(dto.getCalories())
-                .date(dto.getRequestedDate())
+                .date(dto.getDate())
                 .build();
-
-        return calendarFoodRepository.save(updatedFood);
+        calendarFoodRepository.save(updatedFood);
     }
 
     @Override
-    public void DeleteFoodByDate(Long id) {
+    public void deleteFoodByDate(Long id) {
+
         calendarFoodRepository.deleteById(id);
     }
 }

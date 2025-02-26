@@ -1,17 +1,17 @@
 package com.health.yogiodigym.calendar.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "calendar_memo")
 @Getter
-@Setter
+@ToString
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class CalendarMemo {
 
     @Id
@@ -27,8 +27,7 @@ public class CalendarMemo {
     @Column(nullable = false)
     private LocalDate date; // 날짜
 
-    //@ManyToOne(fetch = FetchType.LAZY)
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member; // 회원 아이디 (외래키)
 }

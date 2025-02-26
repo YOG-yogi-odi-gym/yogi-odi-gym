@@ -1,6 +1,5 @@
 package com.health.yogiodigym.calendar.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -13,25 +12,35 @@ public class CalendarExerciseDto {
     @ToString
     @AllArgsConstructor
     @NoArgsConstructor
+    public static class SelectRequest {
+
+        private Long id;
+        private String name;
+        private Float time;
+        private Float calories;
+        private LocalDate date;
+        private Long memberId;
+
+    }
+
+    @Getter
+    @Setter
+    @Builder
+    @ToString
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class InsertRequest {
 
         private String name;
         private Float time;
         private Float calories;
-        private String selectedDate;
+        private LocalDate date;
         private Long memberId;
-
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-        private LocalDate requestedDate;
-
-        public void setSelectedDate(String selectedDate) {
-            this.selectedDate = selectedDate;
-            this.requestedDate = LocalDate.parse(selectedDate);
-        }
     }
 
     @Getter
     @Setter
+    @Builder
     @ToString
     @AllArgsConstructor
     @NoArgsConstructor
@@ -41,17 +50,7 @@ public class CalendarExerciseDto {
         private String name;
         private Float time;
         private Float calories;
-        private String selectedDate;
+        private LocalDate date;
         private Long memberId;
-
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-        private LocalDate requestedDate;
-
-        public void setSelectedDate(String selectedDate) {
-            this.selectedDate = selectedDate;
-            this.requestedDate = LocalDate.parse(selectedDate);
-        }
     }
-
-
 }

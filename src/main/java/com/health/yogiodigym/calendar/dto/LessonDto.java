@@ -1,21 +1,25 @@
-package com.health.yogiodigym.calendar.entity;
+package com.health.yogiodigym.calendar.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import com.health.yogiodigym.calendar.entity.Lesson;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Getter
 @Setter
-public class LessonDTO {
+@Builder
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
+public class LessonDto {
     private LocalDate date;      // 뽑아낸 날짜
     private Long id;       // 강의 번호
     private String title;        // 강의 제목
     private LocalTime startTime; // 강의 시작 시간
     private LocalTime endTime;   // 강의 종료 시간
 
-    public LessonDTO(LocalDate date, Lesson lesson) {
+    public LessonDto(LocalDate date, Lesson lesson) {
         this.date = date;
         this.id = lesson.getId();
         this.title = lesson.getTitle();

@@ -67,19 +67,17 @@ package com.health.yogiodigym.calendar.entity;
 import com.health.yogiodigym.calendar.auth.MemberStatus;
 import com.health.yogiodigym.calendar.auth.Role;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.Set;
 
 @Entity
 @Getter
+@ToString
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

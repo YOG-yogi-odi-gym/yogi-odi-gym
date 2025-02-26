@@ -1,9 +1,7 @@
 package com.health.yogiodigym.calendar.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -12,8 +10,10 @@ import java.time.LocalTime;
 @Entity
 @Table(name = "lesson")
 @Getter
-@Setter
+@ToString
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class Lesson {
 
     @Id
@@ -23,8 +23,7 @@ public class Lesson {
     @Column(nullable = false)
     private String title; // 강의 제목
 
-    //@ManyToOne(fetch = FetchType.LAZY)
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category; // 카테고리 (외래키)
 
@@ -61,8 +60,7 @@ public class Lesson {
     @Column(nullable = false)
     private int max; // 강의 정원 (최대 인원)
 
-    //@ManyToOne(fetch = FetchType.LAZY)
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "master_id", nullable = false)
     private Member master; // 강사 (회원 참조)
 

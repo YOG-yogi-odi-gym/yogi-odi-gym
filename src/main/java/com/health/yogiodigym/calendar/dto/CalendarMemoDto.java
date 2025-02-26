@@ -4,7 +4,7 @@ import lombok.*;
 
 import java.time.LocalDate;
 
-public class CalendarFoodDto {
+public class CalendarMemoDto {
 
     @Getter
     @Setter
@@ -15,12 +15,10 @@ public class CalendarFoodDto {
     public static class SelectRequest {
 
         private Long id;
-        private String name;
-        private Float hundredGram;
-        private Float calories;
+        private String title;
+        private String context;
         private LocalDate date;
         private Long memberId;
-
     }
 
     @Getter
@@ -31,12 +29,10 @@ public class CalendarFoodDto {
     @NoArgsConstructor
     public static class InsertRequest {
 
-        private String name;
-        private Float hundredGram;
-        private Float calories;
+        private String title;
+        private String context;
         private LocalDate date;
         private Long memberId;
-
     }
 
     @Getter
@@ -48,13 +44,10 @@ public class CalendarFoodDto {
     public static class UpdateRequest {
 
         private Long id;
-        private String name;
-        private Float hundredGram;
-        private Float calories;
+        private String title;
+        private String context;
         private LocalDate date;
         private Long memberId;
-
     }
-
 
 }

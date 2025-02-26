@@ -1,21 +1,19 @@
 package com.health.yogiodigym.calendar.service;
 
-import com.health.yogiodigym.calendar.dto.CalendarFoodDto.InsertRequest;
-import com.health.yogiodigym.calendar.dto.CalendarFoodDto.UpdateRequest;
-import com.health.yogiodigym.calendar.entity.CalendarFood;
+import com.health.yogiodigym.calendar.dto.CalendarFoodDto.*;
 
 import java.time.LocalDate;
 import java.util.List;
 
 public interface CalendarFoodService {
 
-    List<CalendarFood> findByMemberId(Long memberId);
+    List<SelectRequest> findByMemberId(Long memberId);
 
-    List<CalendarFood> findByDateAndMemberId(LocalDate selectedDate, Long memberId);
+    List<SelectRequest> findByDateAndMemberId(LocalDate selectedDate, Long memberId);
 
-    CalendarFood PostFoodByDate(InsertRequest dto);
+    void postFoodByDate(InsertRequest dto);
 
-    CalendarFood PutFoodByDate(UpdateRequest dto) ;
+    void putFoodByDate(UpdateRequest dto) ;
 
-    void DeleteFoodByDate(Long id);
+    void deleteFoodByDate(Long id);
 }

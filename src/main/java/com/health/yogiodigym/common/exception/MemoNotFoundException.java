@@ -1,9 +1,15 @@
 package com.health.yogiodigym.common.exception;
 
 import com.health.yogiodigym.common.message.ErrorMessage;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 
-public class DataExerciseNotFoundException extends CustomException {
+@NoArgsConstructor
+@AllArgsConstructor
+public class MemoNotFoundException extends CustomException {
+
+    private Long id;
 
     @Override
     public HttpStatus getStatus() {
@@ -12,6 +18,7 @@ public class DataExerciseNotFoundException extends CustomException {
 
     @Override
     public String getMessage() {
-        return ErrorMessage.DATA_EXERCISE_NOT_FOUND.getMessage();
+        return ErrorMessage.MEMO_NOT_FOUND.getMessage() + "-> " + id;
     }
+
 }
