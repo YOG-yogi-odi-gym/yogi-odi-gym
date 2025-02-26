@@ -8,11 +8,9 @@ import java.util.List;
 
 @Entity
 @Getter
-@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "category")
 public class Category {
 
     @Id
@@ -25,8 +23,6 @@ public class Category {
     @Column(nullable = false, unique = true)
     private String code;
 
-
     @OneToMany(mappedBy = "category")
     private List<Lesson> lessons;
-
 }

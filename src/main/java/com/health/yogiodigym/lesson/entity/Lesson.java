@@ -14,7 +14,6 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "lesson")
 public class Lesson {
 
     @Id
