@@ -8,8 +8,6 @@ import com.health.yogiodigym.common.response.HttpResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,6 +29,7 @@ public class AdminController {
     @PostMapping("/member/inactive")
     public ResponseEntity<?> setInactiveStatus(@RequestBody List<Long> memberIds) {
         adminService.setInactiveStatus(memberIds);
+
         return ResponseEntity.ok().body(new HttpResponse(HttpStatus.OK, MEMBER_STATUS_CHANGE_SUCCESS.getMessage(), null));
     }
 }

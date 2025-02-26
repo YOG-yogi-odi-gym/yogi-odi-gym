@@ -20,6 +20,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public List<MemberResponseDto> getAllMembers() {
+
         return memberRepository.getAllMembers();
     }
 

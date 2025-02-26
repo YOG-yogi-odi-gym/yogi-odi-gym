@@ -17,7 +17,6 @@ import java.util.List;
 public interface MemberRepository extends JpaRepository<Member, Long> {
     Member findByEmail(String email);
 
-
     @Query("SELECT m FROM Member m " +
             "ORDER BY CASE " +
             "WHEN m.status = 'ACTIVE' THEN 1 " +
@@ -27,7 +26,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
             "WHEN m.status = 'BAN' THEN 5 " +
             "ELSE 6 END, m.name ASC")
     List<MemberResponseDto> getAllMembers();
-
 
     @Query("select m from Member m " +
             "where lower(m.name) like lower(concat('%', :keyword, '%')) " +
@@ -41,7 +39,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
             "else 6 " +
             "end, m.name asc")
     List<Member> findMembers(@Param("keyword") String keyword);
-
 
     @Modifying
     @Transactional
