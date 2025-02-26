@@ -10,6 +10,7 @@ import lombok.*;
 @Builder
 @Entity
 public class LessonEnrollment {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

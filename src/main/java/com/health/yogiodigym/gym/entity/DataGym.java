@@ -11,6 +11,7 @@ import java.time.LocalDate;
 @Builder
 @Entity
 public class DataGym {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

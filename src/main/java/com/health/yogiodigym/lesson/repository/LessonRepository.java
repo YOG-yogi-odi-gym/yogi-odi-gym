@@ -12,14 +12,11 @@ import java.util.List;
 
 public interface LessonRepository extends JpaRepository<Lesson, Long> {
 
-    @Query("SELECT l FROM Lesson l JOIN FETCH l.master WHERE l.title LIKE %:title%")
-    Page<Lesson> findByTitleContaining(@Param("title") String title, Pageable pageable);
-
     @Query("""
-        SELECT l FROM Lesson l JOIN FETCH l.master 
-        WHERE (:keyword IS NULL OR (CASE WHEN :column = 'name' THEN l.title ELSE l.location END) LIKE %:keyword%)
-        AND (:days IS NULL OR BITAND(l.days, :days) > 0)
-    """)
+                SELECT l FROM Lesson l JOIN FETCH l.master 
+                WHERE (:keyword IS NULL OR (CASE WHEN :column = 'name' THEN l.title ELSE l.location END) LIKE %:keyword%)
+                AND (:days IS NULL OR BITAND(l.days, :days) > 0)
+            """)
     Page<Lesson> searchLessons(@Param("keyword") String keyword,
                                @Param("column") String column,
                                @Param("days") Integer days,

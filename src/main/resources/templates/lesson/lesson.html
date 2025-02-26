@@ -46,8 +46,8 @@
             fetch(`/api/lesson/search?${queryParams.toString()}`)
                 .then(response => response.json())
                 .then(data => {
-                    const lessons = data.content;
-                    const totalPages = data.totalPages;
+                    const lessons = data.data.content;
+                    const totalPages = data.data.totalPages;
 
                     let resultSearch = document.getElementById("resultSearch")
                     resultSearch.innerHTML=""
@@ -93,9 +93,9 @@
                             } else {
                                 fetch(`/api/lesson/enrolled?lessonId=${lesson.id}&memberId=${memberId}`)
                                     .then(response => response.json())
-                                    .then(isEnrolled => {
-                                        lessonBtn.textContent = isEnrolled ? "취소" : "신청";
-                                        lessonBtn.onclick = () => toggleEnrollment(lesson.id, isEnrolled, lessonBtn, tdCurrent);
+                                    .then(data => {
+                                        lessonBtn.textContent = data.data.enrolled ? "취소" : "신청";
+                                        lessonBtn.onclick = () => toggleEnrollment(lesson.id, data.data.enrolled, lessonBtn, tdCurrent);
                                     });
                             }
 
@@ -149,8 +149,6 @@
 
         function openModal(lesson){
             let modal = document.getElementById("gymModal")
-            console.log(kakao)
-            console.log(kakao.maps)
             modal.style.display = "block"
 
             let kakaoMap = document.getElementById("kakaoMap")
@@ -244,7 +242,7 @@
             })
                 .then(response => response.json())
                 .then(data => {
-                    if (data.success) {
+                    if (data.data.success) {
                         button.onclick = () => toggleEnrollment(lessonId, !isEnrolled, button, tdCurrent);
                     } else {
                         tdCurrent.textContent = `${currentCount} / ${maxCount}`;

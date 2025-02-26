@@ -5,6 +5,7 @@ import lombok.Getter;
 
 @Getter
 public class MemberLatLonDto {
+
     private Long id;
     private String name;
     private String email;

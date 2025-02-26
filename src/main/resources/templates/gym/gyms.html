@@ -12,8 +12,8 @@
         let currentPage=0;
         const pageSize=10;
 
-        let memberLat = [[${member.getLatitude}]]
-        let memberLon = [[${member.getLongitude}]]
+        let memberLat = [[${member.latitude}]];
+        let memberLon = [[${member.longitude}]];
 
         function gymSearch(page = 0){
             currentPage = page;
@@ -21,9 +21,11 @@
             let gymKeyword = document.getElementById("gymKeyword").value
             let searchColumn = document.getElementById("searchColumn").value
 
-            fetch(`/api/search?gymKeyword=${gymKeyword}&page=${page}&size=${pageSize}&searchColumn=${searchColumn}`)
+            fetch(`/api/gyms/search?gymKeyword=${gymKeyword}&page=${page}&size=${pageSize}&searchColumn=${searchColumn}`)
                 .then(response => response.json())
-                .then(gyms => {
+                .then(data => {
+                    let gyms = data.data
+
                     let resultSearch = document.getElementById("resultSearch")
                     resultSearch.innerHTML=""
 

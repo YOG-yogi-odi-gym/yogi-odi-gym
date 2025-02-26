@@ -6,7 +6,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface GymRepository extends JpaRepository<DataGym, Long> {
+
     Page<DataGym> findAll(Pageable pageable);
+
     Page<DataGym> findByNameContaining(String gymKeyword, Pageable pageable);
+
     Page<DataGym> findByOldAddressContaining(String gymKeyword, Pageable pageable);
 }
