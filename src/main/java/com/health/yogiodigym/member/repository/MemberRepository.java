@@ -16,6 +16,7 @@ import java.util.Optional;
 
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Long> {
+    Optional<Member> findByEmail(String email);
 
     @Query("SELECT m FROM Member m " +
             "ORDER BY CASE " +
@@ -47,7 +48,4 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
                           @Param("status") MemberStatus memberStatus,
                           @Param("dropDate") LocalDate dropDate);
 
-    List<Member> findByStatusAndDropDateBefore(MemberStatus status, LocalDate dropdate);
-
-    Optional<Member> findByEmail(String email);
 }

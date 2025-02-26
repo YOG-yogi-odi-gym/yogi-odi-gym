@@ -13,7 +13,8 @@ public enum ErrorMessage {
     EXERCISE_NOT_FOUND("운동 기록이 존재하지 않습니다."),
     DATA_FOOD_NOT_FOUND("음식 데이터가 존재하지 않습니다."),
     DATA_EXERCISE_NOT_FOUND("운동 데이터가 존재하지 않습니다."),
-    MEMO_NOT_FOUND("메모가 존재하지 않습니다.");
+    MEMO_NOT_FOUND("메모가 존재하지 않습니다."),
+    EXISTING_MEMBER_ERROR("이미 존재하는 회원입니다.");
 
     private final String message;
 }

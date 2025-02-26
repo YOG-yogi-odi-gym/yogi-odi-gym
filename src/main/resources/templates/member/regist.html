@@ -1,0 +1,162 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <script type="text/javascript" th:src="@{'//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js'}"></script>
+    <script type="text/javascript"
+            th:src="@{'//dapi.kakao.com/v2/maps/sdk.js?appkey=520fa59145415d26c90c57934c778049&libraries=services'}"></script>
+    <script type="text/javascript" th:src="@{'/js/latLonApi.js'}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        const csrfToken = $("meta[name='_csrf']").attr("content");
+        const csrfHeader = $("meta[name='_csrf_header']").attr("content");
+
+        async function registSubmit() {
+            const pwd = document.querySelector("#pwd");
+            const pwd2 = document.querySelector("#pwd2");
+            const registForm = document.querySelector("#registForm");
+            const formData = new FormData(registForm);
+
+            if (pwd && pwd2 && pwd.value !== pwd2.value) {
+                alert("비밀번호와 비밀번호 확인이 일치하지 않습니다!");
+                return;
+            }
+
+
+            const requiredFields = ["name", "email", "gender", "height", "weight", "addr", "latitude", "longitude"];
+            if(pwd !== null){
+                requiredFields.push("pwd");
+            }
+
+            for (const field of requiredFields) {
+                if (!formData.get(field)) {
+                    alert("빈칸 없이 입력해주세요!");
+                    return;
+                }
+            }
+
+            await $.ajax({
+                url: "/api/member/regist",
+                type: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                dataType: "json",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(csrfHeader, csrfToken);
+                },
+                success: function (res) {
+                    console.log(res);
+                    alert(res.message);
+                    if(res.status != 400){
+                        window.location.href = "/dashboard"
+                    }
+                },
+                error: function (request, error) {
+                    alert(request.responseText);
+                    alert(error);
+                }
+            });
+        }
+    </script>
+    <title>Document</title>
+</head>
+<body>
+<h1>회원가입 조이고</h1>
+<form id="registForm" th:action="@{/member/regist}" method="post" enctype="multipart/form-data">
+    <input type="hidden" id="latitude" name="latitude" required>
+    <input type="hidden" id="longitude" name="longitude" required>
+
+    <!-- 이름 -->
+    <div class="form-group">
+        <label for="name">이름</label>
+        <input type="text" id="name" name="name" class="form-control"
+               th:value="${#authentication.principal != 'anonymousUser' ? #authentication.principal.member.name : ''}"
+               th:readonly="${#authentication.principal != 'anonymousUser'}" required>
+    </div>
+
+    <!-- 이메일 -->
+    <div class="form-group">
+        <label for="email">이메일</label>
+        <input type="email" id="email" name="email" class="form-control"
+               th:value="${#authentication.principal != 'anonymousUser' ? #authentication.principal.member.email : ''}"
+               th:readonly="${#authentication.principal != 'anonymousUser'}" required>
+    </div>
+
+    <div sec:authorize="isAnonymous()">
+        <!-- 비밀번호 -->
+        <div class="form-group">
+            <label for="pwd">비밀번호</label>
+            <input type="password" id="pwd" name="pwd" class="form-control" required>
+        </div>
+
+        <!-- 비밀번호 -->
+        <div class="form-group">
+            <label for="pwd">비밀번호 확인</label>
+            <input type="password" id="pwd2" name="pwd2" class="form-control" required>
+        </div>
+    </div>
+
+    <!-- 성별 -->
+    <div class="form-group">
+        <label>성별</label>
+        <input type="radio" name="gender" value="남성"> 남성
+        <input type="radio" name="gender" value="여성"> 여성
+    </div>
+
+    <!-- 키 -->
+    <div class="form-group">
+        <label for="height">키 </label>
+        <input type="number" id="height" name="height" class="form-control" step="0.1">(cm)
+    </div>
+
+    <!-- 체중 -->
+    <div class="form-group">
+        <label for="weight">체중 </label>
+        <input type="number" id="weight" name="weight" class="form-control" step="0.1">(kg)
+    </div>
+
+    <!-- 주소 -->
+    <div class="form-group">
+        <label for="addr">주소</label>
+        <input type="text" id="addr" name="addr" class="form-control">
+        <input type="button" onclick="searchAddress('addr')" value="주소찾기">
+    </div>
+
+    <div sec:authorize="isAnonymous()">
+        <!-- 프로필 이미지 -->
+        <div class="form-group">
+            <label for="profile">프로필 사진</label>
+            <input type="file" id="profile" name="profile" class="form-control">
+        </div>
+    </div>
+
+    <button type="button" onclick="registSubmit()"
+            class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 focus:outline-none">회원가입
+    </button>
+    <a href="/member/login">로그인창</a>
+</form>
+
+
+<div sec:authorize="isAuthenticated()">
+    <p>안녕하세요, <span sec:authentication="name"></span>님!</p>
+    <form th:action="@{/logout}" method="post">
+
+        <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 focus:outline-none">
+            로그아웃
+        </button>
+    </form>
+</div>
+
+<div sec:authorize="isAnonymous()">
+</div>
+
+</body>
+</html>
