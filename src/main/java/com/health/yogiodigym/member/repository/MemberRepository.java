@@ -10,12 +10,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 import java.time.LocalDate;
 import java.util.List;
 
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Long> {
-    Member findByEmail(String email);
+    Optional<Member> findByEmail(String email);
 
     @Query("SELECT m FROM Member m " +
             "ORDER BY CASE " +
@@ -46,6 +48,4 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     int setInactiveStatus(@Param("memberIds") List<Long> memberIds,
                           @Param("status") MemberStatus memberStatus,
                           @Param("dropDate") LocalDate dropDate);
-
-//    List<Member> findByStatusAndDropDateBefore(MemberStatus status, LocalDate dropdate);
 }
