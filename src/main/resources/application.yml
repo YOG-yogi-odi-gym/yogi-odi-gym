@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: local
+    active: local, auth
 
   flyway:
     enabled: true
@@ -8,7 +8,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
 
   kafka:
     bootstrap-servers: localhost:9092
@@ -21,7 +21,12 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       group-id: chat-room
 
+  thymeleaf:
+    cache: false
+
 jasypt:
   encryptor:
     bean: jasyptEncryptor
     password: ${JASYPT_KEY}
+
+

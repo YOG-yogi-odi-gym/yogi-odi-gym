@@ -11,7 +11,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<?> globalExceptionHandler(CustomException e) {
         return ResponseEntity
-                .ok()
+                .status(e.getStatus())
                 .body(new HttpResponse(e.getStatus(), e.getMessage(), null));
     }
 }

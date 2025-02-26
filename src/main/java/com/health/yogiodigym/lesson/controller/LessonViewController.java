@@ -5,8 +5,10 @@ import com.health.yogiodigym.lesson.dto.MemberLatLonDto;
 import com.health.yogiodigym.lesson.repository.CategoryRepository;
 import com.health.yogiodigym.lesson.service.LessonService;
 import com.health.yogiodigym.member.entity.Member;
+import com.health.yogiodigym.member.entity.MemberOAuth2User;
 import com.health.yogiodigym.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,30 +24,35 @@ public class LessonViewController {
     private final LessonService lessonService;
 
     @GetMapping
-    public String showLesson(Model model) {
-        Member member = memberRepository.findByEmail("chulsoo@naver.com");
+    public String showLesson(Model model,
+                             @AuthenticationPrincipal MemberOAuth2User loginUser) {
+        Member loginMember = loginUser.getMember();
 
-        model.addAttribute("member", new MemberLatLonDto(member));
+        model.addAttribute("member", new MemberLatLonDto(loginMember));
         model.addAttribute("categories", lessonService.getCategoriesByCode("lesson"));
 
         return "lesson/lesson";
     }
 
     @GetMapping("/register")
-    public String showLessonRegister(Model model) {
+    public String showLessonRegister(Model model,
+                                     @AuthenticationPrincipal MemberOAuth2User loginUser) {
+        Member loginMember = loginUser.getMember();
 
-        model.addAttribute("member", memberRepository.findByEmail("chulsoo@naver.com"));
+        model.addAttribute("member", new MemberLatLonDto(loginMember));
         model.addAttribute("categories", lessonService.getCategoriesByCode("lesson"));
 
         return "lesson/register";
     }
 
     @GetMapping("/{id}")
-    public String showLessonDetail(@PathVariable Long id, Model model) {
-        Member member = memberRepository.findByEmail("chulsoo@naver.com");
+    public String showLessonDetail(@PathVariable Long id, Model model,
+                                   @AuthenticationPrincipal MemberOAuth2User loginUser) {
+        Member loginMember = loginUser.getMember();
+
         LessonDto.Detail lessonDetailDto = lessonService.findLessonById(id);
 
-        model.addAttribute("member", new MemberLatLonDto(member));
+        model.addAttribute("member", new MemberLatLonDto(loginMember));
         model.addAttribute("lesson", lessonDetailDto);
         return "lesson/detail";
     }

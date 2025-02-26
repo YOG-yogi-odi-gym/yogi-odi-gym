@@ -5,6 +5,7 @@ import com.health.yogiodigym.lesson.dto.LessonDto;
 import com.health.yogiodigym.lesson.service.LessonEnrollmentService;
 import com.health.yogiodigym.lesson.service.LessonService;
 import com.health.yogiodigym.member.entity.Member;
+import com.health.yogiodigym.member.entity.MemberOAuth2User;
 import com.health.yogiodigym.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -42,9 +44,10 @@ public class LessonController {
     }
 
     @PostMapping("/register")
-    public RedirectView registerLesson(@ModelAttribute LessonDto.Request lessonDto) {
-        Member master = memberRepository.findByEmail("chulsoo@naver.com");
-        lessonService.registerLesson(lessonDto, master);
+    public RedirectView registerLesson(@ModelAttribute LessonDto.Request lessonDto,
+                                       @AuthenticationPrincipal MemberOAuth2User loginUser) {
+        Member loginMember = loginUser.getMember();
+        lessonService.registerLesson(lessonDto, loginMember);
 
         return new RedirectView("/lesson");
     }
