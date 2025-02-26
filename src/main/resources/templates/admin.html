@@ -12,60 +12,87 @@
         }
         .container.table-list {
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-start;
             flex-wrap: wrap;
             width: 100%;
-            margin-top: 50px;
+            margin: 50px 0 0 0 !important;
         }
 
-        .table-list {
-            width: 100%;
-            margin-top: 50px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .member-container, .lesson-container {
+        .member-container {
+            width: 45%;
+            margin-right: 20px;
             border: 3px solid #cccccc;
             padding: 15px;
             border-radius: 10px;
             display: flex;
             flex-direction: column;
             align-items: flex-start;
-            width: 48%;
             background-color: white;
             box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
+            height: 800px;
         }
-        .member-container h3, .lesson-container h3 {
+        .lesson-category-container {
+            width: 45%;
+        }
+
+        .lesson-container, .category-container {
+            width: 100%;
+            margin-bottom: 20px;
+            border: 3px solid #cccccc;
+            padding: 15px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            background-color: white;
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
+            height: 390px;
+        }
+
+        .member-container h3, .lesson-container h3, .category-container h3 {
             text-align: center;
             width: 100%;
         }
-        .table-container{
+
+        .memberTable-container {
             width: 100%;
-            max-height: 600px;
+            height: 800px;
             overflow-y: auto;
             border: 1px solid #ccc;
         }
+
+        .lessonTable-container, .CategoryTable-container {
+            width: 100%;
+            height: 400px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+        }
+
         .table thead th {
             position: sticky;
             z-index: 1;
             top: 0;
             vertical-align: middle;
             text-align: center;
+            background-color: #343a40;
         }
+
         .table tbody td {
             vertical-align: middle;
             text-align: center;
         }
+
         .table th, .table td {
             word-wrap: break-word;
         }
-        #memberTable th:nth-child(1), .table td:nth-child(1) { width: 60px; }
-        #memberTable th:nth-child(2), .table td:nth-child(2) { width: 100px; }
-        #memberTable th:nth-child(3), .table td:nth-child(3) { width: 200px; }
-        #memberTable th:nth-child(4), .table td:nth-child(4) { width: 100px; }
-        #lessonTable th:nth-child(1), .table td:nth-child(1) { width: 60px; }
-        #lessonTable th:nth-child(2), .table td:nth-child(2) { width: 200px; }
-        #lessonTable th:nth-child(3), .table td:nth-child(3) { width: 100px; }
+
+        #memberTable th:nth-child(1) { width: 70px; }
+        #memberTable th:nth-child(2) { width: 100px; }
+        #memberTable th:nth-child(3) { width: 170px; }
+        #memberTable th:nth-child(4) { width: 100px; }
+        #lessonTable th:nth-child(1) { width: 60px; }
+        #lessonTable th:nth-child(2) { width: 200px; }
+        #lessonTable th:nth-child(3) { width: 100px; }
 
         .search-container {
             width: 100%;
@@ -73,28 +100,39 @@
             justify-content: flex-end;
             margin-bottom: 15px;
         }
-        #memberSearchInput, #lessonSearchInput {
+
+        #memberSearchInput, #lessonSearchInput, #categorySearchInput {
             width: 250px;
         }
-        #deleteMemberButton, #deleteLessonButton {
+
+        #deleteMemberButton, #deleteLessonButton, #deleteCategoryButton {
             width: 100px;
-            margin-top: 15px;
+            margin-top: 10px;
             align-self: flex-end;
         }
 
+        #updateCategoryButton {
+            width: 120px;
+            margin-right: 10px;
+            align-self: flex-end;
+        }
 
+        .category-btnGroup {
+            display: flex;
+            margin-top: 10px;
+            align-self: flex-end;
+        }
     </style>
 </head>
 <body>
 <div class="container table-list">
-
     <div class="member-container">
         <h3>회원 목록</h3>
         <div class="search-container">
             <input type="text" id="memberSearchInput" name="memberKeyword" class="form-control" placeholder="이름 또는 이메일 검색...">
             <button id="memberSearchButton" class="btn btn-primary ml-2">검색</button>
         </div>
-        <div class="table-container">
+        <div class="memberTable-container">
             <table id="memberTable" class="table table-bordered table-striped table-hover">
                 <thead class="thead-dark">
                 <tr>
@@ -117,31 +155,63 @@
         <button class="btn btn-danger" id="deleteMemberButton">회원 삭제</button>
     </div>
 
-    <div class="lesson-container">
-        <h3>강의 관리</h3>
-        <div class="search-container">
-            <input type="text" id="lessonSearchInput" name="lessonKeyword" class="form-control" placeholder="강의명 검색...">
-            <button id="lessonSearchButton" class="btn btn-primary ml-2">검색</button>
+    <div class="lesson-category-container">
+        <div class="lesson-container">
+            <h3>강의 관리</h3>
+            <div class="search-container">
+                <input type="text" id="lessonSearchInput" name="lessonKeyword" class="form-control" placeholder="강의명 검색...">
+                <button id="lessonSearchButton" class="btn btn-primary ml-2">검색</button>
+            </div>
+            <div class="lessonTable-container">
+                <table id="lessonTable" class="table table-bordered table-striped table-hover">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th>선택</th>
+                        <th>강의명</th>
+                        <th>강사</th>
+                    </tr>
+                    </thead>
+                    <tbody id="lessonTableBody">
+                    <tr th:each="lesson : ${lessons}">
+                        <td><input type="checkbox" class="lessonCheckbox" th:value="${lesson.id}"></td>
+                        <td th:text="${lesson.title}"></td>
+                        <td th:text="${lesson.masterName}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <button class="btn btn-danger" id="deleteLessonButton">강의 삭제</button>
         </div>
-        <div class="table-container">
-            <table id="lessonTable" class="table table-bordered table-striped table-hover">
-                <thead class="thead-dark">
-                <tr>
-                    <th>선택</th>
-                    <th>강의명</th>
-                    <th>강사</th>
-                </tr>
-                </thead>
-                <tbody id="lessonTableBody">
-                <tr th:each="lesson : ${lessons}">
-                    <td><input type="checkbox" class="lessonCheckbox" th:value="${lesson.id}"></td>
-                    <td th:text="${lesson.title}"></td>
-                    <td th:text="${lesson.masterName}"></td>
-                </tr>
-                </tbody>
-            </table>
+
+        <div class="category-container">
+            <h3>카테고리 관리</h3>
+            <div class="search-container">
+                <input type="text" id="categorySearchInput" name="categoryKeyword" class="form-control" placeholder="카테고리 검색...">
+                <button id="categorySearchButton" class="btn btn-primary ml-2">검색</button>
+            </div>
+            <div class="CategoryTable-container">
+                <table id="categoryTable" class="table table-bordered table-striped table-hover">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th>선택</th>
+                        <th>강의명</th>
+                        <th>강사</th>
+                    </tr>
+                    </thead>
+                    <tbody id="categoryTableBody">
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="category-btnGroup">
+                <button class="btn btn-success" id="updateCategoryButton">추가 / 수정</button>
+                <button class="btn btn-danger" id="deleteCategoryButton">삭제</button>
+            </div>
         </div>
-        <button class="btn btn-danger" id="deleteLessonButton">강의 삭제</button>
     </div>
 </div>
 
