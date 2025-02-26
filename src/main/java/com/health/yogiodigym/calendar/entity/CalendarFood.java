@@ -1,13 +1,13 @@
 package com.health.yogiodigym.calendar.entity;
 
 
+import com.health.yogiodigym.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "calendar_food")
 @Getter
 @ToString
 @Builder
@@ -26,7 +26,7 @@ public class CalendarFood {
     @Column(nullable = false)
     private String name; // 음식 이름
 
-    @Column(nullable = false, name = "hundred_gram")
+    @Column(nullable = false)
     private Float hundredGram; // 섭취량 (100g 단위)
 
     @Column(nullable = false)

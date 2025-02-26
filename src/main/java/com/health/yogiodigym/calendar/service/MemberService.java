@@ -1,7 +1,9 @@
 package com.health.yogiodigym.calendar.service;
 
-import com.health.yogiodigym.calendar.entity.Member;
-import com.health.yogiodigym.calendar.repository.MemberRepository;
+//import com.health.yogiodigym.calendar.entity.Member;
+//import com.health.yogiodigym.calendar.repository.MemberRepository;
+import com.health.yogiodigym.member.entity.Member;
+import com.health.yogiodigym.member.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

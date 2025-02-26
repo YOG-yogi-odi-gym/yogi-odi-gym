@@ -1,7 +1,8 @@
 package com.health.yogiodigym.calendar.controller;
 
-import com.health.yogiodigym.calendar.entity.Member;
+//import com.health.yogiodigym.calendar.entity.Member;
 import com.health.yogiodigym.calendar.service.MemberService;
+import com.health.yogiodigym.member.entity.Member;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,5 +1,6 @@
 package com.health.yogiodigym.calendar.entity;
 
+import com.health.yogiodigym.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -8,7 +9,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
-@Table(name = "lesson")
 @Getter
 @ToString
 @Builder
@@ -36,19 +36,19 @@ public class Lesson {
 
     private Float longitude; // 경도
 
-    @Column(name="detailed_location")
+    @Column
     private String detailedLocation; // 상세 위치
 
-    @Column(nullable = false, name="start_time")
+    @Column(nullable = false)
     private LocalTime startTime; // 강의 시작 시간
 
-    @Column(nullable = false, name="end_time")
+    @Column(nullable = false)
     private LocalTime endTime; // 강의 종료 시간
 
-    @Column(nullable = false, name="start_day")
+    @Column(nullable = false)
     private LocalDate startDay; // 강의 시작 일
 
-    @Column(nullable = false, name="end_day")
+    @Column(nullable = false)
     private LocalDate endDay; // 강의 종료 일
 
     @Column(columnDefinition = "TEXT")
@@ -64,6 +64,6 @@ public class Lesson {
     @JoinColumn(name = "master_id", nullable = false)
     private Member master; // 강사 (회원 참조)
 
-    @Column(name="create_date_time")
+    @Column
     private LocalDateTime createDateTime; // 생성 날짜
 }

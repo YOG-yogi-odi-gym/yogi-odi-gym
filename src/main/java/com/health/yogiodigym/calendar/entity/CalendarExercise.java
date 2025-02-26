@@ -1,12 +1,12 @@
 package com.health.yogiodigym.calendar.entity;
 
+import com.health.yogiodigym.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "calendar_exercise")
 @Getter
 @ToString
 @Builder

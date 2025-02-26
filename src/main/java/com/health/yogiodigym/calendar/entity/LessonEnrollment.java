@@ -1,10 +1,10 @@
 package com.health.yogiodigym.calendar.entity;
 
+import com.health.yogiodigym.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "lesson_enrollment")
 @Getter
 @ToString
 @Builder
@@ -26,6 +26,6 @@ public class LessonEnrollment {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    @Column(nullable = false, name="unread_message")
+    @Column(nullable = false)
     private Integer unreadMessage = 0;
 }
