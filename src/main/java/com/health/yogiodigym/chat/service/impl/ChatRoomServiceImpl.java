@@ -40,13 +40,8 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     private final LessonEnrollmentRepository lessonEnrollmentRepository;
     private final KafkaProducerService kafkaProducerService;
 
-    // TODO 로그인 구현 완료 후 UserDetails에서 User객체 사용
-
     @Override
-    public void enterChatRoom(Long memberId, String roomId) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException(memberId));
-
+    public void enterChatRoom(Member member, String roomId) {
         ChatRoom chatRoom = chatRoomRepository.findByRoomId(roomId)
                 .orElseThrow(() -> new ChatRoomNotFoundException(roomId));
 
@@ -95,10 +90,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ChatRoomResponseDto> getChatRooms(Long memberId) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException(memberId));
-
+    public List<ChatRoomResponseDto> getChatRooms(Member member) {
         return lessonEnrollmentRepository.findAllByMember(member)
                 .stream()
                 .map(LessonEnrollment::getLesson)
@@ -107,13 +99,11 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     }
 
     @Override
-    public void kickMember(Long instructorId, Long memberId, String chatRoomId) {
-        Member instructor = memberRepository.findById(instructorId)
-                .orElseThrow(() -> new MemberNotFoundException(instructorId));
+    public void kickMember(Member instructor, Long memberId, String chatRoomId) {
         ChatRoom chatRoom = chatRoomRepository.findByRoomId(chatRoomId)
                 .orElseThrow(() -> new ChatRoomNotFoundException(chatRoomId));
         chatParticipantRepository.findByMemberAndChatRoom(instructor, chatRoom)
-                .orElseThrow(() -> new MemberNotInChatRoomException(instructorId));
+                .orElseThrow(() -> new MemberNotInChatRoomException(instructor.getId()));
 
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException(memberId));
@@ -123,15 +113,12 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     }
 
     @Override
-    public void quitChatRoom(Long memberId, String roomId) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException(memberId));
-
+    public void quitChatRoom(Member member, String roomId) {
         ChatRoom chatRoom = chatRoomRepository.findByRoomId(roomId)
                 .orElseThrow(() -> new ChatRoomNotFoundException(roomId));
 
         ChatParticipant chatParticipant = chatParticipantRepository.findByMemberAndChatRoom(member, chatRoom)
-                .orElseThrow(() -> new MemberNotInChatRoomException(memberId));
+                .orElseThrow(() -> new MemberNotInChatRoomException(member.getId()));
         chatParticipantRepository.delete(chatParticipant);
 
         sendChatMessage(member, roomId, member.getName() + QUIT_CHAT_ROOM_MESSAGE_SUFFIX);

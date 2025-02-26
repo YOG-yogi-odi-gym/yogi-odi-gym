@@ -6,15 +6,15 @@ import com.health.yogiodigym.member.entity.Member;
 import java.util.List;
 
 public interface ChatRoomService {
-    void enterChatRoom(Long memberId, String roomId);
+    void enterChatRoom(Member member, String roomId);
 
     void createChatRoom(Member member, boolean isGroupChat);
 
     void deleteChatRoom(ChatRoom chatRoom);
 
-    List<ChatRoomResponseDto> getChatRooms(Long memberId);
+    List<ChatRoomResponseDto> getChatRooms(Member member);
 
-    void kickMember(Long managerId, Long memberId, String chatRoomId);
+    void kickMember(Member instructor, Long memberId, String chatRoomId);
 
-    void quitChatRoom(Long memberId, String chatRoomId);
+    void quitChatRoom(Member member, String chatRoomId);
 }
