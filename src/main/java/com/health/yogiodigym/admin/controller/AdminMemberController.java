@@ -20,8 +20,8 @@ public class AdminMemberController {
     private final AdminMemberService adminMemberService;
 
     @GetMapping("/member/search")
-    public ResponseEntity<?> findMembers(@RequestParam String keyword) {
-        List<MemberResponseDto> members = adminMemberService.searchMembers(keyword);
+    public ResponseEntity<?> searchMembers(@RequestParam String memberKeyword) {
+        List<MemberResponseDto> members = adminMemberService.searchMembers(memberKeyword);
 
         return ResponseEntity.ok().body(new HttpResponse(HttpStatus.OK, MEMBER_SEARCH_SUCCESS.getMessage(), members));
     }

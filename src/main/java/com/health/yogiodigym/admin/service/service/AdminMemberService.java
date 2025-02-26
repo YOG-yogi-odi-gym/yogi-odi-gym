@@ -11,7 +11,7 @@ public interface AdminMemberService {
 
     List<Member> getAllMembers();
 
-    List<MemberResponseDto> searchMembers(String keyword);
+    List<MemberResponseDto> searchMembers(String memberKeyword);
 
     void setInactiveStatus(List<Long> memberIds);
 

@@ -73,7 +73,7 @@
             justify-content: flex-end;
             margin-bottom: 15px;
         }
-        #searchInput, #lessonSearchInput {
+        #memberSearchInput, #lessonSearchInput {
             width: 250px;
         }
         #deleteMemberButton, #deleteLessonButton {
@@ -91,8 +91,8 @@
     <div class="member-container">
         <h3>회원 목록</h3>
         <div class="search-container">
-            <input type="text" id="searchInput" name="keyword" class="form-control" placeholder="이름 또는 이메일 검색...">
-            <button id="searchButton" class="btn btn-primary ml-2">검색</button>
+            <input type="text" id="memberSearchInput" name="memberKeyword" class="form-control" placeholder="이름 또는 이메일 검색...">
+            <button id="memberSearchButton" class="btn btn-primary ml-2">검색</button>
         </div>
         <div class="table-container">
             <table id="memberTable" class="table table-bordered table-striped table-hover">
@@ -120,7 +120,7 @@
     <div class="lesson-container">
         <h3>강의 관리</h3>
         <div class="search-container">
-            <input type="text" id="lessonSearchInput" class="form-control" placeholder="강의명 검색...">
+            <input type="text" id="lessonSearchInput" name="lessonKeyword" class="form-control" placeholder="강의명 검색...">
             <button id="lessonSearchButton" class="btn btn-primary ml-2">검색</button>
         </div>
         <div class="table-container">
@@ -148,13 +148,12 @@
 <script>
     $(document).ready(function () {
         function searchMembers() {
-            let keyword = $("#searchInput").val().trim();
-            let requestUrl = keyword === "" ? "/api/members/search" : `/api/members/search?keyword=${keyword}`;
+            let memberKeyword = $("#memberSearchInput").val().trim();
 
             $.ajax({
                 url: "/api/admin/member/search",
                 type: "GET",
-                data: { keyword: keyword },
+                data: { memberKeyword: memberKeyword },
                 success: function (response) {
                     if (response.status !== 200) {
                         alert("검색에 실패했습니다.");
@@ -166,7 +165,7 @@
                     tableBody.empty();
 
                     if (members.length === 0) {
-                        tableBody.append("<tr><td colspan='3' class='text-center'>검색 결과가 없습니다.</td></tr>");
+                        tableBody.append("<tr><td colspan='4' class='text-center'>검색 결과가 없습니다.</td></tr>");
                         return;
                     }
 
@@ -187,15 +186,61 @@
             });
         }
 
-        $("#searchButton").click(function () {
+        function searchLessons() {
+            let lessonKeyword = $("#lessonSearchInput").val().trim();
+
+            $.ajax({
+                url: "/api/admin/lesson/search",
+                type: "GET",
+                data: { lessonKeyword: lessonKeyword },
+                success: function (response) {
+                    if (response.status !== 200) {
+                        alert("검색에 실패했습니다.")
+                    }
+
+                    let lessons = response.data;
+                    let tableBody = $("#lessonTableBody");
+                    tableBody.empty();
+
+                    if (lessons.length === 0) {
+                        tableBody.append("<tr><td colspan='3' class='text-center'>검색 결과가 없습니다.</td></tr>")
+                        return;
+                    }
+
+                    lessons.forEach(lesson => {
+                        let row = `
+                            <tr>
+                                <td><input type="checkbox" class="lessonCheckbox" value="${lesson.id}"></td>
+                                <td>${lesson.title}</td>
+                                <td>${lesson.masterName}</td>
+                            </tr>`;
+                        tableBody.append(row);
+                    });
+                },
+                error: function () {
+                    alert("검색 중 오류가 발생했습니다.")
+                }
+            });
+        }
+
+        $("#memberSearchButton").click(function () {
             searchMembers();
         });
-
-        $("#searchInput").keypress(function (event) {
+        $("#memberSearchInput").keypress(function (event) {
             if (event.which === 13) {
                 searchMembers();
             }
         });
+
+        $("#lessonSearchButton").click(function () {
+            searchLessons();
+        });
+        $("#lessonSearchInput").keypress(function (event) {
+            if (event.which === 13) {
+                searchLessons();
+            }
+        })
+
     });
 
     $("#deleteMemberButton").click(function () {

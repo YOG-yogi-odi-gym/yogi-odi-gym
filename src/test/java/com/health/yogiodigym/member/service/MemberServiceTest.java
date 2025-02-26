@@ -33,7 +33,7 @@ class MemberServiceTest {
         // given
         List<Member> members = new ArrayList<>();
         members.add(Member.builder().id(1L).name("김지훈").build());
-        when(memberRepository.findMembers(anyString())).thenReturn(members);
+        when(memberRepository.searchMembers(anyString())).thenReturn(members);
 
         // when
         List<MemberResponseDto> response = adminService.searchMembers("김지");
