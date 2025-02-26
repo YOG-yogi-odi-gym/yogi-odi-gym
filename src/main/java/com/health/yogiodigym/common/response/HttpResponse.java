@@ -1,7 +1,10 @@
 package com.health.yogiodigym.common.response;
 
+import com.health.yogiodigym.admin.dto.MemberDto;
 import lombok.*;
 import org.springframework.http.HttpStatus;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -18,5 +21,6 @@ public class HttpResponse {
         this.status = status.value();
         this.message = message;
         this.data = data;
+
     }
 }
