@@ -32,7 +32,6 @@
 
             const requiredFields = ["name", "email", "gender", "height", "weight", "addr", "latitude", "longitude"];
             if(pwd !== null){
-                alert(pwd);
                 requiredFields.push("pwd");
             }
 
@@ -49,19 +48,14 @@
                 data: formData,
                 processData: false,
                 contentType: false,
-                dataType: "text",
+                dataType: "json",
                 beforeSend: function (xhr) {
                     xhr.setRequestHeader(csrfHeader, csrfToken);
                 },
                 success: function (res) {
-                    if(res === "registEmailSuccess"){
-                        alert("회원가입에 성공했습니다!");
-                        window.location.href = "/dashboard"
-                    }else if(res === "existing"){
-                        alert("이미 존재하는 회원입니다!");
-                        window.location.href = "/member/login"
-                    }else if(res === "registOAuth2Success"){
-                        alert("소셜 회원가입에 성공했습니다!");
+                    console.log(res);
+                    alert(res.message);
+                    if(res.status != 400){
                         window.location.href = "/dashboard"
                     }
                 },

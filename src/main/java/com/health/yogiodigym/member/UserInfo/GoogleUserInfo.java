@@ -1,29 +1,31 @@
 package com.health.yogiodigym.member.UserInfo;
 
-import lombok.extern.slf4j.Slf4j;
-
 import java.util.Map;
 
-@Slf4j
 public class GoogleUserInfo implements OAuth2UserInfo {
+
+    private static final String NAME = "name";
+    private static final String EMAIL = "email";
+    private static final String IMAGE = "picture";
+
     private Map<String, Object> attributes;
 
-    public GoogleUserInfo(Map<String, Object> attributes){
+    public GoogleUserInfo(Map<String, Object> attributes) {
         this.attributes = attributes;
     }
 
     @Override
     public String getName() {
-        return attributes.get("name").toString();
+        return attributes.get(NAME).toString();
     }
 
     @Override
     public String getEmail() {
-        return attributes.get("email").toString();
+        return attributes.get(EMAIL).toString();
     }
 
     @Override
     public String getProfile() {
-        return attributes.get("picture").toString();
+        return attributes.get(IMAGE).toString();
     }
 }

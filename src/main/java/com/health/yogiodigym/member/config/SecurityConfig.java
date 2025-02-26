@@ -8,7 +8,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -20,17 +19,12 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
+
     private final OAuth2UserService oAuth2UserService;
-    private final ClientRegistrationRepository clientRegistrationRepository;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public CustomAuthorizationRequestResolver CustomAuthorizationRequestResolver() {
-        return new CustomAuthorizationRequestResolver(clientRegistrationRepository);
     }
 
     @Bean
@@ -42,7 +36,7 @@ public class SecurityConfig {
                         .requestMatchers("/images/source/**", "/css/**", "/js/**", "/", "/member/regist", "/api/member/regist").permitAll()
                         .requestMatchers("/images/license/**").hasRole("ADMIN")
                         .requestMatchers("/member/login", "/login").not().authenticated()
-                        .requestMatchers("/logout", "/dashboard", "/images/license/**").authenticated()
+                        .requestMatchers("/logout", "/dashboard", "/images/license/**", "/images/profile/**").authenticated()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
@@ -51,16 +45,13 @@ public class SecurityConfig {
                         .permitAll()
                         .defaultSuccessUrl("/dashboard", true)
                         .failureHandler((request, response, exception) -> {
-                            log.error("🚨 로그인 실패: " + exception.getMessage(), exception);
+                            log.error("로그인 실패: " + exception.getMessage(), exception);
                             response.sendRedirect("/member/login?error");
                         })
                 )
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/member/login")
                         .defaultSuccessUrl("/dashboard", true)
-                        .authorizationEndpoint(authorization ->
-                                authorization.authorizationRequestResolver(CustomAuthorizationRequestResolver())
-                        )
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(oAuth2UserService)
                         )

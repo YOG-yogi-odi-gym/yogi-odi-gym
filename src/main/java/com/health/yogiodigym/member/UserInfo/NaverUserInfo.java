@@ -1,32 +1,32 @@
 package com.health.yogiodigym.member.UserInfo;
 
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
 import java.util.Map;
 
-@Slf4j
 public class NaverUserInfo implements OAuth2UserInfo {
-    private Map<String, Object> attributes;
-    private Map<String, Object> response;
 
-    public NaverUserInfo(Map<String, Object> attributes){
-        this.attributes = attributes;
-        this.response = (Map<String, Object>)attributes.get("response");
+    private static final String ATTRIBUTES_NAME = "response";
+    private static final String NAME = "name";
+    private static final String EMAIL = "email";
+    private static final String IMAGE = "profile_image";
+
+    private final Map<String, Object> attributes;
+
+    public NaverUserInfo(Map<String, Object> attributes) {
+        this.attributes = (Map<String, Object>) attributes.get(ATTRIBUTES_NAME);
     }
 
     @Override
     public String getName() {
-        return response.get("name").toString();
+        return attributes.get(NAME).toString();
     }
 
     @Override
     public String getEmail() {
-        return response.get("email").toString();
+        return attributes.get(EMAIL).toString();
     }
 
     @Override
     public String getProfile() {
-        return response.get("profile_image").toString();
+        return attributes.get(IMAGE).toString();
     }
 }

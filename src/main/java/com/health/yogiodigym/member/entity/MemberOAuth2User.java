@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 @Setter
 @Getter
 public class MemberOAuth2User implements UserDetails, OAuth2User {
+
     private Member member;
     private final Map<String, Object> attributes;
 
