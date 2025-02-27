@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lesson Detail</title>
+    <script type="text/javascript" th:src="@{'//dapi.kakao.com/v2/maps/sdk.js?appkey=' + ${@environment.getProperty('kakao.api.scriptKey')}}"></script>
+    <script type="text/javascript" th:src="@{'/js/bitmaskToDays.js'}"></script>
+    <script>
+        const memberId = [[${member.id}]];
+        const lessonId = [[${lesson.id}]];
+
+        function enrollLesson() {
+            fetch(`/api/lesson/enroll`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ memberId, lessonId }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    alert("수강 신청이 완료되었습니다.");
+                    location.reload();
+                })
+                .catch(error => console.error("Error:", error));
+        }
+
+        function cancelEnrollment() {
+            fetch(`/api/lesson/cancel/${memberId}/${lessonId}`, {
+                method: "DELETE",
+            })
+                .then(response => response.json())
+                .then(data => {
+                    alert("수강이 취소되었습니다.");
+                    location.reload();
+                })
+                .catch(error => console.error("Error:", error));
+        }
+
+        function enterChatRoom() {
+            location.href = `/chatroom/${lessonId}`;
+        }
+
+        function updateLesson() {
+            location.href = `/lesson/${lessonId}/edit`;
+        }
+
+        function openModal() {
+            let modal = document.getElementById("mapModal");
+            modal.style.display = "block";
+
+            let kakaoMap = document.getElementById("kakaoMap");
+            kakaoMap.innerHTML = "";
+
+            let latitude = event.target.dataset.latitude;
+            let longitude = event.target.dataset.longitude;
+
+            let mapOption = {
+                center: new kakao.maps.LatLng(latitude, longitude),
+                level: 3
+            };
+
+            let map = new kakao.maps.Map(kakaoMap, mapOption);
+
+            let marker = new kakao.maps.Marker({
+                position: new kakao.maps.LatLng(latitude, longitude)
+            });
+
+            marker.setMap(map);
+        }
+
+        function closeModal() {
+            document.getElementById("mapModal").style.display = "none";
+        }
+
+        function toggleEnrollment(lessonId, isEnrolled, button, tdCurrent) {
+            let url = isEnrolled
+                ? `/api/lesson/cancel/${memberId}/${lessonId}`
+                : `/api/lesson/enroll`;
+
+            let method = isEnrolled ? "DELETE" : "POST";
+            let body = isEnrolled ? null : JSON.stringify({ memberId, lessonId });
+
+            let currentCount = parseInt(tdCurrent.textContent.split(" / ")[0]);
+            let maxCount = parseInt(tdCurrent.textContent.split(" / ")[1]);
+            let newCount = isEnrolled ? currentCount - 1 : currentCount + 1;
+
+            tdCurrent.textContent = `${newCount} / ${maxCount}`;
+
+            if (newCount >= maxCount) {
+                button.textContent = "마감";
+                button.disabled = true;
+            } else {
+                button.textContent = isEnrolled ? "신청" : "취소";
+            }
+
+            fetch(url, {
+                method: method,
+                headers: { "Content-Type": "application/json" },
+                body: body
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        button.onclick = () => toggleEnrollment(lessonId, !isEnrolled, button, tdCurrent);
+                    } else {
+                        tdCurrent.textContent = `${currentCount} / ${maxCount}`;
+                        button.textContent = isEnrolled ? "취소" : "신청";
+                        button.disabled = false;
+                    }
+                })
+                .catch(() => {
+                    tdCurrent.textContent = `${currentCount} / ${maxCount}`;
+                    button.textContent = isEnrolled ? "취소" : "신청";
+                    button.disabled = false;
+                });
+        }
+
+        window.onload = function() {
+            const lessonMasterId = [[${lesson.masterId}]];
+            const lessonMax = [[${lesson.max}]];
+            const lessonCurrent = [[${lesson.current}]];
+
+            const chatRoomBtn = document.getElementById("chatRoomBtn");
+            const updateBtn = document.getElementById("updateBtn");
+            const enrollBtn = document.getElementById("enrollBtn");
+            const cancelEnrollBtn = document.getElementById("cancelEnrollBtn");
+
+            const bitmask = [[${lesson.days}]]
+            document.getElementById("lessonDays").textContent = bitmaskToDays(parseInt(bitmask));
+
+            // 강의 마스터인 경우
+            if (lessonMasterId === memberId) {
+                chatRoomBtn.style.display = "block";
+                updateBtn.style.display = "block";
+            } else {
+                // 수강 인원이 최대에 도달한 경우
+                if (lessonCurrent >= lessonMax) {
+                    enrollBtn.textContent = "마감";
+                    enrollBtn.disabled = true;
+                    enrollBtn.style.display = "block";
+
+                    // 이미 수강 신청한 경우
+                    fetch(`/api/lesson/enrolled?lessonId=${lessonId}&memberId=${memberId}`)
+                        .then(response => response.json())
+                        .then(isEnrolled => {
+                            if (isEnrolled.data.enrolled) {
+                                // 수강 인원이 마감되었고, 이미 신청한 경우
+                                cancelEnrollBtn.style.display = "block";
+                                chatRoomBtn.style.display = "block";  // 채팅방 입장 버튼 표시
+                            } else {
+                                // 수강 신청하지 않은 경우
+                                cancelEnrollBtn.style.display = "none";
+                            }
+                        })
+                        .catch(error => console.error('Error checking enrollment:', error));
+                } else {
+                    // 수강 신청 가능 상태
+                    fetch(`/api/lesson/enrolled?lessonId=${lessonId}&memberId=${memberId}`)
+                        .then(response => response.json())
+                        .then(isEnrolled => {
+                            if (isEnrolled.data.enrolled) {
+                                // 이미 수강 신청한 경우
+                                cancelEnrollBtn.style.display = "block";
+                                chatRoomBtn.style.display = "block";
+                                enrollBtn.style.display = "none";
+                            } else {
+                                // 수강 신청하지 않은 경우
+                                enrollBtn.style.display = "block";
+                                cancelEnrollBtn.style.display = "none";
+                            }
+                        })
+                        .catch(error => console.error('Error checking enrollment:', error));
+                }
+            }
+        }
+
+    </script>
+    <style>
+        #mapModal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border: 1px solid black;
+        }
+        #kakaoMap{
+            width: 500px;
+            height: 400px;
+        }
+    </style>
+</head>
+<body>
+    <h2 th:text="${lesson.title}"></h2>
+
+    <p><strong>카테고리:</strong> <span th:text="${lesson.categoryName}"></span></p>
+    <p><strong>강의 요일:</strong> <span id="lessonDays"></span></p>
+    <p><strong>강의 기간:</strong> <span th:text="|${lesson.startDay} ~ ${lesson.endDay}|"></span></p>
+    <p><strong>강의 시간:</strong> <span th:text="|${lesson.startTime} ~ ${lesson.endTime}|"></span></p>
+    <p><strong>위치:</strong> <span th:text="${lesson.location}"></span></p>
+    <p><strong>상세 위치:</strong> <span th:text="${lesson.detailedLocation}"></span></p>
+    <button onclick="openModal()"
+            th:data-title="${lesson.title}"
+            th:data-latitude="${lesson.latitude}"
+            th:data-longitude="${lesson.longitude}">지도 보기</button>
+    <p><strong>수강 인원:</strong> <span th:text="|${lesson.current} / ${lesson.max}|"></span></p>
+    <p><strong>강사:</strong> <span th:text="${lesson.masterName}"></span></p>
+    <strong>강의 소개:</strong>
+    <p th:utext="${#strings.replace(lesson.description, '\n', '<br>')}"></p>
+
+    <div id="buttonContainer">
+        <button onclick="history.back()">뒤로 가기</button>
+        <button onclick="location.href='/lesson'">강의 목록</button>
+        <button id="chatRoomBtn" style="display: none;" onclick="enterChatRoom()">채팅방 입장</button>
+        <button id="cancelEnrollBtn" style="display: none;" onclick="cancelEnrollment()">수강 취소</button>
+        <button id="enrollBtn" style="display: none;" onclick="enrollLesson()">수강 신청</button>
+        <button id="updateBtn" style="display: none;" onclick="updateLesson()">수정</button>
+
+    </div>
+
+    <div id="mapModal">
+        <h3 id="modalContent"></h3>
+        <div id="kakaoMap" ></div>
+        <button onclick="closeModal()">Close</button>
+    </div>
+
+</body>
+</html>

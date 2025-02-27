@@ -4,6 +4,7 @@ import com.health.yogiodigym.chat.dto.MessageDto;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.context.annotation.Bean;
@@ -15,6 +16,7 @@ import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 
+@Slf4j
 @EnableKafka
 @Configuration
 @RequiredArgsConstructor
@@ -34,11 +36,13 @@ public class KafkaConsumerConfiguration {
 
         final String GROUP_ID = env.getProperty("spring.kafka.consumer.group-id");
 
+        log.info("GroupID: {}", GROUP_ID);
+
         JsonDeserializer<MessageDto> deserializer = new JsonDeserializer<>();
         deserializer.addTrustedPackages("*");
 
         Map<String, Object> consumerConfigurations = new HashMap<>();
-        consumerConfigurations.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");  // TODO 서버 IP로 변경 예정
+        consumerConfigurations.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, env.getProperty("spring.kafka.bootstrap-servers"));
         consumerConfigurations.put(ConsumerConfig.GROUP_ID_CONFIG, GROUP_ID);
         consumerConfigurations.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         consumerConfigurations.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, deserializer);
