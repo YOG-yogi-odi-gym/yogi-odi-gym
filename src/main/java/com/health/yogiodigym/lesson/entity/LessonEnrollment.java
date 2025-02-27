@@ -1,20 +1,14 @@
 package com.health.yogiodigym.lesson.entity;
 
 import com.health.yogiodigym.member.entity.Member;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
-@Builder
-@ToString
-@Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
+@Entity
 public class LessonEnrollment {
 
     @Id
@@ -22,9 +16,10 @@ public class LessonEnrollment {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Member member;
-
-    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "lesson_id", nullable = false)
     private Lesson lesson;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
 }
