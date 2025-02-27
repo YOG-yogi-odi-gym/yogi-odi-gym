@@ -1,11 +1,14 @@
 package com.health.yogiodigym.member.controller.view;
 
+import com.health.yogiodigym.member.entity.Member;
 import com.health.yogiodigym.member.entity.MemberOAuth2User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import static com.health.yogiodigym.member.auth.MemberStatus.INCOMPLETE;
@@ -33,5 +36,13 @@ public class MemberViewController {
         }
 
         return "/member/regist";
+    }
+
+    @PostMapping("/")
+    public String main(@AuthenticationPrincipal MemberOAuth2User principal){
+        Member member = principal.getMember();
+        member.getName();
+
+        return "main";
     }
 }
