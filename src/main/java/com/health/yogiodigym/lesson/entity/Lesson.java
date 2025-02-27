@@ -1,5 +1,6 @@
 package com.health.yogiodigym.lesson.entity;
 
+import com.health.yogiodigym.chat.entity.ChatRoom;
 import com.health.yogiodigym.lesson.dto.LessonDto;
 import com.health.yogiodigym.member.entity.Member;
 import jakarta.persistence.*;
@@ -47,6 +48,10 @@ public class Lesson {
     private Member master;
 
     private LocalDateTime createDateTime;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "chat_room_id")
+    private ChatRoom chatRoom;
 
     public void incrementCurrent() {
         if (this.current < this.max) {

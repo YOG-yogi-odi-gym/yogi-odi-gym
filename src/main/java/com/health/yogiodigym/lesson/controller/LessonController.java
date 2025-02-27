@@ -1,5 +1,6 @@
 package com.health.yogiodigym.lesson.controller;
 
+import com.health.yogiodigym.chat.service.ChatRoomService;
 import com.health.yogiodigym.common.response.HttpResponse;
 import com.health.yogiodigym.lesson.dto.LessonDto;
 import com.health.yogiodigym.lesson.service.LessonEnrollmentService;
@@ -28,7 +29,7 @@ import static com.health.yogiodigym.common.message.SuccessMessage.SEARCH_GYMS_SU
 public class LessonController {
 
     private final LessonService lessonService;
-    private final MemberRepository memberRepository;
+    private final ChatRoomService chatRoomService;
     private final LessonEnrollmentService lessonEnrollmentService;
 
     @GetMapping("/search")

@@ -1,5 +1,7 @@
 package com.health.yogiodigym.lesson.service.impl;
 
+import com.health.yogiodigym.chat.entity.ChatRoom;
+import com.health.yogiodigym.chat.service.ChatRoomService;
 import com.health.yogiodigym.lesson.dto.CategoryDto;
 import com.health.yogiodigym.lesson.dto.LessonDto;
 import com.health.yogiodigym.lesson.entity.Category;
@@ -10,6 +12,7 @@ import com.health.yogiodigym.lesson.repository.LessonEnrollmentRepository;
 import com.health.yogiodigym.lesson.repository.LessonRepository;
 import com.health.yogiodigym.lesson.service.LessonService;
 import com.health.yogiodigym.member.entity.Member;
+import com.health.yogiodigym.member.repository.MemberRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -28,6 +31,7 @@ public class LessonServiceImpl implements LessonService {
     private final LessonRepository lessonRepository;
     private final CategoryRepository categoryRepository;
     private final LessonEnrollmentRepository lessonEnrollmentRepository;
+    private final ChatRoomService chatRoomService;
 
     @Override
     @Transactional(readOnly = true)
