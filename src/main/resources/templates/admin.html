@@ -2,6 +2,9 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
     <title>관리자 페이지</title>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -275,6 +278,7 @@
 
 <script>
     $(document).ready(function () {
+
         function searchMembers() {
             let memberKeyword = $("#memberSearchInput").val().trim();
 
@@ -372,6 +376,13 @@
     });
 
     $("#deleteMemberButton").click(function () {
+        let csrfToken = $('meta[name="_csrf"]').attr('content');
+        let csrfHeader = $("meta[name='_csrf_header']").attr("content");
+
+        console.log(csrfHeader + "Header");
+        console.log(csrfToken + "Token");
+
+
         let selectMembers = [];
         $(".memberCheckbox:checked").each(function () {
             selectMembers.push(Number($(this).val()));
@@ -384,20 +395,28 @@
             return;
         }
 
+
         $.ajax({
             url: "/api/admin/member/inactive",
             type: "POST",
             data: JSON.stringify(selectMembers),
-            contentType: "application/json",
+            contentType: 'application/json; charset=utf-8',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader(csrfHeader, csrfToken);
+            },
             success: function (response) {
                 if (response.status === 200) {
                     alert("회원 상태를 비활성화 했습니다.");
                     location.reload();
                 }else {
                     alert("회원 비활성화에 실패했습니다.");
+
+                    console.log(response.status);
+                    console.log(response.data);
                 }
             },
-            error: function () {
+            error: function (xhr) {
+                console.log(xhr.responseText);
                 alert("비활성화 중 오류가 발생했습니다.");
             }
         });
