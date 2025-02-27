@@ -10,17 +10,17 @@
         body {
             background-color: #f8f9fa;
         }
-        .container.table-list {
+        .container-fluid table-list {
             display: flex;
-            justify-content: flex-start;
-            flex-wrap: wrap;
-            width: 100%;
+            justify-content: space-evenly;
             margin: 50px 0 0 0 !important;
         }
 
         .member-container {
-            width: 45%;
+            max-width: 33%;
             margin-right: 20px;
+            margin-top: 20px;
+            margin-bottom: 20px;
             border: 3px solid #cccccc;
             padding: 15px;
             border-radius: 10px;
@@ -31,13 +31,17 @@
             box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
             height: 800px;
         }
-        .lesson-category-container {
-            width: 45%;
+        .lesson-category-container, .apply-board-container {
+            margin-top: 20px;
+            max-width: 33%;
+            margin-right: 20px;
         }
 
-        .lesson-container, .category-container {
+        .lesson-container, .category-container, .apply-container, .board-container {
             width: 100%;
             margin-bottom: 20px;
+            maring-top: 20px;
+
             border: 3px solid #cccccc;
             padding: 15px;
             border-radius: 10px;
@@ -49,7 +53,7 @@
             height: 390px;
         }
 
-        .member-container h3, .lesson-container h3, .category-container h3 {
+        .member-container h3, .lesson-container h3, .category-container h3, .apply-container h3, .board-container h3 {
             text-align: center;
             width: 100%;
         }
@@ -61,7 +65,7 @@
             border: 1px solid #ccc;
         }
 
-        .lessonTable-container, .CategoryTable-container {
+        .lessonTable-container, .categoryTable-container, .applyTable-container, .boardTable-container {
             width: 100%;
             height: 400px;
             overflow-y: auto;
@@ -102,11 +106,11 @@
             margin-bottom: 15px;
         }
 
-        #memberSearchInput, #lessonSearchInput, #categorySearchInput {
+        #memberSearchInput, #lessonSearchInput, #categorySearchInput, #applySearchInput, #boardSearchInput {
             width: 250px;
         }
 
-        #deleteMemberButton, #deleteLessonButton, #deleteCategoryButton {
+        #deleteMemberButton, #deleteLessonButton, #deleteCategoryButton, #deleteApplyButton, #deleteBoardButton {
             width: 100px;
             margin-top: 10px;
             align-self: flex-end;
@@ -126,7 +130,7 @@
     </style>
 </head>
 <body>
-<div class="container table-list">
+<div class="container-fluid d-flex flex-row table-list">
     <div class="member-container">
         <h3>회원 목록</h3>
         <div class="search-container">
@@ -134,7 +138,7 @@
             <button id="memberSearchButton" class="btn btn-primary ml-2">검색</button>
         </div>
         <div class="memberTable-container">
-            <table id="memberTable" class="table table-bordered table-striped table-hover">
+            <table id="memberTable" class="table table-bordered table-hover">
                 <thead class="thead-dark">
                 <tr>
                     <th>선택</th>
@@ -156,6 +160,59 @@
         <button class="btn btn-danger" id="deleteMemberButton">회원 삭제</button>
     </div>
 
+    <div class="apply-board-container">
+        <div class="apply-container">
+            <h3>강사 신청</h3>
+            <div class="search-container">
+                <input type="text" id="applySearchInput" name="applyKeyword" class="form-control" placeholder="신청자 검색...">
+                <button id="applySearchButton" class="btn btn-primary ml-2">검색</button>
+            </div>
+            <div class="applyTable-container">
+                <table id="applyTable" class="table table-bordered table-hover">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th>선택</th>
+                        <th>강의명</th>
+                        <th>강사</th>
+                    </tr>
+                    </thead>
+                    <tbody id="applyTableBody">
+                    <tr>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <button class="btn btn-danger" id="deleteApplyButton">강의 삭제</button>
+        </div>
+
+        <div class="board-container">
+            <h3>게시글 관리</h3>
+            <div class="search-container">
+                <input type="text" id="boardSearchInput" name="boardKeyword" class="form-control" placeholder="게시글 검색...">
+                <button id="boardSearchButton" class="btn btn-primary ml-2">검색</button>
+            </div>
+            <div class="boardTable-container">
+                <table id="boardTable" class="table table-bordered table-hover">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th>선택</th>
+                        <th>강의명</th>
+                        <th>강사</th>
+                    </tr>
+                    </thead>
+                    <tbody id="boardTableBody">
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <button class="btn btn-danger" id="deleteBoardButton">삭제</button>
+        </div>
+    </div>
+
     <div class="lesson-category-container">
         <div class="lesson-container">
             <h3>강의 관리</h3>
@@ -164,7 +221,7 @@
                 <button id="lessonSearchButton" class="btn btn-primary ml-2">검색</button>
             </div>
             <div class="lessonTable-container">
-                <table id="lessonTable" class="table table-bordered table-striped table-hover">
+                <table id="lessonTable" class="table table-bordered table-hover">
                     <thead class="thead-dark">
                     <tr>
                         <th>선택</th>
@@ -190,8 +247,8 @@
                 <input type="text" id="categorySearchInput" name="categoryKeyword" class="form-control" placeholder="카테고리 검색...">
                 <button id="categorySearchButton" class="btn btn-primary ml-2">검색</button>
             </div>
-            <div class="CategoryTable-container">
-                <table id="categoryTable" class="table table-bordered table-striped table-hover">
+            <div class="categoryTable-container">
+                <table id="categoryTable" class="table table-bordered table-hover">
                     <thead class="thead-dark">
                     <tr>
                         <th>선택</th>
