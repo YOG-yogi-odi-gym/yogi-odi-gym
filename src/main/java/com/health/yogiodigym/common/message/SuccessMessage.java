@@ -23,6 +23,8 @@ public enum SuccessMessage {
     PUT_CALENDAR_MEMO_SUCCESS("유저의 메모를 수정하는데 성공하였습니다."),
     DELETE_CALENDAR_MEMO_SUCCESS("유저의 메모를 삭제하는데 성공하였습니다."),
 
+    REGIST_SUCCESS("회원가입에 성공하였습니다."),
+    SEARCH_GYMS_SUCCESS("헬스장 조회에 성공하였습니다."),
     CREATE_CHAT_ROOMS_SUCCESS("채팅방 생성에 성공하였습니다."),
     GET_MY_CHAT_ROOMS_SUCCESS("채팅방 목록 조회에 성공하였습니다."),
     KICK_MEMBER_SUCCESS("회원 강퇴에 성공하였습니다."),
