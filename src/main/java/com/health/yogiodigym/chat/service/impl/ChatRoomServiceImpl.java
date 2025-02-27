@@ -63,7 +63,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     }
 
     @Override
-    public void createChatRoom(Member member, boolean isGroupChat) {
+    public ChatRoom createChatRoom(Member member, boolean isGroupChat) {
         ChatRoom chatRoom = ChatRoom.builder()
                 .roomId(createChatRoomId())
                 .isGroupChat(isGroupChat)
@@ -75,6 +75,8 @@ public class ChatRoomServiceImpl implements ChatRoomService {
                 .member(member)
                 .build();
         chatParticipantRepository.save(chatParticipant);
+
+        return chatRoom;
     }
 
     private String createChatRoomId() {
