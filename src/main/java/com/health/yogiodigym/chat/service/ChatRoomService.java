@@ -8,7 +8,7 @@ import java.util.List;
 public interface ChatRoomService {
     void enterChatRoom(Member member, String roomId);
 
-    void createChatRoom(Member member, boolean isGroupChat);
+    ChatRoom createChatRoom(Member member, boolean isGroupChat);
 
     void deleteChatRoom(ChatRoom chatRoom);
 
