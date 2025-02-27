@@ -35,7 +35,7 @@ public class SecurityConfig {
                         .ignoringRequestMatchers("/api/**"))
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/images/source/**", "/css/**", "/js/**", "/", "/member/regist", "/api/member/regist").permitAll()
-                        .requestMatchers("/images/license/**").hasRole("ADMIN")
+                        .requestMatchers("/images/license/**", "/admin/**", "/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/member/login", "/login").not().authenticated()
                         .requestMatchers("/logout", "/dashboard", "/images/license/**", "/images/profile/**").authenticated()
                         .anyRequest().authenticated()

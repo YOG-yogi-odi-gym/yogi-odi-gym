@@ -34,8 +34,7 @@ public class AdminMemberServiceImpl implements AdminMemberService {
     @Override
     @Transactional
     public void setInactiveStatus(List<Long> memberIds) {
-        LocalDate dropDate = LocalDate.now();
-        memberRepository.setInactiveStatus(memberIds, MemberStatus.INACTIVE, dropDate);
+        memberRepository.setInactiveStatus(memberIds, MemberStatus.INACTIVE, LocalDate.now());
     }
 
 //    @Scheduled(cron = "00 00 00 * * *")

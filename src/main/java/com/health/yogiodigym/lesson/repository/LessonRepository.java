@@ -1,6 +1,10 @@
 package com.health.yogiodigym.lesson.repository;
 
 import com.health.yogiodigym.lesson.entity.Lesson;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
 import com.health.yogiodigym.member.entity.Member;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
