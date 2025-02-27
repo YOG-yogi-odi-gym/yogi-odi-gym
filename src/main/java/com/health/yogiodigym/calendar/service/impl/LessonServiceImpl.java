@@ -1,10 +1,10 @@
 package com.health.yogiodigym.calendar.service.impl;
 
 import com.health.yogiodigym.calendar.dto.LessonDto;
-import com.health.yogiodigym.calendar.entity.Lesson;
-import com.health.yogiodigym.calendar.entity.LessonEnrollment;
-import com.health.yogiodigym.calendar.repository.LessonEnrollmentRepository;
-import com.health.yogiodigym.calendar.repository.LessonRepository;
+import com.health.yogiodigym.lesson.entity.Lesson;
+import com.health.yogiodigym.lesson.entity.LessonEnrollment;
+import com.health.yogiodigym.lesson.repository.LessonEnrollmentRepository;
+import com.health.yogiodigym.lesson.repository.LessonRepository;
 import com.health.yogiodigym.calendar.service.LessonService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

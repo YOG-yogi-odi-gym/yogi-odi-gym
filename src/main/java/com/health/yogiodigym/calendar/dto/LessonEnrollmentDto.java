@@ -1,6 +1,6 @@
 package com.health.yogiodigym.calendar.dto;
 
-import com.health.yogiodigym.calendar.entity.Lesson;
+import com.health.yogiodigym.lesson.entity.Lesson;
 //import com.health.yogiodigym.calendar.entity.Member;
 import com.health.yogiodigym.member.entity.Member;
 import lombok.*;

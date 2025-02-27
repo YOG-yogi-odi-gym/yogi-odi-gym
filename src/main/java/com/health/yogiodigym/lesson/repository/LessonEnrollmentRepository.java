@@ -7,4 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface LessonEnrollmentRepository extends JpaRepository<LessonEnrollment, Long> {
     List<LessonEnrollment> findAllByMember(Member member);
+
+    List<LessonEnrollment> findByMemberId(Long memberId);
 }

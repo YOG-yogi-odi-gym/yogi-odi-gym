@@ -1,6 +1,6 @@
 package com.health.yogiodigym.calendar.controller;
 
-import com.health.yogiodigym.calendar.entity.LessonEnrollment;
+import com.health.yogiodigym.lesson.entity.LessonEnrollment;
 import com.health.yogiodigym.calendar.service.LessonEnrollmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

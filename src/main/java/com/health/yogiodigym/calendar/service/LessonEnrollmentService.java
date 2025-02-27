@@ -1,7 +1,7 @@
 package com.health.yogiodigym.calendar.service;
 
-import com.health.yogiodigym.calendar.entity.LessonEnrollment;
-import com.health.yogiodigym.calendar.repository.LessonEnrollmentRepository;
+import com.health.yogiodigym.lesson.entity.LessonEnrollment;
+import com.health.yogiodigym.lesson.repository.LessonEnrollmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -18,6 +18,7 @@ function saveMemo(selectedDate, memberId) {
             console.log(response);
 
             $("#openModalBtn").click();
+            $(".fc-MemoButton-button").click();
         },
         error: function() {
             alert("메모 저장 실패");
@@ -47,6 +48,9 @@ function updateMemo(memoId, selectedDate, memberId) {
         data: JSON.stringify(requestData),
         success: function(response) {
             console.log(response);
+
+            $("#openModalBtn").click();
+            $(".fc-MemoButton-button").click();
         },
         error: function(xhr) {
             alert("메모 업데이트 실패: " + xhr.responseText);
@@ -61,6 +65,9 @@ function deleteMemo(memoId) {
         method: "DELETE",
         success: function(response) {
             console.log(response);
+
+            $("#openModalBtn").click();
+            $(".fc-MemoButton-button").click();
         },
         error: function(xhr) {
             alert("메모 삭제 실패: " + xhr.responseText);
@@ -88,6 +95,9 @@ function saveFood(selectedDate, memberId) {
         data: JSON.stringify(requestData),  // 데이터를 JSON 형식으로 변환하여 전송
         success: function(response) {
             console.log(response);
+
+            $("#openModalBtn").click();
+            $(".fc-FoodButton-button").click();
         },
         error: function() {
             alert("식단 저장 실패");
@@ -117,6 +127,9 @@ function updateFood(foodId, selectedDate, memberId) {
         data: JSON.stringify(requestData),
         success: function(response) {
             console.log(response);
+
+            $("#openModalBtn").click();
+            $(".fc-FoodButton-button").click();
         },
         error: function(xhr) {
             alert("식단 업데이트 실패: " + xhr.responseText);
@@ -131,6 +144,9 @@ function deleteFood(foodId) {
         method: "DELETE",
         success: function(response) {
             console.log(response);
+
+            $("#openModalBtn").click();
+            $(".fc-FoodButton-button").click();
         },
         error: function(xhr) {
             alert("식단 삭제 실패: " + xhr.responseText);
@@ -159,6 +175,9 @@ function saveExercise(selectedDate, memberId) {
         data: JSON.stringify(requestData),  // 데이터를 JSON 형식으로 변환하여 전송
         success: function(response) {
             console.log(response);
+
+            $("#openModalBtn").click();
+            $(".fc-ExerButton-button").click();
         },
         error: function() {
             alert("운동 저장 실패");
@@ -187,6 +206,9 @@ function updateExercise(exerciseId, selectedDate, memberId) {
         data: JSON.stringify(requestData),
         success: function(response) {
             console.log(response);
+
+            $("#openModalBtn").click();
+            $(".fc-ExerButton-button").click();
         },
         error: function(xhr) {
             alert("운동 업데이트 실패: " + xhr.responseText);
@@ -201,6 +223,9 @@ function deleteExercise(exerciseId) {
         method: "DELETE",
         success: function(response) {
             console.log(response);
+
+            $("#openModalBtn").click();
+            $(".fc-ExerButton-button").click();
         },
         error: function(xhr) {
             alert("운동 삭제 실패: " + xhr.responseText);
