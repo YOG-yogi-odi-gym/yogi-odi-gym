@@ -15,10 +15,15 @@
         <p><span th:text="${#authentication.name}"></span></p>
         <p><img th:src="${#authentication.principal.member.profile}"></p>
         <p><span th:text="${#authentication.principal.member.name}"></span></p>
+        <p><span th:text="${#authentication.principal.member.id}"></span></p>
     </div>
 
     <form th:action="@{/logout}" method="post">
         <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 focus:outline-none">로그아웃</button>
+    </form>
+
+    <form th:action="@{/member/test}" method="post">
+        <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 focus:outline-none">캘린더 이동</button>
     </form>
 
     <div sec:authorize="!isAuthenticated()">

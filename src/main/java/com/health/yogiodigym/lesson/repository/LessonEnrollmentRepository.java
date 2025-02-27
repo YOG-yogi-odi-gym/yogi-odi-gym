@@ -15,4 +15,7 @@ public interface LessonEnrollmentRepository extends JpaRepository<LessonEnrollme
     Optional<LessonEnrollment> findByLessonAndMember(Lesson lesson, Member member);
 
     List<LessonEnrollment> findAllByMember(Member member);
+
+    //임시추가
+    List<LessonEnrollment> findByMemberId(Long memberId);
 }
