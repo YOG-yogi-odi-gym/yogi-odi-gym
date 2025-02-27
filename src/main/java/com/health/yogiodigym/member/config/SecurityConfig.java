@@ -32,7 +32,8 @@ public class SecurityConfig {
         http
                 .cors(withDefaults())
                 .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/api/**"))
+                        //.ignoringRequestMatchers("/api/**"))
+                        .ignoringRequestMatchers("/api/**","/memo/**","/exercise/**","/food/**"))
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/images/source/**", "/css/**", "/js/**", "/", "/member/regist", "/api/member/regist").permitAll()
                         .requestMatchers("/images/license/**").hasRole("ADMIN")

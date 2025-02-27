@@ -9,6 +9,9 @@ function saveMemo(selectedDate, memberId) {
         memberId: memberId
     };
 
+    console.log(requestData);
+
+
     $.ajax({
         url: "/memo/date/post",
         method: "POST",
@@ -237,7 +240,7 @@ function loadLessonEvents() {
     let memberId = document.getElementById('memberId').value;
 
     $.ajax({
-        url: '/lesson',
+        url: '/calendar/lesson',
         method: 'GET',
         data: { memberId: memberId },
         success: function (data) {
@@ -267,7 +270,7 @@ function loadLesson2Events(date) {
     console.log("선택한 날짜:", selectedDate);
 
     $.ajax({
-        url: '/lesson/date',
+        url: '/calendar/lesson/date',
         method: 'GET',
         data: {
             memberId: memberId,
@@ -305,6 +308,8 @@ function loadLesson2Events(date) {
 function MemoAction() {
     let memberId = document.getElementById('memberId').value;
 
+    console.log(memberId);
+
     $.ajax({
         url: '/memo',
         method: 'GET',
@@ -327,6 +332,9 @@ function MemoAction() {
 function Memo2Action(date) {
     let selectedDate = date.toISOString().split('T')[0];
     let memberId = document.getElementById('memberId').value;
+
+    console.log(memberId);
+    console.log(selectedDate);
 
     $.ajax({
         url: '/memo/date',

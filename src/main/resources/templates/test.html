@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -23,12 +24,18 @@
 
 <h1>캘린더</h1>
 
-<p th:text="'Logged in as : ' + ${userEmail}"></p>
-<p th:text="'Logged id : ' + ${memberId}"></p>
-<p th:text="'userWeight : ' + ${userWeight}"></p>
-<a href="/logout">Logout</a>
-<input type="hidden" id="memberId" th:value="${memberId}" />
-<input type="hidden" id="userWeight" onkeyup="calculateCalories()" th:value="${userWeight}"  />
+
+<div sec:authorize="isAuthenticated()">
+    <p>사진 : <img th:src="${#authentication.principal.member.profile}"></p>
+    <p>이름 :<span th:text="${#authentication.principal.member.name}"></span></p>
+
+
+<input type="hidden" id="memberId" th:value="${#authentication.principal.member.id}" />
+<input type="hidden" id="userWeight" onkeyup="calculateCalories()" th:value="${#authentication.principal.member.weight}"  />
+
+    <p>아이디 : <span th:text="${#authentication.principal.member.id}"></span></p>
+    <p>체중 : <span th:text="${#authentication.principal.member.weight}"></span></p>
+</div>
 
 
 <div id="calendar"></div>

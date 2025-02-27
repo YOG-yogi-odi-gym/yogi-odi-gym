@@ -21,4 +21,21 @@ public class MainViewController {
     public String dashoboard() {
         return "/dashboard";
     }
+
+
+
+    //임시추가
+    @GetMapping("/select_food")
+    public String showFoodSelection() {
+
+        return "select_food";
+
+    }
+
+    @GetMapping("/select_exercise")
+    public String showExerciseSelection() {
+
+        return "select_exercise";
+
+    }
 }

@@ -1,10 +1,13 @@
 package com.health.yogiodigym.member.service;
 
 import com.health.yogiodigym.member.dto.RegistMemberDto;
+import com.health.yogiodigym.member.entity.Member;
 import com.health.yogiodigym.member.entity.MemberOAuth2User;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Optional;
 
 public interface MemberService {
 
@@ -13,4 +16,10 @@ public interface MemberService {
     void registWithEmail(RegistMemberDto registMemberDto, MultipartFile profile);
 
     void updateAuthentication(String email, HttpServletRequest request, HttpServletResponse response);
+
+    //임시사용
+    boolean login(String email, String password);
+
+    Member getMemberByEmail(String email);
+
 }
