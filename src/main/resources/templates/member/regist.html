@@ -54,22 +54,33 @@
                 },
                 success: function (res) {
                     console.log(res);
-                    if(res.status == 400){
-                        alert(res.message);
-                        for (let i = 0; i < res.data.length; i++) {
-                            const error = res.data[i];
-                            alert(`Field: ${error.field}\nMessage: ${error.defaultMessage}`);
-                            break; // 첫 번째 오류만 출력하고 종료
-                        }
-                    }else if(res.status == 409){
-                        alert(res.message);
-                    }else {
-                        window.location.href = "/dashboard"
-                    }
+                    window.location.href = "/dashboard"
                 },
-                error: function (request, error) {
-                    alert("서버와의 연결에 실패했습니다. 다시 시도해주세요.");
-                    alert(error);
+                error: function (res) {
+                    let resJSON = res.responseJSON;
+
+                    if(res.status == 400){
+                        alert(resJSON.message)
+                        let errors = resJSON.data;
+
+                        const errorMap = errors.reduce((acc, error) => {
+                            acc[error.field] = error.defaultMessage;
+                            return acc;
+                        }, {})
+
+                        console.log(errorMap['name']);
+                        console.log(errorMap['email']);
+                        console.log(errorMap['pwd']);
+                        console.log(errorMap['pwd2']);
+                        console.log(errorMap['passwordMatching']);
+                        console.log(errorMap['gender']);
+                        console.log(errorMap['weight']);
+                        console.log(errorMap['height']);
+                        console.log(errorMap['latitude']);
+
+                    }else if(res.status == 409){
+                        alert(resJSON.message)
+                    }
                 }
             });
         }
