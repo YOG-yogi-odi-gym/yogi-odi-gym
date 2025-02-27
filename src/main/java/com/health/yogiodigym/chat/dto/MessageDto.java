@@ -10,6 +10,7 @@ import lombok.*;
 @AllArgsConstructor
 public class MessageDto {
     private Long senderId;
+    private String senderName;
     private String roomId;
     private String message;
 }

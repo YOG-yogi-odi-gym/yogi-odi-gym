@@ -8,3 +8,14 @@
 #    url: ENC(AESFgZv9pzVmujL0GucL0xRW713Wmg5+MSNshtfPUzlnH2mEN8hulQ==)
 #    username: ENC(mEIF/Psek3RVySoZ6lcCGNpaHxDEyrzy)
 #    password: ENC(TS17YebrgCfFaFpXWQpWhJFDH/EBaU6N)
+#
+#  kafka:
+#    bootstrap-servers: ENC(L2VjTT3gMCTpjdLlNhtSlzz3Dzx5P5l4EO0q6XZZLyU=)
+#    producer:
+#      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+#      value-serializer: org.springframework.kafka.support.serializer.JsonDeserializer
+#    consumer:
+#      auto-offset-reset: latest
+#      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+#      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+#      group-id: chat-room
