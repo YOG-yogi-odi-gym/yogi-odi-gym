@@ -77,6 +77,7 @@ public class LessonServiceImpl implements LessonService {
     public void registerLesson(LessonDto.Request lessonDto, Member master) {
         Category category = categoryRepository.findById(lessonDto.getCategoryId())
                 .orElseThrow(() -> new IllegalArgumentException("카테고리 없음"));
+        ChatRoom chatRoom = chatRoomService.createChatRoom(master,true);
 
         Lesson lesson = Lesson.builder()
                 .title(lessonDto.getTitle())
@@ -94,6 +95,7 @@ public class LessonServiceImpl implements LessonService {
                 .max(lessonDto.getMax())
                 .current(1)
                 .master(master)
+                .chatRoom(chatRoom)
                 .build();
 
         lessonRepository.save(lesson);
