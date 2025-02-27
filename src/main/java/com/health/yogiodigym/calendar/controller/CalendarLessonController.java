@@ -1,9 +1,7 @@
 package com.health.yogiodigym.calendar.controller;
 
 import com.health.yogiodigym.calendar.dto.LessonDto;
-import com.health.yogiodigym.lesson.entity.LessonEnrollment;
 import com.health.yogiodigym.calendar.service.CalendarLessonService;
-
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

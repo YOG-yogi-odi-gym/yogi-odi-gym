@@ -3,7 +3,10 @@ package com.health.yogiodigym.calendar.controller;
 import com.health.yogiodigym.calendar.entity.DataExercise;
 import com.health.yogiodigym.calendar.service.DataExerciseService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 

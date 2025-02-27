@@ -1,15 +1,15 @@
 package com.health.yogiodigym.calendar.service.impl;
 
-import com.health.yogiodigym.calendar.dto.CalendarMemoDto.*;
+import com.health.yogiodigym.calendar.dto.CalendarMemoDto.InsertRequest;
+import com.health.yogiodigym.calendar.dto.CalendarMemoDto.SelectRequest;
+import com.health.yogiodigym.calendar.dto.CalendarMemoDto.UpdateRequest;
 import com.health.yogiodigym.calendar.entity.CalendarMemo;
-//import com.health.yogiodigym.calendar.entity.Member;
-import com.health.yogiodigym.member.entity.Member;
 import com.health.yogiodigym.calendar.repository.CalendarMemoRepository;
-//import com.health.yogiodigym.calendar.repository.MemberRepository;
-import com.health.yogiodigym.member.repository.MemberRepository;
 import com.health.yogiodigym.calendar.service.CalendarMemoService;
 import com.health.yogiodigym.common.exception.MemberNotFoundException;
 import com.health.yogiodigym.common.exception.MemoNotFoundException;
+import com.health.yogiodigym.member.entity.Member;
+import com.health.yogiodigym.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

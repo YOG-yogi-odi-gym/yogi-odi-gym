@@ -1,6 +1,8 @@
 package com.health.yogiodigym.calendar.controller;
 
-import com.health.yogiodigym.calendar.dto.CalendarExerciseDto.*;
+import com.health.yogiodigym.calendar.dto.CalendarExerciseDto.InsertRequest;
+import com.health.yogiodigym.calendar.dto.CalendarExerciseDto.SelectRequest;
+import com.health.yogiodigym.calendar.dto.CalendarExerciseDto.UpdateRequest;
 import com.health.yogiodigym.calendar.service.impl.CalendarExerciseServiceImpl;
 import com.health.yogiodigym.common.response.HttpResponse;
 import lombok.RequiredArgsConstructor;

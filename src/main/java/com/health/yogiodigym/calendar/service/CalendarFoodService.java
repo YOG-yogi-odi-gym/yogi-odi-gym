@@ -1,6 +1,8 @@
 package com.health.yogiodigym.calendar.service;
 
-import com.health.yogiodigym.calendar.dto.CalendarFoodDto.*;
+import com.health.yogiodigym.calendar.dto.CalendarFoodDto.InsertRequest;
+import com.health.yogiodigym.calendar.dto.CalendarFoodDto.SelectRequest;
+import com.health.yogiodigym.calendar.dto.CalendarFoodDto.UpdateRequest;
 
 import java.time.LocalDate;
 import java.util.List;

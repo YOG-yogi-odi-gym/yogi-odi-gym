@@ -1,18 +1,18 @@
 package com.health.yogiodigym.calendar.service.impl;
 
-import com.health.yogiodigym.calendar.dto.CalendarExerciseDto.*;
+import com.health.yogiodigym.calendar.dto.CalendarExerciseDto.InsertRequest;
+import com.health.yogiodigym.calendar.dto.CalendarExerciseDto.SelectRequest;
+import com.health.yogiodigym.calendar.dto.CalendarExerciseDto.UpdateRequest;
 import com.health.yogiodigym.calendar.entity.CalendarExercise;
 import com.health.yogiodigym.calendar.entity.DataExercise;
-//import com.health.yogiodigym.calendar.entity.Member;
-import com.health.yogiodigym.member.entity.Member;
 import com.health.yogiodigym.calendar.repository.CalendarExerciseRepository;
 import com.health.yogiodigym.calendar.repository.DataExerciseRepository;
-//import com.health.yogiodigym.calendar.repository.MemberRepository;
-import com.health.yogiodigym.member.repository.MemberRepository;
 import com.health.yogiodigym.calendar.service.CalendarExerciseService;
 import com.health.yogiodigym.common.exception.DataExerciseNotFoundException;
 import com.health.yogiodigym.common.exception.ExerciseNotFoundException;
 import com.health.yogiodigym.common.exception.MemberNotFoundException;
+import com.health.yogiodigym.member.entity.Member;
+import com.health.yogiodigym.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
