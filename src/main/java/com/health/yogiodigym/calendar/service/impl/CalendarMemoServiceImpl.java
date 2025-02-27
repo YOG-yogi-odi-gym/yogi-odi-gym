@@ -36,7 +36,7 @@ public class CalendarMemoServiceImpl implements CalendarMemoService {
                 .map(memo -> SelectRequest.builder()
                         .id(memo.getId())
                         .title(memo.getTitle())
-                        .context(memo.getTitle())
+                        .context(memo.getContext())
                         .date(memo.getDate())
                         .memberId(memo.getMember().getId())
                         .build()
@@ -52,7 +52,7 @@ public class CalendarMemoServiceImpl implements CalendarMemoService {
                 .map(memo -> SelectRequest.builder()
                         .id(memo.getId())
                         .title(memo.getTitle())
-                        .context(memo.getTitle())
+                        .context(memo.getContext())
                         .date(memo.getDate())
                         .memberId(memo.getMember().getId())
                         .build()
@@ -68,7 +68,7 @@ public class CalendarMemoServiceImpl implements CalendarMemoService {
 
         CalendarMemo postMemo = CalendarMemo.builder()
                 .title(dto.getTitle())
-                .context(dto.getTitle())
+                .context(dto.getContext())
                 .date(dto.getDate())
                 .member(member)
                 .build();
@@ -91,7 +91,7 @@ public class CalendarMemoServiceImpl implements CalendarMemoService {
         CalendarMemo updateMemo = CalendarMemo.builder()
                 .id(memo.getId())
                 .title(dto.getTitle())
-                .context(dto.getTitle())
+                .context(dto.getContext())
                 .date(dto.getDate())
                 .member(member)
                 .build();
