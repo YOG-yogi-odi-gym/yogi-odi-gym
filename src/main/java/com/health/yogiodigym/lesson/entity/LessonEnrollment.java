@@ -1,32 +1,30 @@
 package com.health.yogiodigym.lesson.entity;
 
-import jakarta.persistence.Column;
+import com.health.yogiodigym.member.entity.Member;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import jakarta.persistence.ManyToOne;
+import lombok.*;
 
 @Getter
 @Builder
-@Entity
 @ToString
+@Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class Category {
+public class LessonEnrollment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String name;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Member member;
 
-    @Column(nullable = false)
-    private String code;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Lesson lesson;
 
 }

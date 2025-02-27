@@ -1,6 +1,5 @@
 package com.health.yogiodigym.chat.controller.rest;
 
-import com.health.yogiodigym.chat.config.ChatConstants;
 import com.health.yogiodigym.chat.dto.MessageDto;
 import com.health.yogiodigym.chat.service.KafkaProducerService;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +19,7 @@ public class StompController {
 
         log.info("전송한 메시지 : {}", message);
 
-        kafkaProducerService.sendMessage(ChatConstants.CHAT_TOPIC, message);
+        kafkaProducerService.sendMessage(message);
 
         return message;
     }

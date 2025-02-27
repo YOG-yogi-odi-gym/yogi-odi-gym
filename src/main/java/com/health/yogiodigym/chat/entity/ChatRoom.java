@@ -1,6 +1,6 @@
-package com.health.yogiodigym.lesson.entity;
+package com.health.yogiodigym.chat.entity;
 
-import jakarta.persistence.Column;
+import com.health.yogiodigym.common.entity.BaseTimeEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,20 +13,18 @@ import lombok.ToString;
 
 @Getter
 @Builder
-@Entity
 @ToString
+@Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class Category {
+public class ChatRoom extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String name;
+    private String roomId;
 
-    @Column(nullable = false)
-    private String code;
+    private boolean isGroupChat;
 
 }
