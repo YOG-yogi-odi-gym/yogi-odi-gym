@@ -2,8 +2,10 @@ package com.health.yogiodigym.lesson.service.impl;
 
 import com.health.yogiodigym.chat.entity.ChatRoom;
 import com.health.yogiodigym.chat.service.ChatRoomService;
+import com.health.yogiodigym.common.exception.CategoryNotFoundException;
+import com.health.yogiodigym.common.exception.LessonNotFoundException;
 import com.health.yogiodigym.lesson.dto.CategoryDto;
-import com.health.yogiodigym.lesson.dto.LessonDto;
+import com.health.yogiodigym.lesson.dto.LessonDto.*;
 import com.health.yogiodigym.lesson.entity.Category;
 import com.health.yogiodigym.lesson.entity.Lesson;
 import com.health.yogiodigym.lesson.entity.LessonEnrollment;
@@ -12,8 +14,6 @@ import com.health.yogiodigym.lesson.repository.LessonEnrollmentRepository;
 import com.health.yogiodigym.lesson.repository.LessonRepository;
 import com.health.yogiodigym.lesson.service.LessonService;
 import com.health.yogiodigym.member.entity.Member;
-import com.health.yogiodigym.member.repository.MemberRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,7 +35,7 @@ public class LessonServiceImpl implements LessonService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<LessonDto> searchLessons(String keyword, String column, Integer days, List<Long> categories, Pageable pageable) {
+    public Page<LessonSearchDto> searchLessons(String keyword, String column, Integer days, List<Long> categories, Pageable pageable) {
         Page<Lesson> lessons;
 
         boolean hasKeyword = keyword != null && !keyword.isEmpty();
@@ -50,33 +50,34 @@ public class LessonServiceImpl implements LessonService {
             lessons = lessonRepository.searchLessons(keyword, column, days, pageable);
         }
 
-        return lessons.map(LessonDto::new);
+        return lessons.map(LessonSearchDto::new);
     }
 
     @Override
-    public LessonDto.Detail findLessonById(Long lessonId) {
+    public LessonDetailDto findLessonById(Long lessonId) {
         Lesson lesson = lessonRepository.findById(lessonId)
-                .orElseThrow(() -> new EntityNotFoundException("해당 강의를 찾을 수 없습니다."));
+                .orElseThrow(() -> new LessonNotFoundException(lessonId));
 
-        return new LessonDto.Detail(lesson);
+        return new LessonDetailDto(lesson);
     }
 
     @Override
-    public void editLesson(LessonDto.Edit lessonDto) {
+    public void editLesson(LessonEditDto lessonDto) {
         Lesson lesson = lessonRepository.findById(lessonDto.getId())
-                .orElseThrow(() -> new EntityNotFoundException("해당 강의를 찾을 수 없습니다."));
+                .orElseThrow(() -> new LessonNotFoundException(lessonDto.getId()));
 
         Category category = categoryRepository.findById(lessonDto.getCategoryId())
-                .orElseThrow(() -> new IllegalArgumentException("카테고리 없음"));
+                .orElseThrow(() -> new CategoryNotFoundException(lessonDto.getCategoryId()));
 
         lesson.updateLesson(lessonDto, category);
         lessonRepository.save(lesson);
     }
 
     @Override
-    public void registerLesson(LessonDto.Request lessonDto, Member master) {
+    public void registerLesson(LessonRequestDto lessonDto, Member master) {
         Category category = categoryRepository.findById(lessonDto.getCategoryId())
-                .orElseThrow(() -> new IllegalArgumentException("카테고리 없음"));
+                .orElseThrow(() -> new CategoryNotFoundException(lessonDto.getCategoryId()));
+
         ChatRoom chatRoom = chatRoomService.createChatRoom(master,true);
 
         Lesson lesson = Lesson.builder()

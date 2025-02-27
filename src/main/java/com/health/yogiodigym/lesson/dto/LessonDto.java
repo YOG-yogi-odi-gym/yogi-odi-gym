@@ -48,7 +48,44 @@ public class LessonDto {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class Detail {
+    public static class LessonSearchDto {
+        private Long id;
+        private String title;
+        private String categoryName;
+        private Long masterId;
+        private String masterName;
+        private int days;
+        private String location;
+        private float latitude;
+        private float longitude;
+        private String startTime;
+        private String endTime;
+        private Integer current;
+        private Integer max;
+
+        public LessonSearchDto(Lesson lesson) {
+            this.id = lesson.getId();
+            this.title = lesson.getTitle();
+            this.categoryName = lesson.getCategory().getName();
+            this.masterId = lesson.getMaster().getId();
+            this.masterName = lesson.getMaster().getName();
+            this.days = lesson.getDays();
+            this.location = lesson.getLocation();
+            this.latitude = lesson.getLatitude();
+            this.longitude = lesson.getLongitude();
+            this.startTime = lesson.getStartTime().toString();
+            this.endTime = lesson.getEndTime().toString();
+            this.current = lesson.getCurrent();
+            this.max = lesson.getMax();
+        }
+    }
+
+    @Getter
+    @Setter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class LessonDetailDto {
         private Long id;
         private String title;
         private Long categoryId;
@@ -68,7 +105,7 @@ public class LessonDto {
         private Integer current;
         private Integer max;
 
-        public Detail(Lesson lesson) {
+        public LessonDetailDto(Lesson lesson) {
             this.id = lesson.getId();
             this.title = lesson.getTitle();
             this.categoryId = lesson.getCategory().getId();
@@ -95,7 +132,7 @@ public class LessonDto {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class Edit {
+    public static class LessonEditDto {
         private Long id;
         private String title;
         private Long categoryId;
@@ -125,7 +162,7 @@ public class LessonDto {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class Enrollment {
+    public static class LessonEnrollmentDto {
         private Long memberId;
         private Long lessonId;
     }
@@ -135,7 +172,7 @@ public class LessonDto {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class Request {
+    public static class LessonRequestDto {
         private String title;
         private Long categoryId;
         private int[] bitDays;

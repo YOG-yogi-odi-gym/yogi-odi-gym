@@ -1,7 +1,7 @@
 package com.health.yogiodigym.lesson.entity;
 
 import com.health.yogiodigym.chat.entity.ChatRoom;
-import com.health.yogiodigym.lesson.dto.LessonDto;
+import com.health.yogiodigym.lesson.dto.LessonDto.*;
 import com.health.yogiodigym.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.*;
@@ -67,7 +67,7 @@ public class Lesson {
         }
     }
 
-    public void updateLesson(LessonDto.Edit dto, Category category) {
+    public void updateLesson(LessonEditDto dto, Category category) {
         this.title = dto.getTitle();
         this.days = dto.getDays();
         this.category = category;

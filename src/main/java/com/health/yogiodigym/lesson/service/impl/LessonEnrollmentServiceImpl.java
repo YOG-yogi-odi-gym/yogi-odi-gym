@@ -1,5 +1,8 @@
 package com.health.yogiodigym.lesson.service.impl;
 
+import com.health.yogiodigym.common.exception.LessonEnrollmentException;
+import com.health.yogiodigym.common.exception.LessonNotFoundException;
+import com.health.yogiodigym.common.exception.MemberNotFoundException;
 import com.health.yogiodigym.lesson.entity.Lesson;
 import com.health.yogiodigym.lesson.entity.LessonEnrollment;
 import com.health.yogiodigym.lesson.repository.LessonEnrollmentRepository;
@@ -23,12 +26,12 @@ public class LessonEnrollmentServiceImpl implements LessonEnrollmentService {
     @Override
     public boolean enrollLesson(Long memberId, Long lessonId) {
         Lesson lesson = lessonRepository.findById(lessonId)
-                .orElseThrow(() -> new IllegalArgumentException("강의를 찾을 수 없습니다."));
+                .orElseThrow(() -> new LessonNotFoundException(lessonId));
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new MemberNotFoundException(memberId));
 
         if (lessonEnrollmentRepository.existsByLessonAndMember(lesson, member)) {
-            throw new IllegalStateException("이미 수강 중인 강의입니다.");
+            throw new LessonEnrollmentException("ENROLLMENT");
         }
 
         if (lesson.getCurrent() >= lesson.getMax()) {
@@ -48,12 +51,12 @@ public class LessonEnrollmentServiceImpl implements LessonEnrollmentService {
     @Override
     public boolean cancelEnrollment(Long memberId, Long lessonId) {
         Lesson lesson = lessonRepository.findById(lessonId)
-                .orElseThrow(() -> new IllegalArgumentException("강의를 찾을 수 없습니다."));
+                .orElseThrow(() -> new LessonNotFoundException(lessonId));
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new MemberNotFoundException(memberId));
 
         LessonEnrollment enrollment = lessonEnrollmentRepository.findByLessonAndMember(lesson, member)
-                .orElseThrow(() -> new IllegalStateException("수강 내역이 없습니다."));
+                .orElseThrow(() -> new LessonEnrollmentException("CANCEL"));
 
         lessonEnrollmentRepository.delete(enrollment);
         lesson.decrementCurrent();
@@ -65,9 +68,9 @@ public class LessonEnrollmentServiceImpl implements LessonEnrollmentService {
     @Transactional(readOnly = true)
     public boolean isUserEnrolled(Long memberId, Long lessonId) {
         Lesson lesson = lessonRepository.findById(lessonId)
-                .orElseThrow(() -> new IllegalArgumentException("강의를 찾을 수 없습니다."));
+                .orElseThrow(() -> new LessonNotFoundException(lessonId));
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new MemberNotFoundException(memberId));
 
         return lessonEnrollmentRepository.existsByLessonAndMember(lesson, member);
     }

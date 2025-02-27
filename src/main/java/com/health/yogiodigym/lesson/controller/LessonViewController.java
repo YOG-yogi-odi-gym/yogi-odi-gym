@@ -1,8 +1,7 @@
 package com.health.yogiodigym.lesson.controller;
 
-import com.health.yogiodigym.lesson.dto.LessonDto;
+import com.health.yogiodigym.lesson.dto.LessonDto.*;
 import com.health.yogiodigym.lesson.dto.MemberLatLonDto;
-import com.health.yogiodigym.lesson.repository.CategoryRepository;
 import com.health.yogiodigym.lesson.service.LessonService;
 import com.health.yogiodigym.member.entity.Member;
 import com.health.yogiodigym.member.entity.MemberOAuth2User;
@@ -50,7 +49,7 @@ public class LessonViewController {
                                    @AuthenticationPrincipal MemberOAuth2User loginUser) {
         Member loginMember = loginUser.getMember();
 
-        LessonDto.Detail lessonDetailDto = lessonService.findLessonById(id);
+        LessonDetailDto lessonDetailDto = lessonService.findLessonById(id);
 
         model.addAttribute("member", new MemberLatLonDto(loginMember));
         model.addAttribute("lesson", lessonDetailDto);
@@ -59,7 +58,7 @@ public class LessonViewController {
 
     @GetMapping("/{lessonId}/edit")
     public String showLessonUpdate(@PathVariable Long lessonId, Model model) {
-        LessonDto.Detail lessonDetailDto = lessonService.findLessonById(lessonId);
+        LessonDetailDto lessonDetailDto = lessonService.findLessonById(lessonId);
 
         model.addAttribute("daysSelected", lessonService.daysSelected(lessonDetailDto.getDays()));
         model.addAttribute("categories", lessonService.getCategoriesByCode("lesson"));

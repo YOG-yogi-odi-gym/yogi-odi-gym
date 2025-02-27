@@ -2,12 +2,11 @@ package com.health.yogiodigym.lesson.controller;
 
 import com.health.yogiodigym.chat.service.ChatRoomService;
 import com.health.yogiodigym.common.response.HttpResponse;
-import com.health.yogiodigym.lesson.dto.LessonDto;
+import com.health.yogiodigym.lesson.dto.LessonDto.*;
 import com.health.yogiodigym.lesson.service.LessonEnrollmentService;
 import com.health.yogiodigym.lesson.service.LessonService;
 import com.health.yogiodigym.member.entity.Member;
 import com.health.yogiodigym.member.entity.MemberOAuth2User;
-import com.health.yogiodigym.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -39,13 +38,13 @@ public class LessonController {
                                            @RequestParam(required = false) List<Long> categories,
                                            @PageableDefault(page = 0, size = 10) Pageable pageable) {
 
-        Page<LessonDto> lessons = lessonService.searchLessons(lessonKeyword, searchColumn, days, categories, pageable);
+        Page<LessonSearchDto> lessons = lessonService.searchLessons(lessonKeyword, searchColumn, days, categories, pageable);
 
         return ResponseEntity.ok().body(new HttpResponse(HttpStatus.OK, SEARCH_GYMS_SUCCESS.getMessage(), lessons));
     }
 
     @PostMapping("/register")
-    public RedirectView registerLesson(@ModelAttribute LessonDto.Request lessonDto,
+    public RedirectView registerLesson(@ModelAttribute LessonRequestDto lessonDto,
                                        @AuthenticationPrincipal MemberOAuth2User loginUser) {
         Member loginMember = loginUser.getMember();
         lessonService.registerLesson(lessonDto, loginMember);
@@ -54,7 +53,7 @@ public class LessonController {
     }
 
     @PostMapping("/enroll")
-    public ResponseEntity<?> enrollLesson(@RequestBody LessonDto.Enrollment request) {
+    public ResponseEntity<?> enrollLesson(@RequestBody LessonEnrollmentDto request) {
         boolean success = lessonEnrollmentService.enrollLesson(request.getMemberId(), request.getLessonId());
 
         return ResponseEntity.ok().body(
@@ -81,7 +80,7 @@ public class LessonController {
     }
 
     @PostMapping("/edit")
-    public RedirectView editLesson(@ModelAttribute LessonDto.Edit lessonDto) {
+    public RedirectView editLesson(@ModelAttribute LessonEditDto lessonDto) {
         lessonService.editLesson(lessonDto);
         return new RedirectView("/lesson/" + lessonDto.getId());
     }

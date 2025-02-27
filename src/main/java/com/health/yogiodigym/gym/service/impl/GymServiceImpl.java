@@ -19,14 +19,7 @@ public class GymServiceImpl implements GymService {
 
     @Override
     public Page<DataGymDto> findByGymSearch(String gymKeyword, Pageable pageable, String searchColumn) {
-        Page<DataGym> gymPage = gymKeyword.isEmpty() ? gymRepository.findAll(pageable)
-                : determineSearchMethod(gymKeyword, pageable, searchColumn);
+        Page<DataGym> gymPage = gymRepository.findByKeywordAndColumn(gymKeyword, searchColumn, pageable);
         return gymPage.map(DataGymDto::new);
-    }
-
-    private Page<DataGym> determineSearchMethod(String gymKeyword, Pageable pageable, String searchColumn) {
-        return Objects.equals(searchColumn, "oldAddress")
-                ? gymRepository.findByOldAddressContaining(gymKeyword, pageable)
-                : gymRepository.findByNameContaining(gymKeyword, pageable);
     }
 }
