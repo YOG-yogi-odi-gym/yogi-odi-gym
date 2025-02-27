@@ -71,5 +71,4 @@ public class SecurityConfig {
                 ).addFilterBefore(new IncompleteUserFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
-
 }
