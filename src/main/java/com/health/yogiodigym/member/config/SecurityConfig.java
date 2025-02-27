@@ -31,7 +31,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .cors(withDefaults())
-                .csrf(withDefaults())
+                .csrf(csrf -> csrf
+                        .ignoringRequestMatchers("/api/**"))
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/images/source/**", "/css/**", "/js/**", "/", "/member/regist", "/api/member/regist").permitAll()
                         .requestMatchers("/images/license/**").hasRole("ADMIN")
