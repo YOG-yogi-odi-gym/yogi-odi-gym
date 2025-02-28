@@ -8,10 +8,11 @@
 
     <link rel="stylesheet" th:href="@{/calendar/css/calendar.css}">
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <script th:src="@{https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js}"></script>
+    <link th:href="@{https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css}" rel="stylesheet">
+    <script th:src="@{https://code.jquery.com/jquery-3.5.1.slim.min.js}"></script>
+    <script th:src="@{https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js}"></script>
+    <script th:src="@{https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js}"></script>
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.0.0/mdb.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.0.0/mdb.min.js"></script>
@@ -21,136 +22,284 @@
 
 <body>
 
+<div class="container mt-4 custom-container">
 
-<h1>캘린더</h1>
+    <div class="card side-card" th:include="~{sidebar/side.html}"></div>
+
+    <div class="card main-card">
+        <div class="card-header">
+        </div>
+        <div class="card-body">
+
+            <!--여기에 넣기-->
+            <h1>캘린더</h1>
 
 
-<div sec:authorize="isAuthenticated()">
-    <p>사진 : <img th:src="${#authentication.principal.member.profile}"></p>
-    <p>이름 :<span th:text="${#authentication.principal.member.name}"></span></p>
+            <div sec:authorize="isAuthenticated()">
+                <p>사진 : <img th:src="${#authentication.principal.member.profile}"></p>
+                <p>이름 :<span th:text="${#authentication.principal.member.name}"></span></p>
 
 
-<input type="hidden" id="memberId" th:value="${#authentication.principal.member.id}" />
-<input type="hidden" id="userWeight" onkeyup="calculateCalories()" th:value="${#authentication.principal.member.weight}"  />
+                <input type="hidden" id="memberId" th:value="${#authentication.principal.member.id}" />
+                <input type="hidden" id="userWeight" onkeyup="calculateCalories()" th:value="${#authentication.principal.member.weight}"  />
 
-    <p>아이디 : <span th:text="${#authentication.principal.member.id}"></span></p>
-    <p>체중 : <span th:text="${#authentication.principal.member.weight}"></span></p>
+                <p>아이디 : <span th:text="${#authentication.principal.member.id}"></span></p>
+                <p>체중 : <span th:text="${#authentication.principal.member.weight}"></span></p>
+            </div>
+
+
+            <div id="calendar"></div>
+
+            <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
+
+            <script th:src="@{/calendar/js/calculate.js}"></script>
+            <script th:src="@{/calendar/js/filter_action.js}"></script>
+
+            <script>
+
+                document.addEventListener('DOMContentLoaded', () => {
+                    const calendarEl = document.getElementById('calendar');
+                    setupCalendar(calendarEl); // 캘린더 설정 및 렌더링
+                });
+
+                let selectedStatus = 0;
+
+                function setupCalendar(calendarEl) {
+
+                    const calendar = new FullCalendar.Calendar(calendarEl, {
+                        themeSystem: 'bootstrap5',
+                        locale: "en",
+                        initialView: 'dayGridMonth',
+                        editable: false,
+                        selectable: false,
+                        navLinks: true,
+                        navLinkDayClick: function (date, jsEvent) {
+                            handleNavLinkDayClick.call(this, date, jsEvent);
+
+                        },
+                        headerToolbar: {
+                            left: 'today LessonButton FoodButton ExerButton MemoButton',
+                            center: 'title',
+                            right: 'prev,next,multiMonthYear'
+                        },
+                        customButtons: {
+                            LessonButton: {
+                                text: '강의',
+                                click: function () {
+                                    loadLessonEvents(calendar);
+                                    selectedStatus = 1;
+                                }
+                            },
+                            FoodButton: {
+                                text: '음식',
+                                click: function () {
+                                    FoodAction();
+                                    selectedStatus = 2;
+                                }
+                            },
+                            ExerButton: {
+                                text: '운동',
+                                click: function () {
+                                    ExerciseAction();
+                                    selectedStatus = 3;
+                                }
+                            },
+                            MemoButton: {
+                                text: '메모',
+                                click: function () {
+                                    MemoAction();
+                                    selectedStatus = 4;
+                                }
+                            },
+                            multiMonthYear: {
+                                icon: "bi bi-calendar",
+                                click: function () {
+                                    calendar.changeView("multiMonthYear");
+                                }
+                            }
+                        }
+                    });
+
+                    calendar.render();
+
+                    window.calendar = calendar;
+
+                    console.log("Calendar initialized:", window.calendar)
+                }
+
+                function handleNavLinkDayClick(date, jsEvent) {
+                    let timezoneOffset = date.getTimezoneOffset() * 60000;
+                    let adjustedDate = new Date(date.getTime() - timezoneOffset);
+
+                    console.log("Current view:", this.view.type); // 디버깅용 로그
+                    console.log(this);
+
+                    if (this.view.type === "multiMonthYear") {
+                        this.changeView("dayGridMonth");
+                        this.gotoDate(adjustedDate);
+                        return;
+                    }
+
+                    switch (selectedStatus) {
+                        case 1:
+                            loadLesson2Events(adjustedDate);
+                            break;
+                        case 2:
+                            Food2Action(adjustedDate);
+                            break;
+                        case 3:
+                            Exercise2Action(adjustedDate);
+                            break;
+                        case 4:
+                            Memo2Action(adjustedDate);
+                            break;
+                        default:
+                            alert("필터를 선택하세요");
+                    }
+
+                    console.log('day', adjustedDate.toISOString());
+                    console.log('coords', jsEvent.pageX, jsEvent.pageY);
+                }
+            </script>
+            <!--종료-->
+
+        </div>
+        <div class="card-footer">
+        </div>
+    </div>
+
 </div>
 
 
-<div id="calendar"></div>
+<!--<h1>캘린더</h1>-->
 
-<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
 
-<script th:src="@{/calendar/js/calculate.js}"></script>
-<script th:src="@{/calendar/js/filter_action.js}"></script>
+<!--<div sec:authorize="isAuthenticated()">-->
+<!--    <p>사진 : <img th:src="${#authentication.principal.member.profile}"></p>-->
+<!--    <p>이름 :<span th:text="${#authentication.principal.member.name}"></span></p>-->
 
-<script>
 
-    document.addEventListener('DOMContentLoaded', () => {
-        const calendarEl = document.getElementById('calendar');
-        setupCalendar(calendarEl); // 캘린더 설정 및 렌더링
-    });
+<!--<input type="hidden" id="memberId" th:value="${#authentication.principal.member.id}" />-->
+<!--<input type="hidden" id="userWeight" onkeyup="calculateCalories()" th:value="${#authentication.principal.member.weight}"  />-->
 
-    let selectedStatus = 0;
+<!--    <p>아이디 : <span th:text="${#authentication.principal.member.id}"></span></p>-->
+<!--    <p>체중 : <span th:text="${#authentication.principal.member.weight}"></span></p>-->
+<!--</div>-->
 
-    function setupCalendar(calendarEl) {
 
-        const calendar = new FullCalendar.Calendar(calendarEl, {
-            themeSystem: 'bootstrap5',
-            locale: "en",
-            initialView: 'dayGridMonth',
-            editable: false,
-            selectable: false,
-            navLinks: true,
-            navLinkDayClick: function (date, jsEvent) {
-                handleNavLinkDayClick.call(this, date, jsEvent);
+<!--<div id="calendar"></div>-->
 
-            },
-            headerToolbar: {
-                left: 'today LessonButton FoodButton ExerButton MemoButton',
-                center: 'title',
-                right: 'prev,next,multiMonthYear'
-            },
-            customButtons: {
-                LessonButton: {
-                    text: '강의',
-                    click: function () {
-                        loadLessonEvents(calendar);
-                        selectedStatus = 1;
-                    }
-                },
-                FoodButton: {
-                    text: '음식',
-                    click: function () {
-                        FoodAction();
-                        selectedStatus = 2;
-                    }
-                },
-                ExerButton: {
-                    text: '운동',
-                    click: function () {
-                        ExerciseAction();
-                        selectedStatus = 3;
-                    }
-                },
-                MemoButton: {
-                    text: '메모',
-                    click: function () {
-                        MemoAction();
-                        selectedStatus = 4;
-                    }
-                },
-                multiMonthYear: {
-                    icon: "bi bi-calendar",
-                    click: function () {
-                        calendar.changeView("multiMonthYear");
-                    }
-                }
-            }
-        });
+<!--<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>-->
 
-        calendar.render();
+<!--<script th:src="@{/calendar/js/calculate.js}"></script>-->
+<!--<script th:src="@{/calendar/js/filter_action.js}"></script>-->
 
-        window.calendar = calendar;
+<!--<script>-->
 
-        console.log("Calendar initialized:", window.calendar)
-    }
+<!--    document.addEventListener('DOMContentLoaded', () => {-->
+<!--        const calendarEl = document.getElementById('calendar');-->
+<!--        setupCalendar(calendarEl); // 캘린더 설정 및 렌더링-->
+<!--    });-->
 
-    function handleNavLinkDayClick(date, jsEvent) {
-        let timezoneOffset = date.getTimezoneOffset() * 60000;
-        let adjustedDate = new Date(date.getTime() - timezoneOffset);
+<!--    let selectedStatus = 0;-->
 
-        console.log("Current view:", this.view.type); // 디버깅용 로그
-        console.log(this);
+<!--    function setupCalendar(calendarEl) {-->
 
-        if (this.view.type === "multiMonthYear") {
-            this.changeView("dayGridMonth");
-            this.gotoDate(adjustedDate);
-            return;
-        }
+<!--        const calendar = new FullCalendar.Calendar(calendarEl, {-->
+<!--            themeSystem: 'bootstrap5',-->
+<!--            locale: "en",-->
+<!--            initialView: 'dayGridMonth',-->
+<!--            editable: false,-->
+<!--            selectable: false,-->
+<!--            navLinks: true,-->
+<!--            navLinkDayClick: function (date, jsEvent) {-->
+<!--                handleNavLinkDayClick.call(this, date, jsEvent);-->
 
-        switch (selectedStatus) {
-            case 1:
-                loadLesson2Events(adjustedDate);
-                break;
-            case 2:
-                Food2Action(adjustedDate);
-                break;
-            case 3:
-                Exercise2Action(adjustedDate);
-                break;
-            case 4:
-                Memo2Action(adjustedDate);
-                break;
-            default:
-                alert("필터를 선택하세요");
-        }
+<!--            },-->
+<!--            headerToolbar: {-->
+<!--                left: 'today LessonButton FoodButton ExerButton MemoButton',-->
+<!--                center: 'title',-->
+<!--                right: 'prev,next,multiMonthYear'-->
+<!--            },-->
+<!--            customButtons: {-->
+<!--                LessonButton: {-->
+<!--                    text: '강의',-->
+<!--                    click: function () {-->
+<!--                        loadLessonEvents(calendar);-->
+<!--                        selectedStatus = 1;-->
+<!--                    }-->
+<!--                },-->
+<!--                FoodButton: {-->
+<!--                    text: '음식',-->
+<!--                    click: function () {-->
+<!--                        FoodAction();-->
+<!--                        selectedStatus = 2;-->
+<!--                    }-->
+<!--                },-->
+<!--                ExerButton: {-->
+<!--                    text: '운동',-->
+<!--                    click: function () {-->
+<!--                        ExerciseAction();-->
+<!--                        selectedStatus = 3;-->
+<!--                    }-->
+<!--                },-->
+<!--                MemoButton: {-->
+<!--                    text: '메모',-->
+<!--                    click: function () {-->
+<!--                        MemoAction();-->
+<!--                        selectedStatus = 4;-->
+<!--                    }-->
+<!--                },-->
+<!--                multiMonthYear: {-->
+<!--                    icon: "bi bi-calendar",-->
+<!--                    click: function () {-->
+<!--                        calendar.changeView("multiMonthYear");-->
+<!--                    }-->
+<!--                }-->
+<!--            }-->
+<!--        });-->
 
-        console.log('day', adjustedDate.toISOString());
-        console.log('coords', jsEvent.pageX, jsEvent.pageY);
-    }
-</script>
+<!--        calendar.render();-->
+
+<!--        window.calendar = calendar;-->
+
+<!--        console.log("Calendar initialized:", window.calendar)-->
+<!--    }-->
+
+<!--    function handleNavLinkDayClick(date, jsEvent) {-->
+<!--        let timezoneOffset = date.getTimezoneOffset() * 60000;-->
+<!--        let adjustedDate = new Date(date.getTime() - timezoneOffset);-->
+
+<!--        console.log("Current view:", this.view.type); // 디버깅용 로그-->
+<!--        console.log(this);-->
+
+<!--        if (this.view.type === "multiMonthYear") {-->
+<!--            this.changeView("dayGridMonth");-->
+<!--            this.gotoDate(adjustedDate);-->
+<!--            return;-->
+<!--        }-->
+
+<!--        switch (selectedStatus) {-->
+<!--            case 1:-->
+<!--                loadLesson2Events(adjustedDate);-->
+<!--                break;-->
+<!--            case 2:-->
+<!--                Food2Action(adjustedDate);-->
+<!--                break;-->
+<!--            case 3:-->
+<!--                Exercise2Action(adjustedDate);-->
+<!--                break;-->
+<!--            case 4:-->
+<!--                Memo2Action(adjustedDate);-->
+<!--                break;-->
+<!--            default:-->
+<!--                alert("필터를 선택하세요");-->
+<!--        }-->
+
+<!--        console.log('day', adjustedDate.toISOString());-->
+<!--        console.log('coords', jsEvent.pageX, jsEvent.pageY);-->
+<!--    }-->
+<!--</script>-->
 
 <!-- 모달 띄우는 버튼 -->
 <button type="button" class="btn btn-primary" id="openModalBtn" data-bs-toggle="modal" data-bs-target="#eventModal"
