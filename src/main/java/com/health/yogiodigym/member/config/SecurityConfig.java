@@ -31,12 +31,13 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .cors(withDefaults())
+//                .csrf(withDefaults())
                 .csrf(csrf -> csrf
                         //.ignoringRequestMatchers("/api/**"))
                         .ignoringRequestMatchers("/api/**","/memo/**","/exercise/**","/food/**"))
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/images/source/**", "/css/**", "/js/**", "/", "/member/regist", "/api/member/regist").permitAll()
-                        .requestMatchers("/images/license/**").hasRole("ADMIN")
+                        .requestMatchers("/images/license/**", "/admin/**", "/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/member/login", "/login").not().authenticated()
                         .requestMatchers("/logout", "/dashboard", "/images/license/**", "/images/profile/**").authenticated()
                         .anyRequest().authenticated()

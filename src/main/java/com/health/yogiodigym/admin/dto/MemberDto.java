@@ -4,8 +4,6 @@ import com.health.yogiodigym.member.auth.MemberStatus;
 import com.health.yogiodigym.member.entity.Member;
 import lombok.*;
 
-import java.util.List;
-
 public class MemberDto {
 
     @Setter
