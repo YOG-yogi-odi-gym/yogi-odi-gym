@@ -17,9 +17,9 @@ public interface MemberService {
 
     void updateAuthentication(String email, HttpServletRequest request, HttpServletResponse response);
 
-    //임시사용
-    boolean login(String email, String password);
-
-    Member getMemberByEmail(String email);
+//    //임시사용
+//    boolean login(String email, String password);
+//
+//    Member getMemberByEmail(String email);
 
 }

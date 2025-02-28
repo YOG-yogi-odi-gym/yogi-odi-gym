@@ -12,14 +12,14 @@ import java.time.LocalTime;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class LessonDto {
+public class CalendarLessonDto {
     private LocalDate date;      // 뽑아낸 날짜
     private Long id;       // 강의 번호
     private String title;        // 강의 제목
     private LocalTime startTime; // 강의 시작 시간
     private LocalTime endTime;   // 강의 종료 시간
 
-    public LessonDto(LocalDate date, Lesson lesson) {
+    public CalendarLessonDto(LocalDate date, Lesson lesson) {
         this.date = date;
         this.id = lesson.getId();
         this.title = lesson.getTitle();

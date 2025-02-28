@@ -77,11 +77,4 @@ public class LessonEnrollmentServiceImpl implements LessonEnrollmentService {
         return lessonEnrollmentRepository.existsByLessonAndMember(lesson, member);
     }
 
-    
-    //임시추가
-    @Override
-    public List<LessonEnrollment> getLessonsByMemberId(Long memberId) {
-        return lessonEnrollmentRepository.findByMemberId(memberId);
-    }
-
 }

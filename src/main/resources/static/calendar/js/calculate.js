@@ -1,9 +1,9 @@
 function openSelectFoodWindow() {
-    window.open("/select_food", "SelectFood", "width=600,height=400,scrollbars=yes,resizable=yes");
+    window.open("/calendar/select_food", "SelectFood", "width=600,height=400,scrollbars=yes,resizable=yes");
 }
 
 function openSelectExerciseWindow() {
-    window.open("/select_exercise", "SelectExercise", "width=600,height=400,scrollbars=yes,resizable=yes");
+    window.open("/calendar/select_exercise", "SelectExercise", "width=600,height=400,scrollbars=yes,resizable=yes");
 }
 
 

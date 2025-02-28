@@ -1,19 +1,21 @@
 package com.health.yogiodigym.calendar.service.impl;
-
-import com.health.yogiodigym.calendar.dto.LessonDto;
+import com.health.yogiodigym.calendar.dto.CalendarLessonDto;
+import com.health.yogiodigym.calendar.dto.CalendarMemberDto;
 import com.health.yogiodigym.calendar.service.CalendarLessonService;
+import com.health.yogiodigym.common.exception.MemberNotFoundException;
 import com.health.yogiodigym.lesson.entity.Lesson;
 import com.health.yogiodigym.lesson.entity.LessonEnrollment;
 import com.health.yogiodigym.lesson.repository.LessonEnrollmentRepository;
-import com.health.yogiodigym.lesson.repository.LessonRepository;
+import com.health.yogiodigym.member.entity.Member;
+import com.health.yogiodigym.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -22,12 +24,8 @@ public class CalendarLessonServiceImpl implements CalendarLessonService {
 
     private final LessonEnrollmentRepository lessonEnrollmentRepository;
 
-    private final LessonRepository lessonRepository;
+    private final MemberRepository memberRepository;
 
-//    @Override
-//    public Lesson selectLesson(Long lessonId) {
-//        return lessonRepository.findById(lessonId).orElseThrow(() -> new IllegalArgumentException("강의가 존재하지 않습니다"));
-//    }
 
     private int getDayBitmask(DayOfWeek dayOfWeek) {
         return switch (dayOfWeek) {
@@ -47,41 +45,39 @@ public class CalendarLessonServiceImpl implements CalendarLessonService {
     }
 
     @Override
-    public List<LessonDto> getLessonsByMemberId(Long memberId) {
-        List<LessonEnrollment> enrollments = lessonEnrollmentRepository.findByMemberId(memberId);
-        List<LessonDto> result = new ArrayList<>();
+    @Transactional(readOnly = true)
+    public List<CalendarLessonDto> getLessonsByMemberId(Long memberId) {
 
-        for (LessonEnrollment enrollment : enrollments) {
-            Lesson lesson = enrollment.getLesson();
-            LocalDate current = lesson.getStartDay();
-            int dayBitmask = lesson.getDays();
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException(memberId));
 
-            while (!current.isAfter(lesson.getEndDay())) {
-                if (isMatchingDay(current, dayBitmask)) {
-                    result.add(new LessonDto(current, lesson));
-                }
-                current = current.plusDays(1);
-            }
-        }
-        return result;
+        return lessonEnrollmentRepository.findAllByMember(member).stream()
+                .flatMap(enrollment -> {
+                    Lesson lesson = enrollment.getLesson();
+                    int dayBitmask = lesson.getDays();
+
+                    return lesson.getStartDay().datesUntil(lesson.getEndDay().plusDays(1))
+                            .filter(date -> isMatchingDay(date, dayBitmask))
+                            .map(date -> new CalendarLessonDto(date, lesson));
+                })
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<LessonDto> getLessonsByMemberAndDate(Long memberId, LocalDate selectedDate) {
-        List<LessonEnrollment> enrollments = lessonEnrollmentRepository.findByMemberId(memberId);
-        List<LessonDto> result = new ArrayList<>();
+    @Transactional(readOnly = true)
+    public List<CalendarLessonDto> getLessonsByMemberAndDate(Long memberId, LocalDate selectedDate) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException(memberId));
 
-        for (LessonEnrollment enrollment : enrollments) {
-            Lesson lesson = enrollment.getLesson();
-            int dayBitmask = lesson.getDays();
-
-            if (!selectedDate.isBefore(lesson.getStartDay()) &&
-                    !selectedDate.isAfter(lesson.getEndDay()) &&
-                    isMatchingDay(selectedDate, dayBitmask)) {
-
-                result.add(new LessonDto(selectedDate, lesson));
-            }
-        }
-        return result;
+        return lessonEnrollmentRepository.findAllByMember(member).stream()
+                .map(LessonEnrollment::getLesson)
+                .filter(lesson ->
+                        !selectedDate.isBefore(lesson.getStartDay()) &&
+                                !selectedDate.isAfter(lesson.getEndDay()) &&
+                                isMatchingDay(selectedDate, lesson.getDays())
+                )
+                .map(lesson -> new CalendarLessonDto(selectedDate, lesson))
+                .collect(Collectors.toList());
     }
+
 }

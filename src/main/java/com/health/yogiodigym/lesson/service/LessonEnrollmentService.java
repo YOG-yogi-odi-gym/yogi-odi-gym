@@ -1,8 +1,5 @@
 package com.health.yogiodigym.lesson.service;
 
-import com.health.yogiodigym.lesson.entity.LessonEnrollment;
-
-import java.util.List;
 
 public interface LessonEnrollmentService {
 
@@ -12,6 +9,4 @@ public interface LessonEnrollmentService {
 
     boolean isUserEnrolled(Long memberId, Long lessonId);
 
-    //임시추가
-    public List<LessonEnrollment> getLessonsByMemberId(Long memberId);
 }

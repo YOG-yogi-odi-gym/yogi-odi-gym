@@ -1,48 +1,48 @@
 package com.health.yogiodigym.calendar.controller;
 
-import com.health.yogiodigym.calendar.dto.LessonDto;
-import com.health.yogiodigym.calendar.service.CalendarLessonService;
-import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.health.yogiodigym.calendar.dto.CalendarLessonDto;
+import com.health.yogiodigym.calendar.service.impl.CalendarLessonServiceImpl;
+import com.health.yogiodigym.common.response.HttpResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
 
+import static com.health.yogiodigym.common.message.SuccessMessage.*;
+
 @RestController
 @RequestMapping("/calendar")
-@NoArgsConstructor
+@RequiredArgsConstructor
 public class CalendarLessonController {
 
-    @Autowired
-    private CalendarLessonService calendarLessonService;
-
+    private final CalendarLessonServiceImpl calendarLessonServiceimpl;
 
     @GetMapping("/lesson")
-    public ResponseEntity<List<LessonDto>> getLessonsByMember(
-            @RequestParam("memberId") Long memberId) {
+    public ResponseEntity<?> getLessonsByMember(@RequestParam("memberId") Long memberId) {
 
-        List<LessonDto> lessons = calendarLessonService.getLessonsByMemberId(memberId);
-        return ResponseEntity.ok(lessons);
+        List<CalendarLessonDto> calendarLesson = calendarLessonServiceimpl.getLessonsByMemberId(memberId);
+
+        return ResponseEntity
+                .ok()
+                .body(new HttpResponse(HttpStatus.OK,GET_CALENDAR_LESSON_SUCCESS.getMessage(), calendarLesson));
     }
 
     // 특정 회원이 신청한 강의 중, 특정 날짜에 해당하는 것만 조회
     @GetMapping("/lesson/date")
-    public ResponseEntity<List<LessonDto>> getLessonsByMemberAndDate(
+    public ResponseEntity<?> getLessonsByMemberAndDate(
             @RequestParam("memberId") Long memberId,
             @RequestParam("date") String selectedDate) {
 
         LocalDate requestedDate = LocalDate.parse(selectedDate);
-        List<LessonDto> lessons = calendarLessonService.getLessonsByMemberAndDate(memberId, requestedDate);
-        return ResponseEntity.ok(lessons);
-    }
 
+        List<CalendarLessonDto> calendarLesson = calendarLessonServiceimpl.getLessonsByMemberAndDate(memberId,requestedDate);
 
-    @GetMapping("/api/enrollments/{memberId}")
-    //public List<LessonEnrollment> getEnrollments(@PathVariable Long memberId) {
-        public List<LessonDto> getEnrollments(@PathVariable Long memberId) {
-        return calendarLessonService.getLessonsByMemberId(memberId);
+        return ResponseEntity
+                .ok()
+                .body(new HttpResponse(HttpStatus.OK,GET_ONE_CALENDAR_LESSON_SUCCESS.getMessage(), calendarLesson));
     }
 
 }

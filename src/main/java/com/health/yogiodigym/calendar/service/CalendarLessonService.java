@@ -1,16 +1,14 @@
 package com.health.yogiodigym.calendar.service;
 
-import com.health.yogiodigym.calendar.dto.LessonDto;
+import com.health.yogiodigym.calendar.dto.CalendarLessonDto;
 
 import java.time.LocalDate;
 import java.util.List;
 
 public interface CalendarLessonService {
 
-    //Lesson selectLesson(Long lessonId) ;
+    List<CalendarLessonDto> getLessonsByMemberId(Long memberId);
 
-    List<LessonDto> getLessonsByMemberId(Long memberId);
-
-    List<LessonDto> getLessonsByMemberAndDate(Long memberId, LocalDate selectedDate);
+    List<CalendarLessonDto> getLessonsByMemberAndDate(Long memberId, LocalDate selectedDate);
 
 }

@@ -131,20 +131,20 @@ public class MemberServiceImpl implements MemberService {
         securityContextRepository.saveContext(context, request, response);
     }
 
-    @Override
-    public boolean login(String email, String password) {
-        Optional<Member> memberOptional = memberRepository.findByEmail(email);
-        if (memberOptional.isPresent()) {
-            Member member = memberOptional.get();
-            return member.getPwd().equals(password);
-        }
-        return false;
-    }
-
-    @Override
-    public Member getMemberByEmail(String email) {
-
-        Optional<Member> member = memberRepository.findByEmail(email);
-        return member.orElse(null);
-    }
+//    @Override
+//    public boolean login(String email, String password) {
+//        Optional<Member> memberOptional = memberRepository.findByEmail(email);
+//        if (memberOptional.isPresent()) {
+//            Member member = memberOptional.get();
+//            return member.getPwd().equals(password);
+//        }
+//        return false;
+//    }
+//
+//    @Override
+//    public Member getMemberByEmail(String email) {
+//
+//        Optional<Member> member = memberRepository.findByEmail(email);
+//        return member.orElse(null);
+//    }
 }

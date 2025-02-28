@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum SuccessMessage {
 
+    GET_CALENDAR_LESSON_SUCCESS("유저의 강의정보를 불러오는데 성공하였습니다."),
+    GET_ONE_CALENDAR_LESSON_SUCCESS("해당날짜의 강의정보를 불러오는데 성공하였습니다."),
     GET_CALENDAR_EXERCISE_SUCCESS("유저의 운동정보를 불러오는데 성공하였습니다."),
     GET_ONE_CALENDAR_EXERCISE_SUCCESS("해당날짜의 운동정보를 불러오는데 성공하였습니다."),
     POST_CALENDAR_EXERCISE_SUCCESS("유저의 운동정보를 삽입하는데 성공하였습니다."),

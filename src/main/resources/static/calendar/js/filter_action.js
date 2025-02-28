@@ -243,10 +243,9 @@ function loadLessonEvents() {
         url: '/calendar/lesson',
         method: 'GET',
         data: { memberId: memberId },
-        success: function (data) {
-            console.log('Received Lessons:', data);
+        success: function (response) {
 
-            let events = data.map(item => ({
+            let events = response.data.map(item => ({
                 title: item.title,
                 start: new Date(item.date),
                 end: new Date(new Date(item.date).setHours(new Date(item.date).getHours() + 2)),
@@ -276,11 +275,11 @@ function loadLesson2Events(date) {
             memberId: memberId,
             date: selectedDate
         },
-        success: function (data) {
+        success: function (response) {
 
             let content = `<strong>${selectedDate}의 강의 일정</strong><br>`;
-            if (data.length > 0) {
-                data.forEach(item => {
+            if (response.data.length > 0) {
+                response.data.forEach(item => {
                     content += `<strong>${item.title}</strong> (${item.startTime} ~ ${item.endTime})`;
                     content += `<input type="button" class="lessonDetailBtn btn btn-info mt-2" value="강의 상세보기" data-id="${item.id}" /><br>`;
                 });
@@ -293,7 +292,7 @@ function loadLesson2Events(date) {
 
             $(".lessonDetailBtn").on("click", function () {
                 let id = $(this).data("id");
-                window.location.href = `/detail/${id}`; // 강의 상세 페이지 이동
+                window.location.href = `/lesson/${id}`; // 강의 상세 페이지 이동
             });
         },
         error: function () {
