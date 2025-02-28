@@ -35,7 +35,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .cors(withDefaults())
-                .csrf(withDefaults())
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/images/source/**", "/images/profile/**", "/css/**", "/js/**", "/", "/member/regist", "/api/member/regist").permitAll()
                         .requestMatchers("/images/license/**").hasRole("ADMIN")
@@ -75,6 +75,7 @@ public class SecurityConfig {
                 )
                 .exceptionHandling(e -> e
                         .authenticationEntryPoint((request, response, authException) -> {
+                            log.error("서버오류 : "+authException.getMessage(), authException);
                             response.sendRedirect("/member/login");
                         })
                         .accessDeniedHandler((request, response, accessDeniedException) -> {
