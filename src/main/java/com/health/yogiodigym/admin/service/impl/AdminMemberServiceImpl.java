@@ -1,7 +1,7 @@
 package com.health.yogiodigym.admin.service.impl;
 
 import com.health.yogiodigym.admin.dto.MemberDto.*;
-import com.health.yogiodigym.admin.service.AdminService;
+import com.health.yogiodigym.admin.service.service.AdminMemberService;
 import com.health.yogiodigym.member.auth.MemberStatus;
 import com.health.yogiodigym.member.entity.Member;
 import com.health.yogiodigym.member.repository.MemberRepository;
@@ -13,20 +13,20 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
-public class AdminServiceImpl implements AdminService {
+public class AdminMemberServiceImpl implements AdminMemberService {
 
     private final MemberRepository memberRepository;
 
     @Override
     public List<MemberResponseDto> getAllMembers() {
-
         return memberRepository.getAllMembers();
     }
 
     @Override
-    public List<MemberResponseDto> searchMembers(String keyword) {
-        List<Member> members = memberRepository.findMembers(keyword);
+    public List<MemberResponseDto> searchMembers(String memberKeyword) {
+        List<Member> members = memberRepository.searchMembers(memberKeyword);
 
         return members.stream().map(MemberResponseDto::from).toList();
     }
@@ -34,8 +34,7 @@ public class AdminServiceImpl implements AdminService {
     @Override
     @Transactional
     public void setInactiveStatus(List<Long> memberIds) {
-        LocalDate dropDate = LocalDate.now();
-        memberRepository.setInactiveStatus(memberIds, MemberStatus.INACTIVE, dropDate);
+        memberRepository.setInactiveStatus(memberIds, MemberStatus.INACTIVE, LocalDate.now());
     }
 
 //    @Scheduled(cron = "00 00 00 * * *")

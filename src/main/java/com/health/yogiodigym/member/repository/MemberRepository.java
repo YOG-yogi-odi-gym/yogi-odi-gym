@@ -8,14 +8,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 import java.time.LocalDate;
 import java.util.List;
 
-@Repository
 public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByEmail(String email);
 
@@ -30,8 +28,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     List<MemberResponseDto> getAllMembers();
 
     @Query("select m from Member m " +
-            "where lower(m.name) like lower(concat('%', :keyword, '%')) " +
-            "or lower(substring(m.email, 1, locate('@', m.email)-1)) like lower(concat('%', :keyword, '%')) " +
+            "where lower(m.name) like lower(concat('%', :memberKeyword, '%')) " +
+            "or lower(substring(m.email, 1, locate('@', m.email)-1)) like lower(concat('%', :memberKeyword, '%')) " +
             "order by case " +
             "when m.status = 'ACTIVE' then 1 " +
             "when m.status = 'INCOMPLETE' then 2 " +
@@ -40,7 +38,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
             "when m.status = 'BAN' then 5 " +
             "else 6 " +
             "end, m.name asc")
-    List<Member> findMembers(@Param("keyword") String keyword);
+    List<Member> searchMembers(@Param("memberKeyword") String memberKeyword);
 
     @Modifying
     @Transactional

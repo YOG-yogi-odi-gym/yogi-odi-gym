@@ -35,8 +35,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .cors(withDefaults())
-                .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/api/**"))
+                .csrf(withDefaults())
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/images/source/**", "/images/profile/**", "/css/**", "/js/**", "/", "/member/regist", "/api/member/regist").permitAll()
                         .requestMatchers("/images/license/**").hasRole("ADMIN")
@@ -44,7 +43,7 @@ public class SecurityConfig {
                         .requestMatchers("/logout", "/dashboard", "/images/license/**").authenticated()
                         .anyRequest().authenticated()
                 )
-                .formLogin(form -> formh
+                .formLogin(form -> form
                         .loginPage("/member/login")
                         .loginProcessingUrl("/login")
                         .permitAll()
@@ -84,4 +83,5 @@ public class SecurityConfig {
                 ).addFilterBefore(new IncompleteUserFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
+
 }
