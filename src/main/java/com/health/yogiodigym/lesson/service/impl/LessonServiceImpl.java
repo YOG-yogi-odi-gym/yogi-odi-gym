@@ -122,6 +122,7 @@ public class LessonServiceImpl implements LessonService {
     @Transactional(readOnly = true)
     public List<CategoryDto> getCategoriesByCode(String code) {
         List<Category> categories = categoryRepository.findByCode(code);
+
         return categories.stream()
                 .map(CategoryDto::new)
                 .collect(Collectors.toList());
