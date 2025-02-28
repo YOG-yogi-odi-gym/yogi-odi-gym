@@ -1,7 +1,39 @@
 spring:
   profiles:
-    active: local
+    active: local, auth
 
   flyway:
     enabled: true
     baseline-on-migrate: true
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        highlight_sql: true
+        use_sql_comments: true
+    open-in-view: false
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonDeserializer
+    consumer:
+      auto-offset-reset: latest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      group-id: chat-room
+
+  thymeleaf:
+    cache: false
+
+jasypt:
+  encryptor:
+    bean: jasyptEncryptor
+    password: ${JASYPT_KEY}
+
+

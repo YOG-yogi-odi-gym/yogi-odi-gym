@@ -1,0 +1,21 @@
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ENC(jYUhBuGtGJl4av+DFTPnnxobFeTO3wNltqfD29cIiNapSOHKwpQcjHuGZapT6JqF)
+    username: ENC(yixVQ9U6WusuQMa34v+P8Q==)
+    password: ENC(td4ZLVKdNy5JsVcp5yvuXsL0vGidbphp)
+
+  kafka:
+    bootstrap-servers: ENC(9AgQ/wHvAH8WyvMkCm1naP13SuWK79W3JCoThydePko=)
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonDeserializer
+    consumer:
+      auto-offset-reset: latest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      group-id: chat-room
