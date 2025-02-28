@@ -6,7 +6,7 @@ CREATE TABLE chat_room
     `lesson_id`     BIGINT,
     `created_date`  DATETIME,
     `modified_date` DATETIME,
-    FOREIGN KEY (lesson_id) REFERENCES lesson (id)
+    FOREIGN KEY (lesson_id) REFERENCES lesson (id) ON DELETE CASCADE
 );
 
 CREATE TABLE chat_participant
@@ -16,8 +16,8 @@ CREATE TABLE chat_participant
     `chat_room_id`  BIGINT,
     `created_date`  DATETIME,
     `modified_date` DATETIME,
-    FOREIGN KEY (member_id) REFERENCES member (id),
-    FOREIGN KEY (chat_room_id) REFERENCES chat_room (id)
+    FOREIGN KEY (member_id) REFERENCES member (id) ON DELETE CASCADE,
+    FOREIGN KEY (chat_room_id) REFERENCES chat_room (id) ON DELETE CASCADE
 );
 
 CREATE TABLE chat_message
@@ -28,8 +28,8 @@ CREATE TABLE chat_message
     `created_date`  DATETIME,
     `modified_date` DATETIME,
     `content`       VARCHAR(255),
-    FOREIGN KEY (member_id) REFERENCES member (id),
-    FOREIGN KEY (chat_room_id) REFERENCES chat_room (id)
+    FOREIGN KEY (member_id) REFERENCES member (id) ON DELETE CASCADE,
+    FOREIGN KEY (chat_room_id) REFERENCES chat_room (id) ON DELETE CASCADE
 );
 
 CREATE TABLE chat_read_status
@@ -39,8 +39,8 @@ CREATE TABLE chat_read_status
     `chat_message_id` BIGINT,
     `created_date`    DATETIME,
     `modified_date`   DATETIME,
-    FOREIGN KEY (member_id) REFERENCES member (id),
-    FOREIGN KEY (chat_message_id) REFERENCES chat_message (id)
+    FOREIGN KEY (member_id) REFERENCES member (id) ON DELETE CASCADE,
+    FOREIGN KEY (chat_message_id) REFERENCES chat_message (id) ON DELETE CASCADE
 );
 
 ALTER TABLE lesson DROP COLUMN `day`;
@@ -51,4 +51,4 @@ ALTER TABLE lesson
     ADD COLUMN chat_room_id BIGINT NOT NULL;
 
 ALTER TABLE lesson
-    ADD CONSTRAINT fk_lesson_chat_room FOREIGN KEY (chat_room_id) REFERENCES chat_room(id);
+    ADD CONSTRAINT fk_lesson_chat_room FOREIGN KEY (chat_room_id) REFERENCES chat_room(id) ON DELETE CASCADE;

@@ -25,17 +25,13 @@ public class AdminMemberController {
     public ResponseEntity<?> searchMembers(@RequestParam String memberKeyword) {
         List<MemberResponseDto> members = adminMemberService.searchMembers(memberKeyword);
 
-        return ResponseEntity.ok().body(new HttpResponse(HttpStatus.OK, MEMBER_SEARCH_SUCCESS.getMessage(), members));
+        return ResponseEntity.ok().body(new HttpResponse(HttpStatus.OK, ADMIN_MEMBER_SEARCH_SUCCESS.getMessage(), members));
     }
 
     @PostMapping("/member/inactive")
     public ResponseEntity<?> setInactiveStatus(@RequestBody List<Long> memberIds) {
 
-        log.info("hello");
-
-        log.info(memberIds.size() + " ");
-
         adminMemberService.setInactiveStatus(memberIds);
-        return ResponseEntity.ok().body(new HttpResponse(HttpStatus.OK, MEMBER_STATUS_CHANGE_SUCCESS.getMessage(), null));
+        return ResponseEntity.ok().body(new HttpResponse(HttpStatus.OK, ADMIN_MEMBER_STATUS_CHANGE_SUCCESS.getMessage(), null));
     }
 }

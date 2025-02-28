@@ -279,6 +279,9 @@
 <script>
     $(document).ready(function () {
 
+        const csrfToken = $('meta[name="_csrf"]').attr('content');
+        const csrfHeader = $("meta[name='_csrf_header']").attr("content");
+
         function searchMembers() {
             let memberKeyword = $("#memberSearchInput").val().trim();
 
@@ -373,52 +376,83 @@
             }
         })
 
-    });
+        $("#deleteMemberButton").click(function () {
 
-    $("#deleteMemberButton").click(function () {
-        let csrfToken = $('meta[name="_csrf"]').attr('content');
-        let csrfHeader = $("meta[name='_csrf_header']").attr("content");
+            let selectMembers = [];
 
-        console.log(csrfHeader + "Header");
-        console.log(csrfToken + "Token");
+            $(".memberCheckbox:checked").each(function () {
+                selectMembers.push(Number($(this).val()));
+            });
 
+            console.log(selectMembers);
 
-        let selectMembers = [];
-        $(".memberCheckbox:checked").each(function () {
-            selectMembers.push(Number($(this).val()));
+            if (selectMembers.length === 0) {
+                alert("삭제할 회원을 선택해 주세요!")
+                return;
+            }
+
+            $.ajax({
+                url: "/api/admin/member/inactive",
+                type: "POST",
+                data: JSON.stringify(selectMembers),
+                contentType: 'application/json; charset=utf-8',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(csrfHeader, csrfToken);
+                },
+                success: function (response) {
+                    if (response.status === 200) {
+                        alert("회원 상태를 비활성화 했습니다.");
+                        location.reload();
+                    }else {
+                        alert("회원 비활성화에 실패했습니다.");
+
+                        console.log(response.status);
+                        console.log(response.data);
+                    }
+                },
+                error: function (xhr) {
+                    console.log(xhr.responseText);
+                    alert("비활성화 중 오류가 발생했습니다.");
+                }
+            });
         });
 
-        console.log(selectMembers);
+        $("#deleteLessonButton").click(function () {
+            let selectLessons = [];
 
-        if (selectMembers.length === 0) {
-            alert("삭제할 회원을 선택해 주세요!")
-            return;
-        }
+            $(".lessonCheckbox:checked").each(function() {
+                selectLessons.push(Number($(this).val()));
+            });
 
-
-        $.ajax({
-            url: "/api/admin/member/inactive",
-            type: "POST",
-            data: JSON.stringify(selectMembers),
-            contentType: 'application/json; charset=utf-8',
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader(csrfHeader, csrfToken);
-            },
-            success: function (response) {
-                if (response.status === 200) {
-                    alert("회원 상태를 비활성화 했습니다.");
-                    location.reload();
-                }else {
-                    alert("회원 비활성화에 실패했습니다.");
-
-                    console.log(response.status);
-                    console.log(response.data);
-                }
-            },
-            error: function (xhr) {
-                console.log(xhr.responseText);
-                alert("비활성화 중 오류가 발생했습니다.");
+            if (selectLessons.length === 0) {
+                alert("삭제할 강의를 선택해 주세요!");
+                return;
             }
+
+            $.ajax({
+                url: "/api/admin/lesson/delete",
+                type: "POST",
+                data: JSON.stringify(selectLessons),
+                contentType: 'application/json; charset=utf-8',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(csrfHeader, csrfToken);
+                },
+                success: function (response) {
+                    if (response.status === 200) {
+                        alert("강의를 삭제했습니다.")
+                        location.reload();
+                    } else {
+                        alert("강의 삭제에 실패했습니다.");
+                        console.log(response.status);
+                        console.log(response.data);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("AJAX Error : ", status, error);
+                    console.error("Response : ", xhr.responseText);
+                    alert("삭제중 오류가 발생하였습니다.");
+                }
+            });
         });
     });
 </script>
