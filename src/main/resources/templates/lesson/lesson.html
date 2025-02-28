@@ -286,6 +286,14 @@
     </style>
 </head>
 <body>
+
+<div class="card side-card" th:include="~{fragment/side.html}"></div>
+
+<script>
+    document.getElementById("side_lesson").style.color = "blue";
+    document.getElementById("side_lesson").style.background = "skyblue";
+</script>
+
 <h2>Lesson Search</h2>
 <select id="searchColumn">
     <option value="name">이름</option>

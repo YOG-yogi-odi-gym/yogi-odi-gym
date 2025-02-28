@@ -194,6 +194,14 @@
     </style>
 </head>
 <body>
+
+<div class="card side-card" th:include="~{fragment/side.html}"></div>
+
+<script>
+    document.getElementById("side_lesson").style.color = "blue";
+    document.getElementById("side_lesson").style.background = "skyblue";
+</script>
+
     <h2 th:text="${lesson.title}"></h2>
 
     <p><strong>카테고리:</strong> <span th:text="${lesson.categoryName}"></span></p>

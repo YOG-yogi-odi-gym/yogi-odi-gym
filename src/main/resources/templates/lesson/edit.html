@@ -10,6 +10,14 @@
     <script type="text/javascript" th:src="@{'/js/lessonValidateDate.js'}"></script>
 </head>
 <body>
+
+<div class="card side-card" th:include="~{fragment/side.html}"></div>
+
+<script>
+    document.getElementById("side_lesson").style.color = "blue";
+    document.getElementById("side_lesson").style.background = "skyblue";
+</script>
+
 <h2>강의 수정</h2>
 <form th:action="@{/api/lesson/edit}" method="post">
     <input type="hidden" name="id" th:value="${lesson.id}">

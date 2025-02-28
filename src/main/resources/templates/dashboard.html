@@ -59,10 +59,17 @@
         .alert {
             margin-bottom: 20px;
         }
-
     </style>
+
 </head>
 <body class="bg-light">
+
+<div class="card side-card" th:include="~{fragment/side.html}"></div>
+
+<script>
+    document.getElementById("side_dashboard").style.color = "blue";
+    document.getElementById("side_dashboard").style.background = "skyblue";
+</script>
 
 <div class="container dashboard-container">
 
