@@ -68,7 +68,7 @@ jobs:
                 --replicas 4 \
                 -p 8080:8080 \
                 --env JASYPT_KEY=${{ secrets.JASYPT_KEY }} \
-                --env PROFILES=prod \
+                --env PROFILES=prod,auth \
                 ${{ env.IMAGE_NAME }}:main
             fi
 
@@ -104,6 +104,6 @@ jobs:
             docker pull $IMAGE_NAME
 
             echo "🚀 새로운 컨테이너 실행..."
-            docker run -dit --name $CONTAINER_NAME -p 8080:8080 -e PROFILES=dev -e JASYPT_KEY=${{ secrets.JASYPT_KEY }} $IMAGE_NAME
+            docker run -dit --name $CONTAINER_NAME -p 8080:8080 -e PROFILES=dev,auth -e JASYPT_KEY=${{ secrets.JASYPT_KEY }} $IMAGE_NAME
 
             echo "✅ 배포 완료!"
