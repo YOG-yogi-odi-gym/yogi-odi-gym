@@ -36,4 +36,8 @@ jasypt:
     bean: jasyptEncryptor
     password: ${JASYPT_KEY}
 
+server:
+  servlet:
+    session:
+      timeout: 180m
 
