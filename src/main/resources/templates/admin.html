@@ -1,11 +1,12 @@
 <!doctype html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <title>관리자 페이지</title>
+
     <meta charset="utf-8">
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 
-    <title>관리자 페이지</title>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -13,13 +14,20 @@
         body {
             background-color: #f8f9fa;
         }
+
         .container-fluid table-list {
             display: flex;
             justify-content: space-evenly;
             margin: 50px 0 0 0 !important;
         }
 
-        .member-container {
+        .apply-category-container {
+            margin-top: 20px;
+            max-width: 33%;
+            margin-right: 20px;
+        }
+
+        .member-container, .board-container, .lesson-container {
             max-width: 33%;
             margin-right: 20px;
             margin-top: 20px;
@@ -34,16 +42,10 @@
             box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
             height: 800px;
         }
-        .lesson-category-container, .apply-board-container {
-            margin-top: 20px;
-            max-width: 33%;
-            margin-right: 20px;
-        }
 
-        .lesson-container, .category-container, .apply-container, .board-container {
+        .category-container, .apply-container {
             width: 100%;
             margin-bottom: 20px;
-            maring-top: 20px;
 
             border: 3px solid #cccccc;
             padding: 15px;
@@ -61,14 +63,14 @@
             width: 100%;
         }
 
-        .memberTable-container {
+        .memberTable-container, .lessonTable-container, .boardTable-container {
             width: 100%;
             height: 800px;
             overflow-y: auto;
             border: 1px solid #ccc;
         }
 
-        .lessonTable-container, .categoryTable-container, .applyTable-container, .boardTable-container {
+         .categoryTable-container, .applyTable-container {
             width: 100%;
             height: 400px;
             overflow-y: auto;
@@ -94,11 +96,11 @@
             padding: 2px 5px;
         }
 
-        #memberTable th:nth-child(1) { width: 70px; }
+        #memberTable th:nth-child(1) { width: 30px; }
         #memberTable th:nth-child(2) { width: 100px; }
         #memberTable th:nth-child(3) { width: 170px; }
         #memberTable th:nth-child(4) { width: 100px; }
-        #lessonTable th:nth-child(1) { width: 60px; }
+        #lessonTable th:nth-child(1) { width: 30px; }
         #lessonTable th:nth-child(2) { width: 200px; }
         #lessonTable th:nth-child(3) { width: 100px; }
 
@@ -144,7 +146,7 @@
             <table id="memberTable" class="table table-bordered table-hover">
                 <thead class="thead-dark">
                 <tr>
-                    <th>선택</th>
+                    <th></th>
                     <th>이름</th>
                     <th>이메일</th>
                     <th>상태</th>
@@ -163,7 +165,61 @@
         <button class="btn btn-danger" id="deleteMemberButton">회원 삭제</button>
     </div>
 
-    <div class="apply-board-container">
+    <div class="lesson-container">
+        <h3>강의 관리</h3>
+        <div class="search-container">
+            <input type="text" id="lessonSearchInput" name="lessonKeyword" class="form-control" placeholder="강의명 검색...">
+            <button id="lessonSearchButton" class="btn btn-primary ml-2">검색</button>
+        </div>
+        <div class="lessonTable-container">
+            <table id="lessonTable" class="table table-bordered table-hover">
+                <thead class="thead-dark">
+                <tr>
+                    <th></th>
+                    <th>강의명</th>
+                    <th>강사</th>
+                </tr>
+                </thead>
+                <tbody id="lessonTableBody">
+                <tr th:each="lesson : ${lessons}">
+                    <td><input type="checkbox" class="lessonCheckbox" th:value="${lesson.id}"></td>
+                    <td th:text="${lesson.title}"></td>
+                    <td th:text="${lesson.masterName}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <button class="btn btn-danger" id="deleteLessonButton">강의 삭제</button>
+    </div>
+
+    <div class="board-container">
+        <h3>게시글 관리</h3>
+        <div class="search-container">
+            <input type="text" id="boardSearchInput" name="boardKeyword" class="form-control" placeholder="게시글 검색...">
+            <button id="boardSearchButton" class="btn btn-primary ml-2">검색</button>
+        </div>
+        <div class="boardTable-container">
+            <table id="boardTable" class="table table-bordered table-hover">
+                <thead class="thead-dark">
+                <tr>
+                    <th></th>
+                    <th>강의명</th>
+                    <th>강사</th>
+                </tr>
+                </thead>
+                <tbody id="boardTableBody">
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <button class="btn btn-danger" id="deleteBoardButton">삭제</button>
+    </div>
+
+    <div class="apply-category-container">
         <div class="apply-container">
             <h3>강사 신청</h3>
             <div class="search-container">
@@ -174,7 +230,7 @@
                 <table id="applyTable" class="table table-bordered table-hover">
                     <thead class="thead-dark">
                     <tr>
-                        <th>선택</th>
+                        <th></th>
                         <th>강의명</th>
                         <th>강사</th>
                     </tr>
@@ -185,63 +241,7 @@
                     </tbody>
                 </table>
             </div>
-            <button class="btn btn-danger" id="deleteApplyButton">강의 삭제</button>
-        </div>
-
-        <div class="board-container">
-            <h3>게시글 관리</h3>
-            <div class="search-container">
-                <input type="text" id="boardSearchInput" name="boardKeyword" class="form-control" placeholder="게시글 검색...">
-                <button id="boardSearchButton" class="btn btn-primary ml-2">검색</button>
-            </div>
-            <div class="boardTable-container">
-                <table id="boardTable" class="table table-bordered table-hover">
-                    <thead class="thead-dark">
-                    <tr>
-                        <th>선택</th>
-                        <th>강의명</th>
-                        <th>강사</th>
-                    </tr>
-                    </thead>
-                    <tbody id="boardTableBody">
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-            <button class="btn btn-danger" id="deleteBoardButton">삭제</button>
-        </div>
-    </div>
-
-    <div class="lesson-category-container">
-        <div class="lesson-container">
-            <h3>강의 관리</h3>
-            <div class="search-container">
-                <input type="text" id="lessonSearchInput" name="lessonKeyword" class="form-control" placeholder="강의명 검색...">
-                <button id="lessonSearchButton" class="btn btn-primary ml-2">검색</button>
-            </div>
-            <div class="lessonTable-container">
-                <table id="lessonTable" class="table table-bordered table-hover">
-                    <thead class="thead-dark">
-                    <tr>
-                        <th>선택</th>
-                        <th>강의명</th>
-                        <th>강사</th>
-                    </tr>
-                    </thead>
-                    <tbody id="lessonTableBody">
-                    <tr th:each="lesson : ${lessons}">
-                        <td><input type="checkbox" class="lessonCheckbox" th:value="${lesson.id}"></td>
-                        <td th:text="${lesson.title}"></td>
-                        <td th:text="${lesson.masterName}"></td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-            <button class="btn btn-danger" id="deleteLessonButton">강의 삭제</button>
+            <button class="btn btn-danger" id="deleteApplyButton">신청 삭제</button>
         </div>
 
         <div class="category-container">
@@ -254,7 +254,7 @@
                 <table id="categoryTable" class="table table-bordered table-hover">
                     <thead class="thead-dark">
                     <tr>
-                        <th>선택</th>
+                        <th></th>
                         <th>강의명</th>
                         <th>강사</th>
                     </tr>

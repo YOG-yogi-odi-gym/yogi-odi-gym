@@ -3,10 +3,8 @@ CREATE TABLE chat_room
     `id`            BIGINT AUTO_INCREMENT PRIMARY KEY,
     `room_id`       VARCHAR(255),
     `is_group_chat` BOOL,
-    `lesson_id`     BIGINT,
     `created_date`  DATETIME,
-    `modified_date` DATETIME,
-    FOREIGN KEY (lesson_id) REFERENCES lesson (id) ON DELETE CASCADE
+    `modified_date` DATETIME
 );
 
 CREATE TABLE chat_participant
