@@ -2,14 +2,13 @@ package com.health.yogiodigym.admin.service.impl;
 
 import com.health.yogiodigym.admin.dto.LessonDto.*;
 import com.health.yogiodigym.admin.service.service.AdminLessonService;
-import com.health.yogiodigym.lesson.entity.Lesson;
 import com.health.yogiodigym.lesson.repository.LessonRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -23,25 +22,12 @@ public class AdminLessonServiceImpl implements AdminLessonService {
     @Transactional(readOnly = true)
     public List<LessonResponseDto> getAllLessons() {
 
-        List<Lesson> lessons = lessonRepository.findAll();
-
-        List<LessonResponseDto> lessonDtos = new ArrayList<>();
-        for (Lesson lesson : lessons) {
-            lessonDtos.add(LessonResponseDto.from(lesson));
-        }
-        return lessonDtos;
-//      return lessons.stream().map(l -> LessonDto.LessonResponseDto.from(l)).collect(Collectors.toList());
+        return lessonRepository.findAll().stream().map(LessonResponseDto::from).collect(Collectors.toList());
     }
 
     public List<LessonResponseDto> adminSearchLessons(String lessonKeyword) {
 
-        List<Lesson> lessons = lessonRepository.adminSearchLessons(lessonKeyword);
-
-        List<LessonResponseDto> lessonDtos = new ArrayList<>();
-        for (Lesson lesson : lessons) {
-            lessonDtos.add(LessonResponseDto.from(lesson));
-        }
-        return lessonDtos;
+        return lessonRepository.adminSearchLessons(lessonKeyword).stream().map(LessonResponseDto::from).collect(Collectors.toList());
     }
 
     @Override
