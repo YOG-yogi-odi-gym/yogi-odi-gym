@@ -7,6 +7,7 @@ import com.health.yogiodigym.admin.dto.MemberDto.*;
 import com.health.yogiodigym.admin.service.service.AdminBoardService;
 import com.health.yogiodigym.admin.service.service.AdminLessonService;
 import com.health.yogiodigym.admin.service.service.AdminMemberService;
+import com.health.yogiodigym.board.entity.Board;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,7 +32,7 @@ public class AdminViewController {
         List<LessonResponseDto> lessons = adminLessonService.getAllLessons();
         model.addAttribute("lessons", lessons);
 
-        List<BoardResponseDto> boards = adminBoardService.getAllBoards();
+        List<BoardResponseDto> boards = adminBoardService.findAllByOrderByIdDesc();
         model.addAttribute("boards", boards);
 
         return "admin";

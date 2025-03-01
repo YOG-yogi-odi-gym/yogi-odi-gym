@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -21,8 +23,10 @@ public class AdminBoardServiceImpl implements AdminBoardService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<BoardResponseDto> getAllBoards() {
-        return boardRepository.getAllBoards();
+    public List<BoardResponseDto> findAllByOrderByIdDesc() {
+        List<Board> boards = boardRepository.findAllByOrderByIdDesc();
+
+        return boards.stream().map(BoardResponseDto::from).collect(Collectors.toList());
     }
 
     public List<BoardResponseDto> adminSearchBoards(String boardKeyword) {

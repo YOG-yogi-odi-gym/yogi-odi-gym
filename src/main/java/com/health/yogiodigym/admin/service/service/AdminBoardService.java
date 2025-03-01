@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface AdminBoardService {
 
-    List<BoardResponseDto> getAllBoards();
+    List<BoardResponseDto> findAllByOrderByIdDesc();
 
     List<BoardResponseDto> adminSearchBoards(String boardKeyword);
 
