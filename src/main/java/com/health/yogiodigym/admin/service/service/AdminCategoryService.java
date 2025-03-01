@@ -8,4 +8,6 @@ public interface AdminCategoryService {
 
     List<CategoryDto> findAll();
 
+    void deleteAllById(List<Long> ids);
+
 }

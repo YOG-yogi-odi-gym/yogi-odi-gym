@@ -26,4 +26,9 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
                 .map(CategoryDto::new)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public void deleteAllById(List<Long> ids) {
+        categoryRepository.deleteAllById(ids);
+    }
 }

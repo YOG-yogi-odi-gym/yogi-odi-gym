@@ -431,6 +431,46 @@
                 }
             });
         });
+
+        $("#deleteCategoryButton").click(function () {
+            let selectCategories = [];
+
+            $(".boardCheckbox:checked").each(function() {
+                selectCategories.push(Number($(this).val()));
+            });
+
+            console.log(selectCategories);
+
+            if (selectCategories.length === 0) {
+                alert("삭제할 카테고리를 선택해 주세요!");
+                return;
+            }
+
+            $.ajax({
+                url: "/api/admin/category/delete",
+                type: "POST",
+                data: JSON.stringify(selectCategories),
+                contentType: 'application/json; charset=utf-8',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(csrfHeader, csrfToken);
+                },
+                success: function (response) {
+                    if (response.status === 200) {
+                        alert("카테고리를 삭제했습니다.")
+                        location.reload();
+                    } else {
+                        alert("카테고리 삭제에 실패했습니다.");
+                        console.log(response.status);
+                        console.log(response.data);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("AJAX Error : ", status, error);
+                    console.error("Response : ", xhr.responseText);
+                    alert("삭제중 오류가 발생하였습니다.");
+                }
+            });
+        });
     });
 </script>
 </body>
