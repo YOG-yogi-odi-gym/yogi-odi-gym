@@ -4,6 +4,49 @@
     <meta charset="UTF-8">
     <title>test</title>
 </head>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: white;
+    }
+    .contain {
+        width: 1200px;
+        height: 900px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        background-color: #E5E5E5;
+    }
+    .header {
+        width: 1200px;
+        height: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 40px;
+        border-radius: 10px;
+    }
+    .main {
+        width: 100%;
+        height: 850px;
+        display: flex;
+        flex-direction: flex-start;
+        border-radius: 10px;
+    }
+    .content {
+        width: 920px;
+        height: 800px;
+        margin: 25px 30px 25px 30px;
+        border-radius: 10px;
+        background-color: white;
+    }
+</style>
 <body>
 
 <div class="contain">
@@ -12,7 +55,7 @@
     </div>
 
     <div class="main" >
-        <div class="side" th:include="~{fragment/side.html}">
+        <div th:replace="~{fragment/side.html}">
 
         </div>
         <script>
