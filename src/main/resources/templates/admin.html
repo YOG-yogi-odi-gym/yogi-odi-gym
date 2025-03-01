@@ -193,15 +193,15 @@
                 <thead class="thead-dark">
                 <tr>
                     <th></th>
-                    <th>강의명</th>
-                    <th>강사</th>
+                    <th>제목</th>
+                    <th>작성자</th>
                 </tr>
                 </thead>
                 <tbody id="boardTableBody">
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                <tr th:each="board : ${boards}">
+                    <td><input type="checkbox" class="boardCheckbox" th:value="${board.id}"></td>
+                    <td th:text="${board.title}"></td>
+                    <td th:text="${board.memberName}"></td>
                 </tr>
                 </tbody>
             </table>
@@ -348,6 +348,43 @@
             });
         }
 
+        function searchBoards() {
+            let boardKeyword = $("#boardSearchInput").val().trim();
+
+            $.ajax({
+                url: "/api/admin/board/search",
+                type: "GET",
+                data: { boardKeyword: boardKeyword },
+                success: function (response) {
+                    if (response.status !== 200) {
+                        alert("검색에 실패했습니다.")
+                    }
+
+                    let boards = response.data;
+                    let tableBody = $("#boardTableBody");
+                    tableBody.empty();
+
+                    if (boards.length === 0) {
+                        tableBody.append("<tr><td colspan='3' class='text-center'>검색 결과가 없습니다.</td></tr>")
+                        return;
+                    }
+
+                    boards.forEach(board => {
+                        let row = `
+                            <tr>
+                                <td><input type="checkbox" class="boardCheckbox" value="${board.id}"></td>
+                                <td>${board.title}</td>
+                                <td>${board.memberName}</td>
+                            </tr>`;
+                        tableBody.append(row);
+                    });
+                },
+                error: function () {
+                    alert("검색 중 오류가 발생했습니다.")
+                }
+            });
+        }
+
         $("#memberSearchButton").click(function () {
             searchMembers();
         });
@@ -363,6 +400,15 @@
         $("#lessonSearchInput").keypress(function (event) {
             if (event.which === 13) {
                 searchLessons();
+            }
+        })
+
+        $("#boardSearchButton").click(function () {
+            searchBoards();
+        });
+        $("#boardSearchInput").keypress(function (event) {
+            if (event.which === 13) {
+                searchBoards();
             }
         })
 

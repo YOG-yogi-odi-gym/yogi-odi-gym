@@ -4,7 +4,6 @@ import com.health.yogiodigym.admin.dto.LessonDto.*;
 import com.health.yogiodigym.admin.service.service.AdminLessonService;
 import com.health.yogiodigym.lesson.entity.Lesson;
 import com.health.yogiodigym.lesson.repository.LessonRepository;
-import com.health.yogiodigym.lesson.service.LessonService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
