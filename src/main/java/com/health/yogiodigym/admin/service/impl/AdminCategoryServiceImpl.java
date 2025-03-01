@@ -43,4 +43,20 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
 
         categoryRepository.save(category);
     }
+
+    @Override
+    @Transactional
+    public void updateCategory(CategoryDto categoryDto) {
+
+        Category category = categoryRepository.findById(categoryDto.getId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 카테고리가 없습니다. id=" + categoryDto.getId()));
+
+        category = Category.builder()
+                .id(categoryDto.getId())
+                .name(categoryDto.getName())
+                .code(categoryDto.getCode())
+                .build();
+
+        categoryRepository.save(category);
+    }
 }

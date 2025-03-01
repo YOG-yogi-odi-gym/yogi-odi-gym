@@ -10,8 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static com.health.yogiodigym.common.message.SuccessMessage.ADMIN_CATEGORY_DELETE_SUCCESS;
-import static com.health.yogiodigym.common.message.SuccessMessage.ADMIN_CATEGORY_INSERT_SUCCESS;
+import static com.health.yogiodigym.common.message.SuccessMessage.*;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -34,5 +33,13 @@ public class AdminCategoryController {
         adminCategoryService.saveCategory(categoryDto);
 
         return ResponseEntity.ok().body(new HttpResponse(HttpStatus.OK, ADMIN_CATEGORY_INSERT_SUCCESS.getMessage(), null));
+    }
+
+    @PutMapping("/category/update")
+    public ResponseEntity<?> updateCategory(@RequestBody CategoryDto categoryDto) {
+
+        adminCategoryService.updateCategory(categoryDto);
+
+        return ResponseEntity.ok().body(new HttpResponse(HttpStatus.OK, ADMIN_CATEGORY_UPDATE_SUCCESS.getMessage(), null));
     }
 }

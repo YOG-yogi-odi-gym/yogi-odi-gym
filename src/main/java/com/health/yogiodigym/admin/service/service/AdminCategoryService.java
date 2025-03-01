@@ -11,4 +11,6 @@ public interface AdminCategoryService {
     void deleteAllById(List<Long> ids);
 
     void saveCategory(CategoryDto categoryDto);
+
+    void updateCategory(CategoryDto categoryDto);
 }

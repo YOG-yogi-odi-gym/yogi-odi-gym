@@ -261,10 +261,10 @@ $(document).ready(function () {
     });
 
     $("#insertCategoryButton").click(function () {
-        $('#categoryModal').modal('show');
+        $('#insertCategoryModal').modal('show');
     })
 
-    $("#saveCategoryButton").click(function () {
+    $("#insertSaveCategoryButton").click(function () {
         const categoryData = {
             name: $("#categoryName").val(),
             code: $("#categoryCode").val(),
@@ -302,10 +302,74 @@ $(document).ready(function () {
         });
     });
 
+    $("#updateCategoryButton").click(function () {
+        let selectCategories = [];
+        let selectCategoriesName = "";
+
+        $(".categoryCheckbox:checked").each(function () {
+            selectCategories.push(Number($(this).val()));
+            selectedCategoryName = $(this).closest('tr').find('td:eq(1)').text();
+        });
+
+        if (selectCategories.length !== 1) {
+            alert("한개의 카테고리만 골라주세요!");
+            return;
+        }
+        $("#originalCategoryName").val(selectedCategoryName);
+        $("#updateCategoryId").val(selectCategories[0]);
+
+        $("#updateCategoryModal").modal('show');
+    })
+
+    $("#updateSaveCategoryButton").click(function () {
+        const categoryId = $("#updateCategoryId").val();
+        const categoryName = $("#updateCategoryName").val();
+        const categoryCode = $("#updateCategoryCode").val();
+
+        if (!categoryName || categoryName.trim() === "") {
+            alert("카테고리명을 입력해주세요!");
+            return;
+        }
+
+        console.log(categoryId, categoryName, categoryCode);
+
+        const updateData = {
+            id: Number(categoryId),
+            name: categoryName,
+            code: categoryCode
+        };
+
+        $.ajax({
+            url: "/api/admin/category/update",
+            type: "PUT",
+            data: JSON.stringify(updateData),
+            contentType: 'application/json; charset=utf-8',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader(csrfHeader, csrfToken);
+            },
+            success: function (response) {
+                if (response.status === 200) {
+                    alert("카테고리가 수정되었습니다.");
+                    $("#updateCategoryModal").modal("hide");
+                    location.reload();
+                } else {
+                    alert("카테고리 수정에 실패했습니다.");
+                    console.log(response.status);
+                    console.log(response.data);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("AJAX Error : ", status, error);
+                console.error("Response : ", xhr.responseText);
+                alert("수정 중 오류가 발생했습니다.");
+            }
+        });
+    });
+
     $("#deleteCategoryButton").click(function () {
         let selectCategories = [];
 
-        $(".boardCheckbox:checked").each(function() {
+        $(".categoryCheckbox:checked").each(function() {
             selectCategories.push(Number($(this).val()));
         });
 
