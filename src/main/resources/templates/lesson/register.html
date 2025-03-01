@@ -10,55 +10,80 @@
     <script type="text/javascript" th:src="@{'/js/lessonValidateDate.js'}"></script>
 </head>
 <body>
-<h2>강의 등록</h2>
-<form th:action="@{/api/lesson/register}" method="post">
-    <label>강의명:</label>
-    <input type="text" name="title" required><br>
 
-    <label>카테고리:</label>
-    <select name="categoryId">
-        <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
-    </select><br>
+<div class="contain">
+    <div class="header" style="background-color: red;">
+        header
+    </div>
 
-    <label>요일:</label>
-    <input type="checkbox" name="bitDays" value="1"> 월
-    <input type="checkbox" name="bitDays" value="2"> 화
-    <input type="checkbox" name="bitDays" value="4"> 수
-    <input type="checkbox" name="bitDays" value="8"> 목
-    <input type="checkbox" name="bitDays" value="16"> 금
-    <input type="checkbox" name="bitDays" value="32"> 토
-    <input type="checkbox" name="bitDays" value="64"> 일<br>
+    <div class="main" >
 
-    <label>위치:</label>
-    <input type="text" id="location" name="location" required>
-    <button type="button" onclick="searchAddress('location')">주소 검색</button><br>
+        <div class="side" th:include="~{fragment/side.html}">
 
-    <label>상세주소:</label>
-    <input type="text" name="detailedLocation" required><br>
+        </div>
+        <script>
+            document.getElementById("side_lesson").style.color = "blue";
+            document.getElementById("side_lesson").style.background = "skyblue";
+        </script>
 
-    <input type="hidden" id="latitude" name="latitude" required readonly>
-    <input type="hidden" id="longitude" name="longitude" required readonly>
+        <div class="content">
+            <!-- 여기에 HTML 코드-->
+            <h2>강의 등록</h2>
+            <form th:action="@{/api/lesson/register}" method="post">
+                <label>강의명:</label>
+                <input type="text" name="title" required><br>
 
-    <label>강의 시작 시간:</label>
-    <input type="time" name="startTime" required><br>
+                <label>카테고리:</label>
+                <select name="categoryId">
+                    <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+                </select><br>
 
-    <label>강의 종료 시간:</label>
-    <input type="time" name="endTime" required><br>
+                <label>요일:</label>
+                <input type="checkbox" name="bitDays" value="1"> 월
+                <input type="checkbox" name="bitDays" value="2"> 화
+                <input type="checkbox" name="bitDays" value="4"> 수
+                <input type="checkbox" name="bitDays" value="8"> 목
+                <input type="checkbox" name="bitDays" value="16"> 금
+                <input type="checkbox" name="bitDays" value="32"> 토
+                <input type="checkbox" name="bitDays" value="64"> 일<br>
 
-    <label>강의 시작일:</label>
-    <input type="date" name="startDay" required onchange="validateEndDate()"><br>
+                <label>위치:</label>
+                <input type="text" id="location" name="location" required>
+                <button type="button" onclick="searchAddress('location')">주소 검색</button><br>
 
-    <label>강의 종료일:</label>
-    <input type="date" name="endDay" required onchange="validateEndDate()"><br>
+                <label>상세주소:</label>
+                <input type="text" name="detailedLocation" required><br>
 
-    <label>최대 인원:</label>
-    <input type="number" name="max" required><br>
+                <input type="hidden" id="latitude" name="latitude" required readonly>
+                <input type="hidden" id="longitude" name="longitude" required readonly>
 
-    <label>강의 소개:</label>
-    <textarea name="description"></textarea><br>
+                <label>강의 시작 시간:</label>
+                <input type="time" name="startTime" required><br>
 
-    <button onclick="history.back()">뒤로 가기</button>
-    <button type="submit">등록</button>
-</form>
+                <label>강의 종료 시간:</label>
+                <input type="time" name="endTime" required><br>
+
+                <label>강의 시작일:</label>
+                <input type="date" name="startDay" required onchange="validateEndDate()"><br>
+
+                <label>강의 종료일:</label>
+                <input type="date" name="endDay" required onchange="validateEndDate()"><br>
+
+                <label>최대 인원:</label>
+                <input type="number" name="max" required><br>
+
+                <label>강의 소개:</label>
+                <textarea name="description"></textarea><br>
+
+                <button onclick="history.back()">뒤로 가기</button>
+                <button type="submit">등록</button>
+            </form>
+            <!-- 종료 -->
+        </div>
+    </div>
+
+</div>
+
+
 </body>
 </html>

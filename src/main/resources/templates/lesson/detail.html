@@ -194,38 +194,64 @@
     </style>
 </head>
 <body>
-    <h2 th:text="${lesson.title}"></h2>
 
-    <p><strong>카테고리:</strong> <span th:text="${lesson.categoryName}"></span></p>
-    <p><strong>강의 요일:</strong> <span id="lessonDays"></span></p>
-    <p><strong>강의 기간:</strong> <span th:text="|${lesson.startDay} ~ ${lesson.endDay}|"></span></p>
-    <p><strong>강의 시간:</strong> <span th:text="|${lesson.startTime} ~ ${lesson.endTime}|"></span></p>
-    <p><strong>위치:</strong> <span th:text="${lesson.location}"></span></p>
-    <p><strong>상세 위치:</strong> <span th:text="${lesson.detailedLocation}"></span></p>
-    <button onclick="openModal()"
-            th:data-title="${lesson.title}"
-            th:data-latitude="${lesson.latitude}"
-            th:data-longitude="${lesson.longitude}">지도 보기</button>
-    <p><strong>수강 인원:</strong> <span th:text="|${lesson.current} / ${lesson.max}|"></span></p>
-    <p><strong>강사:</strong> <span th:text="${lesson.masterName}"></span></p>
-    <strong>강의 소개:</strong>
-    <p th:utext="${#strings.replace(lesson.description, '\n', '<br>')}"></p>
 
-    <div id="buttonContainer">
-        <button onclick="history.back()">뒤로 가기</button>
-        <button onclick="location.href='/lesson'">강의 목록</button>
-        <button id="chatRoomBtn" style="display: none;" onclick="enterChatRoom()">채팅방 입장</button>
-        <button id="cancelEnrollBtn" style="display: none;" onclick="cancelEnrollment()">수강 취소</button>
-        <button id="enrollBtn" style="display: none;" onclick="enrollLesson()">수강 신청</button>
-        <button id="updateBtn" style="display: none;" onclick="updateLesson()">수정</button>
-
+<div class="contain">
+    <div class="header" style="background-color: red;">
+        header
     </div>
 
-    <div id="mapModal">
-        <h3 id="modalContent"></h3>
-        <div id="kakaoMap" ></div>
-        <button onclick="closeModal()">Close</button>
+    <div class="main" >
+
+        <div class="side" th:include="~{fragment/side.html}">
+
+        </div>
+        <script>
+            document.getElementById("side_lesson").style.color = "blue";
+            document.getElementById("side_lesson").style.background = "skyblue";
+        </script>
+
+        <div class="content">
+            <!-- 여기에 HTML 코드-->
+            <h2 th:text="${lesson.title}"></h2>
+
+            <p><strong>카테고리:</strong> <span th:text="${lesson.categoryName}"></span></p>
+            <p><strong>강의 요일:</strong> <span id="lessonDays"></span></p>
+            <p><strong>강의 기간:</strong> <span th:text="|${lesson.startDay} ~ ${lesson.endDay}|"></span></p>
+            <p><strong>강의 시간:</strong> <span th:text="|${lesson.startTime} ~ ${lesson.endTime}|"></span></p>
+            <p><strong>위치:</strong> <span th:text="${lesson.location}"></span></p>
+            <p><strong>상세 위치:</strong> <span th:text="${lesson.detailedLocation}"></span></p>
+            <button onclick="openModal()"
+                    th:data-title="${lesson.title}"
+                    th:data-latitude="${lesson.latitude}"
+                    th:data-longitude="${lesson.longitude}">지도 보기</button>
+            <p><strong>수강 인원:</strong> <span th:text="|${lesson.current} / ${lesson.max}|"></span></p>
+            <p><strong>강사:</strong> <span th:text="${lesson.masterName}"></span></p>
+            <strong>강의 소개:</strong>
+            <p th:utext="${#strings.replace(lesson.description, '\n', '<br>')}"></p>
+
+            <div id="buttonContainer">
+                <button onclick="history.back()">뒤로 가기</button>
+                <button onclick="location.href='/lesson'">강의 목록</button>
+                <button id="chatRoomBtn" style="display: none;" onclick="enterChatRoom()">채팅방 입장</button>
+                <button id="cancelEnrollBtn" style="display: none;" onclick="cancelEnrollment()">수강 취소</button>
+                <button id="enrollBtn" style="display: none;" onclick="enrollLesson()">수강 신청</button>
+                <button id="updateBtn" style="display: none;" onclick="updateLesson()">수정</button>
+
+            </div>
+
+            <div id="mapModal">
+                <h3 id="modalContent"></h3>
+                <div id="kakaoMap" ></div>
+                <button onclick="closeModal()">Close</button>
+            </div>
+            <!-- 종료 -->
+        </div>
     </div>
+
+</div>
+
+
 
 </body>
 </html>

@@ -49,7 +49,7 @@ public class Lesson {
 
     private LocalDateTime createDateTime;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "chat_room_id")
     private ChatRoom chatRoom;
 

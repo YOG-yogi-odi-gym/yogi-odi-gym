@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>test</title>
+</head>
+<body>
+
+<div class="contain">
+    <div class="header" style="background-color: red;">
+        header
+    </div>
+
+    <div class="main" >
+        <div class="side" th:include="~{fragment/side.html}">
+
+        </div>
+        <script>
+            document.getElementById("side_lesson").style.color = "blue";
+            document.getElementById("side_lesson").style.background = "skyblue";
+        </script>
+
+        <div class="content">
+            <!-- 여기에 HTML 코드-->
+            <!-- 종료 -->
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

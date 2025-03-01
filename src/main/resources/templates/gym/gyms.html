@@ -157,34 +157,59 @@
     </style>
 </head>
 <body>
-<h2>Gym Search</h2>
-    <select id="searchColumn">
-        <option value="name">이름</option>
-        <option value="oldAddress">주소</option>
-    </select>
 
-    <input type="text" id="gymKeyword" placeholder="Enter name" >
-    <button onclick="gymSearch()">Search</button>
-
-    <table border="1">
-        <thead>
-        <tr>
-            <th>번호</th>
-            <th>이름</th>
-            <th>주소</th>
-            <th>거리</th>
-        </tr>
-        </thead>
-        <tbody id="resultSearch"></tbody>
-    </table>
-
-    <div id="pagination"></div>
-
-    <div id="mapModal">
-        <p id="modalContent"></p>
-        <div id="kakaoMap" ></div>
-        <button onclick="closeModal()">Close</button>
+<div class="contain">
+    <div class="header" style="background-color: red;">
+        header
     </div>
+
+    <div class="main" >
+        <div class="side" th:include="~{fragment/side.html}">
+
+        </div>
+        <script>
+            document.getElementById("side_gym").style.color = "blue";
+            document.getElementById("side_gym").style.background = "skyblue";
+        </script>
+
+        <div class="content">
+            <!-- 여기에 HTML 코드-->
+            <h2>Gym Search</h2>
+            <select id="searchColumn">
+                <option value="name">이름</option>
+                <option value="oldAddress">주소</option>
+            </select>
+
+            <input type="text" id="gymKeyword" placeholder="Enter name" >
+            <button onclick="gymSearch()">Search</button>
+
+            <table border="1">
+                <thead>
+                <tr>
+                    <th>번호</th>
+                    <th>이름</th>
+                    <th>주소</th>
+                    <th>거리</th>
+                </tr>
+                </thead>
+                <tbody id="resultSearch"></tbody>
+            </table>
+
+            <div id="pagination"></div>
+
+            <div id="mapModal">
+                <p id="modalContent"></p>
+                <div id="kakaoMap" ></div>
+                <button onclick="closeModal()">Close</button>
+            </div>
+            <!-- 종료 -->
+        </div>
+    </div>
+</div>
+
+
+
+
 
 </body>
 </html>
