@@ -1,6 +1,5 @@
 package com.health.yogiodigym.board.repository;
 
-import com.health.yogiodigym.admin.dto.BoardDto.*;
 import com.health.yogiodigym.board.entity.Board;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
