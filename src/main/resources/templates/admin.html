@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>관리자 페이지</title>
+    <title>test</title>
 
     <meta charset="utf-8">
     <meta name="_csrf" th:content="${_csrf.token}"/>
@@ -12,49 +12,38 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
-            background-color: #f8f9fa;
+            background-color: #f1f1f1;
         }
 
-        .container-fluid table-list {
+        .container-fluid.d-flex.flex-row.table-list {
             display: flex;
             justify-content: space-evenly;
-            margin: 50px 0 0 0 !important;
         }
 
         .apply-category-container {
-            margin-top: 20px;
-            max-width: 33%;
-            margin-right: 20px;
+            margin-top: 25px;
+            width: 24%;
         }
 
         .member-container, .board-container, .lesson-container {
-            max-width: 33%;
-            margin-right: 20px;
-            margin-top: 20px;
-            margin-bottom: 20px;
-            border: 3px solid #cccccc;
+            width: 24%;
+            margin-top: 25px;
             padding: 15px;
             border-radius: 10px;
             display: flex;
             flex-direction: column;
-            align-items: flex-start;
             background-color: white;
-            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
             height: 800px;
         }
 
         .category-container, .apply-container {
             width: 100%;
             margin-bottom: 20px;
-
-            border: 3px solid #cccccc;
             padding: 15px;
             border-radius: 10px;
             display: flex;
             flex-direction: column;
-            align-items: flex-start;
             background-color: white;
-            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
             height: 390px;
         }
 
@@ -70,7 +59,7 @@
             border: 1px solid #ccc;
         }
 
-         .categoryTable-container, .applyTable-container {
+        .categoryTable-container, .applyTable-container {
             width: 100%;
             height: 400px;
             overflow-y: auto;
@@ -135,6 +124,7 @@
     </style>
 </head>
 <body>
+<div th:replace="fragments/navbar.html"></div>
 <div class="container-fluid d-flex flex-row table-list">
     <div class="member-container">
         <h3>회원 목록</h3>
@@ -203,15 +193,15 @@
                 <thead class="thead-dark">
                 <tr>
                     <th></th>
-                    <th>강의명</th>
-                    <th>강사</th>
+                    <th>제목</th>
+                    <th>작성자</th>
                 </tr>
                 </thead>
                 <tbody id="boardTableBody">
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                <tr th:each="board : ${boards}">
+                    <td><input type="checkbox" class="boardCheckbox" th:value="${board.id}"></td>
+                    <td th:text="${board.title}"></td>
+                    <td th:text="${board.memberName}"></td>
                 </tr>
                 </tbody>
             </table>
@@ -358,6 +348,43 @@
             });
         }
 
+        function searchBoards() {
+            let boardKeyword = $("#boardSearchInput").val().trim();
+
+            $.ajax({
+                url: "/api/admin/board/search",
+                type: "GET",
+                data: { boardKeyword: boardKeyword },
+                success: function (response) {
+                    if (response.status !== 200) {
+                        alert("검색에 실패했습니다.")
+                    }
+
+                    let boards = response.data;
+                    let tableBody = $("#boardTableBody");
+                    tableBody.empty();
+
+                    if (boards.length === 0) {
+                        tableBody.append("<tr><td colspan='3' class='text-center'>검색 결과가 없습니다.</td></tr>")
+                        return;
+                    }
+
+                    boards.forEach(board => {
+                        let row = `
+                            <tr>
+                                <td><input type="checkbox" class="boardCheckbox" value="${board.id}"></td>
+                                <td>${board.title}</td>
+                                <td>${board.memberName}</td>
+                            </tr>`;
+                        tableBody.append(row);
+                    });
+                },
+                error: function () {
+                    alert("검색 중 오류가 발생했습니다.")
+                }
+            });
+        }
+
         $("#memberSearchButton").click(function () {
             searchMembers();
         });
@@ -373,6 +400,15 @@
         $("#lessonSearchInput").keypress(function (event) {
             if (event.which === 13) {
                 searchLessons();
+            }
+        })
+
+        $("#boardSearchButton").click(function () {
+            searchBoards();
+        });
+        $("#boardSearchInput").keypress(function (event) {
+            if (event.which === 13) {
+                searchBoards();
             }
         })
 
@@ -443,6 +479,44 @@
                         location.reload();
                     } else {
                         alert("강의 삭제에 실패했습니다.");
+                        console.log(response.status);
+                        console.log(response.data);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("AJAX Error : ", status, error);
+                    console.error("Response : ", xhr.responseText);
+                    alert("삭제중 오류가 발생하였습니다.");
+                }
+            });
+        });
+
+        $("#deleteBoardButton").click(function () {
+            let selectBoards = [];
+
+            $(".boardCheckbox:checked").each(function() {
+                selectBoards.push(Number($(this).val()));
+            });
+
+            if (selectBoards.length === 0) {
+                alert("삭제할 게시글을 선택해 주세요!");
+                return;
+            }
+
+            $.ajax({
+                url: "/api/admin/board/delete",
+                type: "POST",
+                data: JSON.stringify(selectBoards),
+                contentType: 'application/json; charset=utf-8',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(csrfHeader, csrfToken);
+                },
+                success: function (response) {
+                    if (response.status === 200) {
+                        alert("게시글을 삭제했습니다.")
+                        location.reload();
+                    } else {
+                        alert("게시글 삭제에 실패했습니다.");
                         console.log(response.status);
                         console.log(response.data);
                     }

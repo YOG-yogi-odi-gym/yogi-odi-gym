@@ -15,7 +15,9 @@ public enum SuccessMessage {
     ADMIN_MEMBER_SEARCH_SUCCESS("회원목록 검색에 성공하였습니다."),
     ADMIN_MEMBER_STATUS_CHANGE_SUCCESS("회원 비활성화 성공하였습니다."),
     ADMIN_LESSON_SEARCH_SUCCESS("강의목록 검색에 성공하였습니다."),
-    ADMIN_LESSON_DELETE_SUCCESS("강의 삭제에 성공하였습니다.");
+    ADMIN_LESSON_DELETE_SUCCESS("강의 삭제에 성공하였습니다."),
+    ADMIN_BOARD_SEARCH_SUCCESS("게시판 검색에 성공하였습니다."),
+    ADMIN_BOARD_DELETE_SUCCESS("게시판 삭제에 성공하였습니다.");
 
     private final String message;
 }
