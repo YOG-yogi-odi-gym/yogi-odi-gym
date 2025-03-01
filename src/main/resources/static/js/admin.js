@@ -275,8 +275,6 @@ $(document).ready(function () {
             return
         }
 
-        console.log(categoryData);
-
         $.ajax({
             url: "/api/admin/category/insert",
             type: "POST",

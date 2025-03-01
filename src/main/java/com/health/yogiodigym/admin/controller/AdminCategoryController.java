@@ -31,9 +31,6 @@ public class AdminCategoryController {
     @PostMapping("/category/insert")
     public ResponseEntity<?> saveCategory(@RequestBody CategoryDto categoryDto) {
 
-        System.out.println(categoryDto.getName());
-        System.out.println(categoryDto.getCode());
-
         adminCategoryService.saveCategory(categoryDto);
 
         return ResponseEntity.ok().body(new HttpResponse(HttpStatus.OK, ADMIN_CATEGORY_INSERT_SUCCESS.getMessage(), null));
