@@ -161,9 +161,40 @@
                 </div>
             </div>
             <div class="category-btnGroup">
-                <button class="btn btn-success" id="insertCategoryButton">추가</button>
+                <button class="btn btn-primary" id="insertCategoryButton">추가</button>
                 <button class="btn btn-success" id="updateCategoryButton">수정</button>
                 <button class="btn btn-danger" id="deleteCategoryButton">삭제</button>
+            </div>
+        </div>
+        <div class="modal fade" id="categoryModal" tabindex="-1" role="dialog" aria-labelledby="categoryModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content" style="border-radius: 10px;">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="categoryModalLabel">카테고리 추가</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="categoryForm">
+                            <div class="form-group">
+                                <label for="categoryName">카테고리 이름</label>
+                                <input type="text" class="form-control" id="categoryName" placeholder="카테고리 이름을 입력하세요">
+                            </div>
+                            <div class="form-group">
+                                <label for="categoryCode">카테고리 코드</label>
+                                <select class="form-control" id="categoryCode">
+                                    <option value="lesson">강의</option>
+                                    <option value="board">게시판</option>
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="saveCategoryButton">저장</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

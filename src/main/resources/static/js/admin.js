@@ -260,6 +260,50 @@ $(document).ready(function () {
         });
     });
 
+    $("#insertCategoryButton").click(function () {
+        $('#categoryModal').modal('show');
+    })
+
+    $("#saveCategoryButton").click(function () {
+        const categoryData = {
+            name: $("#categoryName").val(),
+            code: $("#categoryCode").val(),
+        }
+
+        if (categoryName.length === 0) {
+            alert("카테고리명을 입력해주세요!");
+            return
+        }
+
+        console.log(categoryData);
+
+        $.ajax({
+            url: "/api/admin/category/insert",
+            type: "POST",
+            data: JSON.stringify(categoryData),
+            contentType: 'application/json; charset=utf-8',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader(csrfHeader, csrfToken);
+            },
+            success: function (response) {
+                if (response.status === 200) {
+                    $("#categoryModal").modal("hide");
+                    alert("카테고리가 추가되었습니다!");
+                    location.reload();
+                } else {
+                    alert("카테고리 추가에 실패했습니다.");
+                    console.log(response.status);
+                    console.log(response.data);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("AJAX Error : ", status, error);
+                console.error("Response : ", xhr.responseText);
+                alert("추가중 오류가 발생하엿습니다.")
+            }
+        });
+    });
+
     $("#deleteCategoryButton").click(function () {
         let selectCategories = [];
 

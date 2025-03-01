@@ -18,7 +18,8 @@ public enum SuccessMessage {
     ADMIN_LESSON_DELETE_SUCCESS("강의 삭제에 성공하였습니다."),
     ADMIN_BOARD_SEARCH_SUCCESS("게시판 검색에 성공하였습니다."),
     ADMIN_BOARD_DELETE_SUCCESS("게시판 삭제에 성공하였습니다."),
-    ADMIN_CATEGORY_DELETE_SUCCESS("카테고리 삭제에 성공하였습니다.");
+    ADMIN_CATEGORY_DELETE_SUCCESS("카테고리 삭제에 성공하였습니다."),
+    ADMIN_CATEGORY_INSERT_SUCCESS("카테고리 추가에 성공하였습니다.");
 
 
     private final String message;

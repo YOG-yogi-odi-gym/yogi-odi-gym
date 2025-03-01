@@ -2,6 +2,7 @@ package com.health.yogiodigym.admin.service.impl;
 
 import com.health.yogiodigym.admin.service.service.AdminCategoryService;
 import com.health.yogiodigym.lesson.dto.CategoryDto;
+import com.health.yogiodigym.lesson.entity.Category;
 import com.health.yogiodigym.lesson.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,5 +31,16 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
     @Override
     public void deleteAllById(List<Long> ids) {
         categoryRepository.deleteAllById(ids);
+    }
+
+    @Override
+    public void saveCategory(CategoryDto categoryDto) {
+
+        Category category = Category.builder()
+                .name(categoryDto.getName())
+                .code(categoryDto.getCode())
+                .build();
+
+        categoryRepository.save(category);
     }
 }
