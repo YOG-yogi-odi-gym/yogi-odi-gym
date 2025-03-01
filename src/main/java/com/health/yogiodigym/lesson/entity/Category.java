@@ -3,7 +3,6 @@ package com.health.yogiodigym.lesson.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
