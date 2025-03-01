@@ -19,3 +19,8 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       group-id: chat-room
+
+  data:
+    redis:
+      host: ENC(l+QJzI2EUlLrZ+WV1GFpG7BHatQfxXBd)
+      port: 6379
