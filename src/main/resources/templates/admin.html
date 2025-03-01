@@ -490,6 +490,44 @@
                 }
             });
         });
+
+        $("#deleteBoardButton").click(function () {
+            let selectBoards = [];
+
+            $(".boardCheckbox:checked").each(function() {
+                selectBoards.push(Number($(this).val()));
+            });
+
+            if (selectBoards.length === 0) {
+                alert("삭제할 게시글을 선택해 주세요!");
+                return;
+            }
+
+            $.ajax({
+                url: "/api/admin/board/delete",
+                type: "POST",
+                data: JSON.stringify(selectBoards),
+                contentType: 'application/json; charset=utf-8',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(csrfHeader, csrfToken);
+                },
+                success: function (response) {
+                    if (response.status === 200) {
+                        alert("게시글을 삭제했습니다.")
+                        location.reload();
+                    } else {
+                        alert("게시글 삭제에 실패했습니다.");
+                        console.log(response.status);
+                        console.log(response.data);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("AJAX Error : ", status, error);
+                    console.error("Response : ", xhr.responseText);
+                    alert("삭제중 오류가 발생하였습니다.");
+                }
+            });
+        });
     });
 </script>
 </body>

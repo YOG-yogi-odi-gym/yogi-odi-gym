@@ -10,5 +10,7 @@ public interface AdminBoardService {
 
     List<BoardResponseDto> adminSearchBoards(String boardKeyword);
 
+    void deleteAllById(List<Long> ids);
+
 
 }

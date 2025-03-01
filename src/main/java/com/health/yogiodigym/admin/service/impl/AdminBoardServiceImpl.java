@@ -36,5 +36,11 @@ public class AdminBoardServiceImpl implements AdminBoardService {
         return boardDtos;
     }
 
+    @Override
+    @Transactional
+    public void deleteAllById(List<Long> ids) {
+        boardRepository.deleteAllById(ids);
+    }
+
 
 }

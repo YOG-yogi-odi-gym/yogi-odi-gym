@@ -4,7 +4,6 @@ package com.health.yogiodigym.admin.controller;
 import com.health.yogiodigym.admin.dto.LessonDto.*;
 import com.health.yogiodigym.admin.service.service.AdminLessonService;
 import com.health.yogiodigym.common.response.HttpResponse;
-import com.health.yogiodigym.lesson.service.LessonService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
