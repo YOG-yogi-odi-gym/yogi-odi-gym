@@ -38,7 +38,7 @@ public class ChatController {
         model.addAttribute("readMessages", chatMessageService.getReadMessages(member, roomId, PageRequest.of(0, 30)));
         model.addAttribute("unReadMessages", chatMessageService.getUnReadMessages(member, roomId));
 
-        return "chat";
+        return "chat/chat";
     }
 
 }
