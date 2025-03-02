@@ -19,6 +19,6 @@ public class MainViewController {
 
     @GetMapping("/dashboard")
     public String dashoboard() {
-        return "/dashboard";
+        return "dashboard";
     }
 }
