@@ -12,6 +12,7 @@ public enum ErrorMessage {
     EXISTING_MEMBER_ERROR("이미 존재하는 회원입니다."),
     MEMBER_NOT_FOUND("회원이 존재하지 않습니다."),
     LESSON_NOT_FOUND("강의가 존재하지 않습니다."),
+    BOARD_NOT_FOUND("게시판이 존재하지 않습니다."),
     CHAT_ROOM_NOT_FOUND("채팅방이 존재하지 않습니다."),
     CATEGORY_NOT_FOUND("카테고리가 존재하지 않습니다."),
     MEMBER_NOT_IN_CHAT_ROOM("채팅방 참여자가 아닙니다."),

@@ -21,6 +21,7 @@ public interface LessonRepository extends JpaRepository<Lesson, Long> {
                 SELECT l FROM Lesson l JOIN FETCH l.master 
                 WHERE (:keyword IS NULL OR (CASE WHEN :column = 'name' THEN l.title ELSE l.location END) LIKE %:keyword%)
                 AND (:days IS NULL OR BITAND(l.days, :days) > 0)
+                ORDER BY l.id DESC
             """)
     Page<Lesson> searchLessons(@Param("keyword") String keyword,
                                @Param("column") String column,
@@ -32,7 +33,8 @@ public interface LessonRepository extends JpaRepository<Lesson, Long> {
             "(:column = 'name' AND l.title LIKE CONCAT('%', :keyword, '%')) OR " +
             "(:column = 'location' AND l.location LIKE CONCAT('%', :keyword, '%'))) " +
             "AND (:days IS NULL OR (l.days & :days) > 0) " +
-            "AND (:categories IS NULL OR l.category_id IN :categories)",
+            "AND (:categories IS NULL OR l.category_id IN :categories) " +
+            "ORDER BY l.id DESC",
             countQuery = "SELECT count(*) FROM lesson l WHERE " +
                     "(:keyword IS NULL OR :keyword = '' OR " +
                     "(:column = 'name' AND l.title LIKE CONCAT('%', :keyword, '%')) OR " +
