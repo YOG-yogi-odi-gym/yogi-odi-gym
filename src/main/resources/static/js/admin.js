@@ -144,6 +144,125 @@ $(document).ready(function () {
         }
     })
 
+    $("#insertCategoryButton").click(function () {
+        $('#insertCategoryModal').modal('show');
+    })
+
+    $("#applyTableBody").on("click","tr", function () {
+        let applyId = $(this).find(".applyCheckbox").val();
+        let applyName = $(this).find(".applyName").text();
+        let applyEmail = $(this).find(".applyEmail").text();
+        let applyFile = $(this).find("td:nth-child(4)").text();
+
+        $("#applyId").val(applyId)
+        $("#applyName").text(applyName)
+        $("#applyEmail").text(applyEmail)
+
+        $("#applyDetailModal").modal("show");
+    })
+
+    $("#insertSaveCategoryButton").click(function () {
+        const categoryData = {
+            name: $("#categoryName").val(),
+            code: $("#categoryCode").val(),
+        }
+
+        if (categoryName.length === 0) {
+            alert("카테고리명을 입력해주세요!");
+            return
+        }
+
+        $.ajax({
+            url: "/api/admin/category/insert",
+            type: "POST",
+            data: JSON.stringify(categoryData),
+            contentType: 'application/json; charset=utf-8',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader(csrfHeader, csrfToken);
+            },
+            success: function (response) {
+                if (response.status === 200) {
+                    $("#categoryModal").modal("hide");
+                    alert("카테고리가 추가되었습니다!");
+                    location.reload();
+                } else {
+                    alert("카테고리 추가에 실패했습니다.");
+                    console.log(response.status);
+                    console.log(response.data);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("AJAX Error : ", status, error);
+                console.error("Response : ", xhr.responseText);
+                alert("추가중 오류가 발생하엿습니다.")
+            }
+        });
+    });
+
+    $("#updateCategoryButton").click(function () {
+        let selectCategories = [];
+        let selectCategoriesName = "";
+
+        $(".categoryCheckbox:checked").each(function () {
+            selectCategories.push(Number($(this).val()));
+            selectedCategoryName = $(this).closest('tr').find('td:eq(1)').text();
+        });
+
+        if (selectCategories.length !== 1) {
+            alert("한개의 카테고리만 골라주세요!");
+            return;
+        }
+        $("#originalCategoryName").val(selectedCategoryName);
+        $("#updateCategoryId").val(selectCategories[0]);
+
+        $("#updateCategoryModal").modal('show');
+    })
+
+    $("#updateSaveCategoryButton").click(function () {
+        const categoryId = $("#updateCategoryId").val();
+        const categoryName = $("#updateCategoryName").val();
+        const categoryCode = $("#updateCategoryCode").val();
+
+        if (!categoryName || categoryName.trim() === "") {
+            alert("카테고리명을 입력해주세요!");
+            return;
+        }
+
+        console.log(categoryId, categoryName, categoryCode);
+
+        const updateData = {
+            id: Number(categoryId),
+            name: categoryName,
+            code: categoryCode
+        };
+
+        $.ajax({
+            url: "/api/admin/category/update",
+            type: "PUT",
+            data: JSON.stringify(updateData),
+            contentType: 'application/json; charset=utf-8',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader(csrfHeader, csrfToken);
+            },
+            success: function (response) {
+                if (response.status === 200) {
+                    alert("카테고리가 수정되었습니다.");
+                    $("#updateCategoryModal").modal("hide");
+                    location.reload();
+                } else {
+                    alert("카테고리 수정에 실패했습니다.");
+                    console.log(response.status);
+                    console.log(response.data);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("AJAX Error : ", status, error);
+                console.error("Response : ", xhr.responseText);
+                alert("수정 중 오류가 발생했습니다.");
+            }
+        });
+    });
+
     $("#deleteMemberButton").click(function () {
 
         let selectMembers = [];
@@ -257,112 +376,6 @@ $(document).ready(function () {
                 console.error("AJAX Error : ", status, error);
                 console.error("Response : ", xhr.responseText);
                 alert("삭제중 오류가 발생하였습니다.");
-            }
-        });
-    });
-
-    $("#insertCategoryButton").click(function () {
-        $('#insertCategoryModal').modal('show');
-    })
-
-    $("#insertSaveCategoryButton").click(function () {
-        const categoryData = {
-            name: $("#categoryName").val(),
-            code: $("#categoryCode").val(),
-        }
-
-        if (categoryName.length === 0) {
-            alert("카테고리명을 입력해주세요!");
-            return
-        }
-
-        $.ajax({
-            url: "/api/admin/category/insert",
-            type: "POST",
-            data: JSON.stringify(categoryData),
-            contentType: 'application/json; charset=utf-8',
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader(csrfHeader, csrfToken);
-            },
-            success: function (response) {
-                if (response.status === 200) {
-                    $("#categoryModal").modal("hide");
-                    alert("카테고리가 추가되었습니다!");
-                    location.reload();
-                } else {
-                    alert("카테고리 추가에 실패했습니다.");
-                    console.log(response.status);
-                    console.log(response.data);
-                }
-            },
-            error: function (xhr, status, error) {
-                console.error("AJAX Error : ", status, error);
-                console.error("Response : ", xhr.responseText);
-                alert("추가중 오류가 발생하엿습니다.")
-            }
-        });
-    });
-
-    $("#updateCategoryButton").click(function () {
-        let selectCategories = [];
-        let selectCategoriesName = "";
-
-        $(".categoryCheckbox:checked").each(function () {
-            selectCategories.push(Number($(this).val()));
-            selectedCategoryName = $(this).closest('tr').find('td:eq(1)').text();
-        });
-
-        if (selectCategories.length !== 1) {
-            alert("한개의 카테고리만 골라주세요!");
-            return;
-        }
-        $("#originalCategoryName").val(selectedCategoryName);
-        $("#updateCategoryId").val(selectCategories[0]);
-
-        $("#updateCategoryModal").modal('show');
-    })
-
-    $("#updateSaveCategoryButton").click(function () {
-        const categoryId = $("#updateCategoryId").val();
-        const categoryName = $("#updateCategoryName").val();
-        const categoryCode = $("#updateCategoryCode").val();
-
-        if (!categoryName || categoryName.trim() === "") {
-            alert("카테고리명을 입력해주세요!");
-            return;
-        }
-
-        console.log(categoryId, categoryName, categoryCode);
-
-        const updateData = {
-            id: Number(categoryId),
-            name: categoryName,
-            code: categoryCode
-        };
-
-        $.ajax({
-            url: "/api/admin/category/update",
-            type: "PUT",
-            data: JSON.stringify(updateData),
-            contentType: 'application/json; charset=utf-8',
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader(csrfHeader, csrfToken);
-            },
-            success: function (response) {
-                if (response.status === 200) {
-                    alert("카테고리가 수정되었습니다.");
-                    $("#updateCategoryModal").modal("hide");
-                    location.reload();
-                } else {
-                    alert("카테고리 수정에 실패했습니다.");
-                    console.log(response.status);
-                    console.log(response.data);
-                }
-            },
-            error: function (xhr, status, error) {
-                console.error("AJAX Error : ", status, error);
-                console.error("Response : ", xhr.responseText);
-                alert("수정 중 오류가 발생했습니다.");
             }
         });
     });
