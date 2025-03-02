@@ -14,12 +14,14 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 public class StompWebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     private final StompHandler stompHandler;
+    private final WebSocketHandshakeInterceptor handshakeInterceptor;
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint(ChatConstants.CONNECT_URL)
                 .setAllowedOrigins("http://localhost:8080", "http://localhost:8081") // TODO 변경
-                .withSockJS();
+                .withSockJS()
+                .setInterceptors(handshakeInterceptor);
     }
 
     @Override

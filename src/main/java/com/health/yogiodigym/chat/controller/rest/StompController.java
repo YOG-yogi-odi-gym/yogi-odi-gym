@@ -1,6 +1,6 @@
 package com.health.yogiodigym.chat.controller.rest;
 
-import com.health.yogiodigym.chat.dto.MessageDto;
+import com.health.yogiodigym.chat.dto.MessageDto.MessageRequestDto;
 import com.health.yogiodigym.chat.service.KafkaProducerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +15,7 @@ public class StompController {
     private final KafkaProducerService kafkaProducerService;
 
     @MessageMapping("/{roomId}")
-    public MessageDto sendMessage(MessageDto message) {
+    public MessageRequestDto sendMessage(MessageRequestDto message) {
 
         log.info("전송한 메시지 : {}", message);
 
