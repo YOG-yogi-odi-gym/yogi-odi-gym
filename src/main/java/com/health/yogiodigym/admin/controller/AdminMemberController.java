@@ -15,20 +15,20 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/admin")
+@RequestMapping("/api/admin/member")
 @RequiredArgsConstructor
 public class AdminMemberController {
 
     private final AdminMemberService adminMemberService;
 
-    @GetMapping("/member/search")
+    @GetMapping("/search")
     public ResponseEntity<?> searchMembers(@RequestParam String memberKeyword) {
         List<MemberResponseDto> members = adminMemberService.searchMembers(memberKeyword);
 
         return ResponseEntity.ok().body(new HttpResponse(HttpStatus.OK, ADMIN_MEMBER_SEARCH_SUCCESS.getMessage(), members));
     }
 
-    @PostMapping("/member/inactive")
+    @PostMapping("/inactive")
     public ResponseEntity<?> setInactiveStatus(@RequestBody List<Long> memberIds) {
 
         adminMemberService.setInactiveStatus(memberIds);
