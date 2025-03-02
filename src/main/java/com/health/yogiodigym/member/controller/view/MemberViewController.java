@@ -21,7 +21,7 @@ public class MemberViewController {
             return "redirect:/dashboard";
         }
 
-        return "/member/login";
+        return "member/login";
     }
 
     @GetMapping("/regist")
@@ -32,6 +32,6 @@ public class MemberViewController {
             }
         }
 
-        return "/member/regist";
+        return "member/regist";
     }
 }

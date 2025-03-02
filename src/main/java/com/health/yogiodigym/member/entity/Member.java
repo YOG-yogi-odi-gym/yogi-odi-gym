@@ -3,6 +3,7 @@ package com.health.yogiodigym.member.entity;
 import com.health.yogiodigym.member.auth.MemberStatus;
 import com.health.yogiodigym.member.auth.Role;
 import jakarta.persistence.*;
+import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,7 +17,7 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Member {
+public class Member implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
