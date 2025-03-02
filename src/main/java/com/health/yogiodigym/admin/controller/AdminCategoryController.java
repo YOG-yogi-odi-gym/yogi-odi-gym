@@ -13,13 +13,13 @@ import java.util.List;
 import static com.health.yogiodigym.common.message.SuccessMessage.*;
 
 @RestController
-@RequestMapping("/api/admin")
+@RequestMapping("/api/admin/category")
 @RequiredArgsConstructor
 public class AdminCategoryController {
 
     private final AdminCategoryService adminCategoryService;
 
-    @PostMapping(("/category/delete"))
+    @PostMapping(("/delete"))
     public ResponseEntity<?> adminDeleteCategory(@RequestBody List<Long> ids) {
 
         adminCategoryService.deleteAllById(ids);
@@ -27,7 +27,7 @@ public class AdminCategoryController {
         return ResponseEntity.ok().body(new HttpResponse(HttpStatus.OK, ADMIN_CATEGORY_DELETE_SUCCESS.getMessage(), null));
     }
 
-    @PostMapping("/category/insert")
+    @PostMapping("/insert")
     public ResponseEntity<?> saveCategory(@RequestBody CategoryDto categoryDto) {
 
         adminCategoryService.saveCategory(categoryDto);
@@ -35,7 +35,7 @@ public class AdminCategoryController {
         return ResponseEntity.ok().body(new HttpResponse(HttpStatus.OK, ADMIN_CATEGORY_INSERT_SUCCESS.getMessage(), null));
     }
 
-    @PutMapping("/category/update")
+    @PutMapping("/update")
     public ResponseEntity<?> updateCategory(@RequestBody CategoryDto categoryDto) {
 
         adminCategoryService.updateCategory(categoryDto);

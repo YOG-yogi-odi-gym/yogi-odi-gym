@@ -15,20 +15,20 @@ import static com.health.yogiodigym.common.message.SuccessMessage.ADMIN_BOARD_DE
 import static com.health.yogiodigym.common.message.SuccessMessage.ADMIN_BOARD_SEARCH_SUCCESS;
 
 @RestController
-@RequestMapping("/api/admin")
+@RequestMapping("/api/admin/board")
 @RequiredArgsConstructor
 public class AdminBoardController {
 
     private final AdminBoardService adminBoardService;
 
-    @GetMapping("/board/search")
+    @GetMapping("/search")
     public ResponseEntity<?> adminSearchBoards(@RequestParam String boardKeyword) {
         List<BoardResponseDto> boards =adminBoardService.adminSearchBoards(boardKeyword);
 
         return ResponseEntity.ok().body(new HttpResponse(HttpStatus.OK, ADMIN_BOARD_SEARCH_SUCCESS.getMessage(), boards));
     }
 
-    @PostMapping("/board/delete")
+    @PostMapping("/delete")
     public ResponseEntity<?> adminDeleteBoard(@RequestBody List<Long> ids) {
 
         adminBoardService.deleteAllById(ids);
