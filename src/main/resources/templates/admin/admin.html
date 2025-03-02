@@ -28,7 +28,8 @@
                 <tr>
                     <th></th>
                     <th>이름</th>
-                    <th>이메일</th>
+                    <th>이메일
+                    <th>등급</th>
                     <th>상태</th>
                 </tr>
                 </thead>
@@ -37,6 +38,7 @@
                     <td><input type="checkbox" class="memberCheckbox" th:value="${member.id}"></td>
                     <td th:text="${member.name}"></td>
                     <td th:text="${member.email}"></td>
+                    <td th:text="${member.roles[0]}"></td>
                     <td th:text="${member.status}"></td>
                 </tr>
                 </tbody>
@@ -102,17 +104,14 @@
     <div class="apply-category-container">
         <div class="apply-container">
             <h3>강사 신청</h3>
-            <div class="search-container">
-                <input type="text" id="applySearchInput" name="applyKeyword" class="form-control" placeholder="신청자 검색...">
-                <button id="applySearchButton" class="btn btn-primary ml-2">검색</button>
-            </div>
             <div class="applyTable-container">
                 <table id="applyTable" class="table table-bordered table-hover">
                     <thead class="thead-dark">
                     <tr>
                         <th></th>
-                        <th>강의명</th>
-                        <th>강사</th>
+                        <th>이름</th>
+                        <th>이메일</th>
+                        <th>강의</th>
                     </tr>
                     </thead>
                     <tbody id="applyTableBody">

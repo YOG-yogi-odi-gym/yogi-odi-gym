@@ -21,7 +21,7 @@ $(document).ready(function () {
                 tableBody.empty();
 
                 if (members.length === 0) {
-                    tableBody.append("<tr><td colspan='4' class='text-center'>검색 결과가 없습니다.</td></tr>");
+                    tableBody.append("<tr><td colspan='5' class='text-center'>검색 결과가 없습니다.</td></tr>");
                     return;
                 }
 
@@ -31,6 +31,7 @@ $(document).ready(function () {
                                 <td><input type="checkbox" class="memberCheckbox" value="${member.id}"></td>
                                 <td>${member.name}</td>
                                 <td>${member.email}</td>
+                                <td></td>
                                 <td>${member.status}</td>
                             </tr>`;
                     tableBody.append(row);
