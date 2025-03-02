@@ -1,6 +1,7 @@
 package com.health.yogiodigym.chat.config;
 
 import com.health.yogiodigym.chat.dto.MessageDto;
+import com.health.yogiodigym.chat.dto.MessageDto.MessageRequestDto;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -23,12 +24,12 @@ public class KafkaProducerConfiguration {
     private final Environment env;
 
     @Bean
-    public KafkaTemplate<String, MessageDto> kafkaTemplate() {
+    public KafkaTemplate<String, MessageRequestDto> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
 
     @Bean
-    public ProducerFactory<String, MessageDto> producerFactory() {
+    public ProducerFactory<String, MessageRequestDto> producerFactory() {
         return new DefaultKafkaProducerFactory<>(producerConfigurations());
     }
 

@@ -28,4 +28,9 @@ public class ChatParticipant extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private ChatRoom chatRoom;
 
+    private Long last_read_message_id;
+
+    public void updateLastReadMessageId(Long last_read_message_id) {
+        this.last_read_message_id = last_read_message_id;
+    }
 }
