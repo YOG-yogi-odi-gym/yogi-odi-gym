@@ -14,7 +14,7 @@
     <link rel="stylesheet" th:href="@{css/admin.css}">
 </head>
 <body>
-<div th:replace="admin/navbar.html"></div>
+<div th:replace="~{admin/navbar.html}"></div>
 <div class="container-fluid d-flex flex-row table-list">
     <div class="member-container">
         <h3>회원 목록</h3>
@@ -28,7 +28,7 @@
                 <tr>
                     <th></th>
                     <th>이름</th>
-                    <th>이메일
+                    <th>이메일</th>
                     <th>등급</th>
                     <th>상태</th>
                 </tr>
@@ -111,11 +111,14 @@
                         <th></th>
                         <th>이름</th>
                         <th>이메일</th>
-                        <th>강의</th>
                     </tr>
                     </thead>
                     <tbody id="applyTableBody">
-                    <tr>
+                    <tr th:each="memberToMaster : ${memberToMasters}">
+                        <td><input type="checkbox" class="applyCheckbox" th:value="${memberToMaster.id}"></td>
+                        <td th:text="${memberToMaster.memberName}"></td>
+                        <td th:text="${memberToMaster.memberEmail}"></td>
+<!--                        <td th:text="${memberToMaster.file}"></td>-->
                     </tr>
                     </tbody>
                 </table>
