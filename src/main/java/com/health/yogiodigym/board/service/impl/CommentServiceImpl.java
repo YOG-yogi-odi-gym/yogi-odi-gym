@@ -7,7 +7,9 @@ import com.health.yogiodigym.board.repository.BoardRepository;
 import com.health.yogiodigym.board.repository.CommentRepository;
 import com.health.yogiodigym.board.service.CommentService;
 import com.health.yogiodigym.common.exception.BoardNotFoundException;
+import com.health.yogiodigym.common.exception.CommentNotFoundException;
 import com.health.yogiodigym.common.exception.MemberNotFoundException;
+import com.health.yogiodigym.common.exception.NoDeletePermissionException;
 import com.health.yogiodigym.member.entity.Member;
 import com.health.yogiodigym.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -56,10 +58,10 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public void deleteComment(Long commentId, Long memberId) {
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new IllegalArgumentException("댓글이 존재하지 않습니다."));
+                .orElseThrow(() -> new CommentNotFoundException(commentId));
 
         if (!comment.getMember().getId().equals(memberId)) {
-            throw new IllegalArgumentException("삭제 권한이 없습니다.");
+            throw new NoDeletePermissionException();
         }
 
         commentRepository.delete(comment);

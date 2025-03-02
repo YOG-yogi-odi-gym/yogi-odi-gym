@@ -43,10 +43,9 @@ public class BoardViewController {
     public String showBoardDetail(@PathVariable Long id, Model model,
                                   @AuthenticationPrincipal MemberOAuth2User loginUser) {
         Member loginMember = loginUser.getMember();
-        BoardDetailDto boardDetailDto = boardService.getBoardDetail(id);
 
         model.addAttribute("member", new MemberBoardDto(loginMember));
-        model.addAttribute("board", boardDetailDto);
+        model.addAttribute("board", boardService.getBoardDetail(id));
         return "board/detail";
     }
 

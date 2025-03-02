@@ -33,27 +33,11 @@ public class BoardServiceImpl implements BoardService {
     @Override
     @Transactional(readOnly = true)
     public Page<BoardDetailDto> searchBoards(String keyword, String column, List<Long> categories, Pageable pageable) {
-        Page<Board> boardPage;
+        boolean allCategories = isAllCategorySelected(categories);
+        boolean noKeyword = isKeywordEmpty(keyword);
 
-        if (categories == null || categories.isEmpty() || categories.contains(999L)) {
-            if (keyword == null || keyword.isEmpty()) {
-                boardPage = boardRepository.findAll(pageable);
-            } else {
-                boardPage = boardRepository.searchBoards(keyword, column, null, pageable);
-                if (boardPage.isEmpty()) {
-                    boardPage = boardRepository.findAll(pageable);
-                }
-            }
-        } else {
-            if (keyword == null || keyword.isEmpty()) {
-                boardPage = boardRepository.findByCategories(categories, pageable);
-            } else {
-                boardPage = boardRepository.searchBoards(keyword, column, categories, pageable);
-                if (boardPage.isEmpty()) {
-                    boardPage = boardRepository.findByCategories(categories, pageable);
-                }
-            }
-        }
+        Page<Board> boardPage = noKeyword ? findBoardsByCategory(allCategories, categories, pageable)
+                : searchOrFallback(keyword, column, allCategories ? null : categories, pageable);
 
         return boardPage.map(BoardDetailDto::new);
     }
@@ -104,5 +88,22 @@ public class BoardServiceImpl implements BoardService {
                 .orElseThrow(() -> new CategoryNotFoundException(dto.getCategoryId()));
 
         board.updateBoard(dto, category);
+    }
+
+    private boolean isKeywordEmpty(String keyword) {
+        return keyword == null || keyword.isEmpty();
+    }
+
+    private boolean isAllCategorySelected(List<Long> categories) {
+        return categories == null || categories.isEmpty() || categories.contains(999L);
+    }
+
+    private Page<Board> findBoardsByCategory(boolean allCategories, List<Long> categories, Pageable pageable) {
+        return allCategories ? boardRepository.findAll(pageable) : boardRepository.findByCategories(categories, pageable);
+    }
+
+    private Page<Board> searchOrFallback(String keyword, String column, List<Long> categories, Pageable pageable) {
+        Page<Board> boardPage = boardRepository.searchBoards(keyword, column, categories, pageable);
+        return boardPage.isEmpty() ? findBoardsByCategory(categories == null, categories, pageable) : boardPage;
     }
 }
