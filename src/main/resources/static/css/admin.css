@@ -129,7 +129,7 @@ body {
     align-self: flex-end;
 }
 
-#updateCategoryButton, #insertCategoryButton {
+#updateCategoryButton, #insertCategoryButton, #agreeApplyButton {
     width: 60px;
     margin-right: 10px;
     align-self: flex-end;

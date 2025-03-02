@@ -152,11 +152,23 @@ $(document).ready(function () {
         let applyId = $(this).find(".applyCheckbox").val();
         let applyName = $(this).find(".applyName").text();
         let applyEmail = $(this).find(".applyEmail").text();
-        let applyFile = $(this).find("td:nth-child(4)").text();
+        let applyFile = $(this).data("apply_file");
 
         $("#applyId").val(applyId)
         $("#applyName").text(applyName)
         $("#applyEmail").text(applyEmail)
+
+        $("#applyImgContainer").empty();
+
+        if (applyFile) {
+            let imageUrl = `/license/${applyFile}`;
+            let img = $("<img>").attr("src", imageUrl).attr("alt", "자격증 이미지").css({
+                "max-width": "100%",
+                "max-height": "300px",
+                "margin-bottom": "10px"
+            });
+            $("#applyImgContainer").append(img);
+        }
 
         $("#applyDetailModal").modal("show");
     })
@@ -205,14 +217,14 @@ $(document).ready(function () {
 
         $(".categoryCheckbox:checked").each(function () {
             selectCategories.push(Number($(this).val()));
-            selectedCategoryName = $(this).closest('tr').find('td:eq(1)').text();
+            selectCategoriesName = $(this).closest('tr').find('td:eq(1)').text();
         });
 
         if (selectCategories.length !== 1) {
             alert("한개의 카테고리만 골라주세요!");
             return;
         }
-        $("#originalCategoryName").val(selectedCategoryName);
+        $("#originalCategoryName").val(selectCategoriesName);
         $("#updateCategoryId").val(selectCategories[0]);
 
         $("#updateCategoryModal").modal('show');

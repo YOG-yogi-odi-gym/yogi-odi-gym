@@ -114,11 +114,10 @@
                     </tr>
                     </thead>
                     <tbody id="applyTableBody">
-                    <tr th:each="memberToMaster : ${memberToMasters}">
+                    <tr th:each="memberToMaster : ${memberToMasters}" style="cursor: default;" th:data-apply_file="${memberToMaster.file}">
                         <td><input type="checkbox" class="applyCheckbox" th:value="${memberToMaster.id}"></td>
                         <td class="applyName" th:text="${memberToMaster.memberName}"></td>
                         <td class="applyEmail" th:text="${memberToMaster.memberEmail}"></td>
-<!--                        <td th:text="${memberToMaster.file}"></td>-->
                     </tr>
                     </tbody>
                 </table>
@@ -191,13 +190,14 @@
                             </div>
                             <hr>
                             <div class="form-group">
-                                <label for="applyFile">자격증</label>
-                                <a href="#" id="applyFile" target="_blank">첨부 파일 보기</a>
+                                <label for="applyFile">자격증</label><br>
+                                <a href="#" id="applyFile" target="_blank">첨부 파일</a><br>
+                                <div id="applyImgContainer"></div>
                             </div>
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-danger" id="agreeApplyButton">승인</button>
+                        <button class="btn btn-success" id="agreeApplyButton">승인</button>
                         <button class="btn btn-danger" id="deleteApplyButton">거절</button>
                     </div>
                 </div>
