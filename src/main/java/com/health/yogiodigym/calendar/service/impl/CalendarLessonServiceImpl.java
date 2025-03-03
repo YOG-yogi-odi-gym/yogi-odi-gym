@@ -29,13 +29,13 @@ public class CalendarLessonServiceImpl implements CalendarLessonService {
 
     private int getDayBitmask(DayOfWeek dayOfWeek) {
         return switch (dayOfWeek) {
-            case MONDAY -> 1;    // 0b0000001
-            case TUESDAY -> 2;   // 0b0000010
-            case WEDNESDAY -> 4; // 0b0000100
-            case THURSDAY -> 8;  // 0b0001000
-            case FRIDAY -> 16;   // 0b0010000
-            case SATURDAY -> 32; // 0b0100000
-            case SUNDAY -> 64;   // 0b1000000
+            case MONDAY -> 1;
+            case TUESDAY -> 2;
+            case WEDNESDAY -> 4;
+            case THURSDAY -> 8;
+            case FRIDAY -> 16;
+            case SATURDAY -> 32;
+            case SUNDAY -> 64;
         };
     }
 

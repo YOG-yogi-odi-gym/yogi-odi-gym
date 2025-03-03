@@ -1,8 +1,6 @@
 package com.health.yogiodigym.calendar.service.impl;
 
-import com.health.yogiodigym.calendar.dto.CalendarFoodDto.InsertRequest;
-import com.health.yogiodigym.calendar.dto.CalendarFoodDto.SelectRequest;
-import com.health.yogiodigym.calendar.dto.CalendarFoodDto.UpdateRequest;
+import com.health.yogiodigym.calendar.dto.CalendarFoodDto.*;
 import com.health.yogiodigym.calendar.entity.CalendarFood;
 import com.health.yogiodigym.calendar.entity.DataFood;
 import com.health.yogiodigym.calendar.repository.CalendarFoodRepository;
@@ -34,45 +32,29 @@ public class CalendarFoodServiceImpl implements CalendarFoodService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<SelectRequest> findByMemberId(Long memberId) {
+    public List<CalendarFoodSelectDto> findByMemberId(Long memberId) {
         return calendarFoodRepository.findByMemberId(memberId)
                 .stream()
-                .map(food -> SelectRequest.builder()
-                        .id(food.getId())
-                        .name(food.getName())
-                        .hundredGram(food.getHundredGram())
-                        .calories(food.getCalories())
-                        .date(food.getDate())
-                        .memberId(food.getMember().getId())
-                        .build()
-                )
+                .map(CalendarFoodSelectDto::new)
                 .collect(Collectors.toList());
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<SelectRequest> findByDateAndMemberId(LocalDate selectedDate, Long memberId) {
+    public List<CalendarFoodSelectDto> findByDateAndMemberId(LocalDate selectedDate, Long memberId) {
         return calendarFoodRepository.findByDateAndMemberId(selectedDate,memberId)
                 .stream()
-                .map(food -> SelectRequest.builder()
-                        .id(food.getId())
-                        .name(food.getName())
-                        .hundredGram(food.getHundredGram())
-                        .calories(food.getCalories())
-                        .date(food.getDate())
-                        .memberId(food.getMember().getId())
-                        .build()
-                )
+                .map(CalendarFoodSelectDto::new)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public void postFoodByDate(InsertRequest dto) {
+    public void postFoodByDate(CalendarFoodInsertDto dto) {
 
         Member member = memberRepository.findById(dto.getMemberId())
                 .orElseThrow(() -> new MemberNotFoundException(dto.getMemberId()));
 
-        DataFood dataFood = dataFoodRepository.findByName(dto.getName())
+        DataFood dataFood = dataFoodRepository.findById(dto.getFoodId())
                 .orElseThrow(() -> new DataFoodNotFoundException());
 
         CalendarFood postFood = CalendarFood.builder()
@@ -88,14 +70,14 @@ public class CalendarFoodServiceImpl implements CalendarFoodService {
     }
 
     @Override
-    public void putFoodByDate(UpdateRequest dto) {
+    public void putFoodByDate(CalendarFoodUpdateDto dto) {
 
         CalendarFood food = calendarFoodRepository.findById(dto.getId())
                 .orElseThrow(() -> new FoodNotFoundException());
 
         DataFood dataFood=food.getDataFood();
-        if (!food.getDataFood().getName().equals(dto.getName())) {
-            dataFood = dataFoodRepository.findByName(dto.getName())
+        if (!dataFood.getId().equals(dto.getFoodId())) {
+            dataFood = dataFoodRepository.findById(dto.getFoodId())
                     .orElseThrow(() -> new DataFoodNotFoundException());
         }
 
@@ -107,9 +89,9 @@ public class CalendarFoodServiceImpl implements CalendarFoodService {
 
         CalendarFood updatedFood = CalendarFood.builder()
                 .id(food.getId())
+                .name(dto.getName())
                 .dataFood(dataFood)
                 .member(member)
-                .name(dto.getName())
                 .hundredGram(dto.getHundredGram())
                 .calories(dto.getCalories())
                 .date(dto.getDate())

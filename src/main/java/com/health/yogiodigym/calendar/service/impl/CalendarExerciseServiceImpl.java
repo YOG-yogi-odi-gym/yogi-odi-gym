@@ -1,8 +1,6 @@
 package com.health.yogiodigym.calendar.service.impl;
 
-import com.health.yogiodigym.calendar.dto.CalendarExerciseDto.InsertRequest;
-import com.health.yogiodigym.calendar.dto.CalendarExerciseDto.SelectRequest;
-import com.health.yogiodigym.calendar.dto.CalendarExerciseDto.UpdateRequest;
+import com.health.yogiodigym.calendar.dto.CalendarExerciseDto.*;
 import com.health.yogiodigym.calendar.entity.CalendarExercise;
 import com.health.yogiodigym.calendar.entity.DataExercise;
 import com.health.yogiodigym.calendar.repository.CalendarExerciseRepository;
@@ -32,50 +30,37 @@ public class CalendarExerciseServiceImpl implements CalendarExerciseService {
 
     private final DataExerciseRepository dataExerciseRepository;
 
+
     @Override
     @Transactional(readOnly = true)
-    public List<SelectRequest> findByMemberId(Long memberId) {
+    public List<CalendarExerciseSelectDto> findByMemberId(Long memberId) {
         return calendarExerciseRepository.findByMemberId(memberId)
                 .stream()
-                .map(exercise -> SelectRequest.builder()
-                        .id(exercise.getId())
-                        .name(exercise.getName())
-                        .time(exercise.getTime())
-                        .calories(exercise.getCalories())
-                        .date(exercise.getDate())
-                        .memberId(exercise.getMember().getId())
-                        .build()
-                )
+                .map(CalendarExerciseSelectDto::new)
                 .collect(Collectors.toList());
     }
+
 
     @Override
     @Transactional(readOnly = true)
-    public List<SelectRequest> findByDateAndMemberId(LocalDate selectedDate, Long memberId) {
+    public List<CalendarExerciseSelectDto> findByDateAndMemberId(LocalDate selectedDate, Long memberId) {
         return calendarExerciseRepository.findByDateAndMemberId(selectedDate,memberId)
                 .stream()
-                .map(exercise -> SelectRequest.builder()
-                        .id(exercise.getId())
-                        .name(exercise.getName())
-                        .time(exercise.getTime())
-                        .calories(exercise.getCalories())
-                        .date(exercise.getDate())
-                        .memberId(exercise.getMember().getId())
-                        .build()
-                )
+                .map(CalendarExerciseSelectDto::new)
                 .collect(Collectors.toList());
     }
 
 
-
     @Override
-    public void postExerciseByDate(InsertRequest dto) {
+    public void postExerciseByDate(CalendarExerciseInsertDto dto) {
 
         Member member = memberRepository.findById(dto.getMemberId())
                 .orElseThrow(() -> new MemberNotFoundException(dto.getMemberId()));
 
-        DataExercise dataExercise = dataExerciseRepository.findByName(dto.getName())
+
+        DataExercise dataExercise = dataExerciseRepository.findById(dto.getExerciseId())
                 .orElseThrow(() -> new DataExerciseNotFoundException() );
+
 
         CalendarExercise postExercise = CalendarExercise.builder()
                 .name(dto.getName())
@@ -92,14 +77,14 @@ public class CalendarExerciseServiceImpl implements CalendarExerciseService {
 
 
 @Override
-public void putExerciseByDate(UpdateRequest dto) {
+public void putExerciseByDate(CalendarExerciseUpdateDto dto) {
 
     CalendarExercise exercise = calendarExerciseRepository.findById(dto.getId())
             .orElseThrow(() -> new ExerciseNotFoundException());
 
     DataExercise dataExercise = exercise.getDataExercise();
-    if (!dataExercise.getName().equals(dto.getName())) {
-        dataExercise = dataExerciseRepository.findByName(dto.getName())
+    if (!dataExercise.getId().equals(dto.getExerciseId())) {
+        dataExercise = dataExerciseRepository.findById(dto.getExerciseId())
                 .orElseThrow(() -> new DataExerciseNotFoundException());
     }
 
@@ -110,15 +95,14 @@ public void putExerciseByDate(UpdateRequest dto) {
     }
 
     CalendarExercise updatedExercise = CalendarExercise.builder()
-            .id(exercise.getId())
+            .id(dto.getId())
+            .name(dto.getName())
             .dataExercise(dataExercise)
             .member(member)
-            .name(dto.getName())
             .time(dto.getTime())
             .calories(dto.getCalories())
             .date(dto.getDate())
             .build();
-
     calendarExerciseRepository.save(updatedExercise);
 }
 

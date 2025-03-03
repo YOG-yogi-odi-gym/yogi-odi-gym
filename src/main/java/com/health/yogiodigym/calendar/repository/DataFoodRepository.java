@@ -8,8 +8,6 @@ import java.util.Optional;
 
 public interface DataFoodRepository extends JpaRepository<DataFood, Long> {
 
-    // ContainingIgnoreCase : 대소문자 무시
     List<DataFood> findByNameContainingIgnoreCase(String name);
 
-    Optional<DataFood> findByName(String name);
 }

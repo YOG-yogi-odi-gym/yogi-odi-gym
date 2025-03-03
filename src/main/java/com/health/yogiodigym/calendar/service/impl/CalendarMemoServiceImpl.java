@@ -1,8 +1,6 @@
 package com.health.yogiodigym.calendar.service.impl;
 
-import com.health.yogiodigym.calendar.dto.CalendarMemoDto.InsertRequest;
-import com.health.yogiodigym.calendar.dto.CalendarMemoDto.SelectRequest;
-import com.health.yogiodigym.calendar.dto.CalendarMemoDto.UpdateRequest;
+import com.health.yogiodigym.calendar.dto.CalendarMemoDto.*;
 import com.health.yogiodigym.calendar.entity.CalendarMemo;
 import com.health.yogiodigym.calendar.repository.CalendarMemoRepository;
 import com.health.yogiodigym.calendar.service.CalendarMemoService;
@@ -30,38 +28,24 @@ public class CalendarMemoServiceImpl implements CalendarMemoService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<SelectRequest> findByMemberId(Long memberId) {
+    public List<CalendarMemoSelectDto> findByMemberId(Long memberId) {
         return calendarMemoRepository.findByMemberId(memberId)
                 .stream()
-                .map(memo -> SelectRequest.builder()
-                        .id(memo.getId())
-                        .title(memo.getTitle())
-                        .context(memo.getContext())
-                        .date(memo.getDate())
-                        .memberId(memo.getMember().getId())
-                        .build()
-                )
+                .map(CalendarMemoSelectDto::new)
                 .collect(Collectors.toList());
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<SelectRequest> findByDateAndMemberId(LocalDate selectedDate, Long memberId) {
+    public List<CalendarMemoSelectDto> findByDateAndMemberId(LocalDate selectedDate, Long memberId) {
         return calendarMemoRepository.findByDateAndMemberId(selectedDate,memberId)
                 .stream()
-                .map(memo -> SelectRequest.builder()
-                        .id(memo.getId())
-                        .title(memo.getTitle())
-                        .context(memo.getContext())
-                        .date(memo.getDate())
-                        .memberId(memo.getMember().getId())
-                        .build()
-                )
+                .map(CalendarMemoSelectDto::new)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public void postMemoByDate(InsertRequest dto) {
+    public void postMemoByDate(CalendarMemoInsertDto dto) {
 
         Member member = memberRepository.findById(dto.getMemberId())
                 .orElseThrow(() -> new MemberNotFoundException(dto.getMemberId()));
@@ -77,7 +61,7 @@ public class CalendarMemoServiceImpl implements CalendarMemoService {
     }
 
     @Override
-    public void putMemoByDate(UpdateRequest dto) {
+    public void putMemoByDate(CalendarMemoUpdateDto dto) {
 
         CalendarMemo memo = calendarMemoRepository.findById(dto.getId())
                 .orElseThrow(() -> new MemoNotFoundException());

@@ -30,8 +30,7 @@ public class CalendarLessonController {
                 .body(new HttpResponse(HttpStatus.OK,GET_CALENDAR_LESSON_SUCCESS.getMessage(), calendarLesson));
     }
 
-    // 특정 회원이 신청한 강의 중, 특정 날짜에 해당하는 것만 조회
-    @GetMapping("/date/get")
+    @GetMapping("/date")
     public ResponseEntity<?> getLessonsByMemberAndDate(
             @RequestParam("memberId") Long memberId,
             @RequestParam("date") String selectedDate) {

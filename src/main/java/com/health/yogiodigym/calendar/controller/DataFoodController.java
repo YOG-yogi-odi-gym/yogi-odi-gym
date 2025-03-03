@@ -1,6 +1,6 @@
 package com.health.yogiodigym.calendar.controller;
 
-import com.health.yogiodigym.calendar.dto.DataFoodDto.*;
+import com.health.yogiodigym.calendar.dto.DataFoodDto;
 import com.health.yogiodigym.calendar.service.impl.DataFoodServiceImpl;
 import com.health.yogiodigym.common.response.HttpResponse;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,6 @@ import static com.health.yogiodigym.common.message.SuccessMessage.*;
 
 @RestController
 @RequestMapping("/api/food")
-@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class DataFoodController {
 
@@ -22,7 +21,7 @@ public class DataFoodController {
 
     @GetMapping("/all")
     public ResponseEntity<?> findAll() {
-        List<SelectRequest> datafoods= dataFoodServiceImpl.findAll();;
+        List<DataFoodDto> datafoods= dataFoodServiceImpl.findAll();;
 
         return ResponseEntity
                 .ok()
@@ -31,7 +30,7 @@ public class DataFoodController {
 
     @GetMapping("/search")
     public ResponseEntity<?> findByNameContainingIgnoreCase(String name) {
-        List<SelectRequest> datafood=  dataFoodServiceImpl.findByNameContainingIgnoreCase(name);
+        List<DataFoodDto> datafood=  dataFoodServiceImpl.findByNameContainingIgnoreCase(name);
 
         return ResponseEntity
                 .ok()

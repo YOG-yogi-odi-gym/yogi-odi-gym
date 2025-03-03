@@ -13,5 +13,4 @@ public class CalendarMemberDto {
     private Long id;
     private String name;
     private Float weight;
-
 }

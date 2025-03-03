@@ -1,6 +1,8 @@
 package com.health.yogiodigym.calendar.service.impl;
 
+import com.health.yogiodigym.calendar.dto.DataExerciseDto;
 import com.health.yogiodigym.calendar.dto.DataExerciseDto.*;
+import com.health.yogiodigym.calendar.dto.DataFoodDto;
 import com.health.yogiodigym.calendar.repository.DataExerciseRepository;
 import com.health.yogiodigym.calendar.service.DataExerciseService;
 import lombok.RequiredArgsConstructor;
@@ -19,10 +21,10 @@ public class DataExerciseServiceImpl implements DataExerciseService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<SelectRequest> findAll() {
+    public List<DataExerciseDto> findAll() {
         return dataExerciseRepository.findAll()
                 .stream()
-                .map(dataExercises -> SelectRequest.builder()
+                .map(dataExercises -> DataExerciseDto.builder()
                         .id(dataExercises.getId())
                         .name(dataExercises.getName())
                         .energyConsumption(dataExercises.getEnergyConsumption())
@@ -33,10 +35,10 @@ public class DataExerciseServiceImpl implements DataExerciseService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<SelectRequest> findByNameContainingIgnoreCase(String name) {
+    public List<DataExerciseDto> findByNameContainingIgnoreCase(String name) {
         return dataExerciseRepository.findByNameContainingIgnoreCase(name)
                 .stream()
-                .map(dataExercise -> SelectRequest.builder()
+                .map(dataExercise -> DataExerciseDto.builder()
                         .id(dataExercise.getId())
                         .name(dataExercise.getName())
                         .energyConsumption(dataExercise.getEnergyConsumption())

@@ -1,6 +1,6 @@
 package com.health.yogiodigym.calendar.controller;
 
-import com.health.yogiodigym.calendar.dto.DataExerciseDto.*;
+import com.health.yogiodigym.calendar.dto.DataExerciseDto;
 import com.health.yogiodigym.calendar.service.DataExerciseService;
 import com.health.yogiodigym.common.response.HttpResponse;
 import lombok.RequiredArgsConstructor;
@@ -14,15 +14,15 @@ import static com.health.yogiodigym.common.message.SuccessMessage.*;
 
 @RestController
 @RequestMapping("/api/exercise")
-@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*")
 public class DataExerciseController {
 
     private final DataExerciseService dataExerciseService;
 
     @GetMapping("/all")
     public ResponseEntity<?> findAll() {
-        List<SelectRequest> dataExercises= dataExerciseService.findAll();
+        List<DataExerciseDto> dataExercises= dataExerciseService.findAll();
 
         return ResponseEntity
                 .ok()
@@ -31,7 +31,7 @@ public class DataExerciseController {
 
     @GetMapping("/search")
     public ResponseEntity<?> findByNameContainingIgnoreCase(String name) {
-        List<SelectRequest> dataExercise=  dataExerciseService.findByNameContainingIgnoreCase(name);
+        List<DataExerciseDto> dataExercise=  dataExerciseService.findByNameContainingIgnoreCase(name);
 
         return ResponseEntity
                 .ok()

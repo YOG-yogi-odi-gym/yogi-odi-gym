@@ -13,17 +13,17 @@ public class DataFood {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // 음식 번호 (기본키)
+    private Long id;
 
     @Column(nullable = false)
-    private String name; // 음식명
+    private String name;
 
     @Column(nullable = false)
-    private Integer calories; // 칼로리 (100g 당)
+    private Integer calories;
 
-    private Float protein; // 단백질 함량
+    private Float protein;
 
-    private Float fat; // 지방 함량
+    private Float fat;
 
-    private Float carbohydrates; // 탄수화물 함량
+    private Float carbohydrates;
 }

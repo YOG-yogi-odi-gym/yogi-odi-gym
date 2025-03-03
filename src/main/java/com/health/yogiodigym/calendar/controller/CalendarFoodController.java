@@ -1,8 +1,7 @@
 package com.health.yogiodigym.calendar.controller;
 
-import com.health.yogiodigym.calendar.dto.CalendarFoodDto.InsertRequest;
-import com.health.yogiodigym.calendar.dto.CalendarFoodDto.SelectRequest;
-import com.health.yogiodigym.calendar.dto.CalendarFoodDto.UpdateRequest;
+
+import com.health.yogiodigym.calendar.dto.CalendarFoodDto.*;
 import com.health.yogiodigym.calendar.service.impl.CalendarFoodServiceImpl;
 import com.health.yogiodigym.common.response.HttpResponse;
 import lombok.RequiredArgsConstructor;
@@ -25,27 +24,27 @@ public class CalendarFoodController {
     @GetMapping
     public ResponseEntity<?> findByMemberId(@RequestParam("memberId") Long memberId) {
 
-        List<SelectRequest> calendarFood = calendarFoodServiceimpl.findByMemberId(memberId);
+        List<CalendarFoodSelectDto> calendarFood = calendarFoodServiceimpl.findByMemberId(memberId);
 
         return ResponseEntity
                 .ok()
                 .body(new HttpResponse(HttpStatus.OK,GET_CALENDAR_FOOD_SUCCESS.getMessage(), calendarFood));
     }
 
-    @GetMapping("/date/get")
+    @GetMapping("/date")
     public ResponseEntity<?> findByDateAndMemberId(@RequestParam("date") String selectedDate, @RequestParam("memberId") Long memberId) {
 
         LocalDate requestedDate = LocalDate.parse(selectedDate);
 
-        List<SelectRequest> calendarFood = calendarFoodServiceimpl.findByDateAndMemberId(requestedDate, memberId);
+        List<CalendarFoodSelectDto> calendarFood = calendarFoodServiceimpl.findByDateAndMemberId(requestedDate, memberId);
 
         return ResponseEntity
                 .ok()
                 .body(new HttpResponse(HttpStatus.OK, GET_ONE_CALENDAR_FOOD_SUCCESS.getMessage(), calendarFood));
     }
 
-    @PostMapping("/date/post")
-    public ResponseEntity<?> postExerciseByDate(@RequestBody InsertRequest dto) {
+    @PostMapping("/date")
+    public ResponseEntity<?> postExerciseByDate(@RequestBody CalendarFoodInsertDto dto) {
 
         calendarFoodServiceimpl.postFoodByDate(dto);
 
@@ -54,8 +53,8 @@ public class CalendarFoodController {
                 .body(new HttpResponse(HttpStatus.OK, POST_CALENDAR_FOOD_SUCCESS.getMessage(), null));
     }
 
-    @PutMapping("/date/put")
-    public ResponseEntity<?> putExerciseByDate(@RequestBody UpdateRequest dto) {
+    @PutMapping("/date")
+    public ResponseEntity<?> putExerciseByDate(@RequestBody CalendarFoodUpdateDto dto) {
 
         calendarFoodServiceimpl.putFoodByDate(dto);
 
@@ -64,7 +63,7 @@ public class CalendarFoodController {
                 .body(new HttpResponse(HttpStatus.OK, PUT_CALENDAR_FOOD_SUCCESS.getMessage(), null));
     }
 
-    @DeleteMapping("/date/delete/{id}")
+    @DeleteMapping("/date/{id}")
     public ResponseEntity<?>  deleteFoodByDate(@PathVariable("id") Long id) {
         calendarFoodServiceimpl.deleteFoodByDate(id);
 

@@ -8,8 +8,6 @@ import java.util.Optional;
 
 public interface DataExerciseRepository extends JpaRepository<DataExercise, Long> {
 
-    // ContainingIgnoreCase : 대소문자 무시
     List<DataExercise> findByNameContainingIgnoreCase(String name);
 
-    Optional<DataExercise> findByName(String name);
 }

@@ -18,6 +18,7 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="../../static/calendar/js/filter_action.js"></script>
+    <script src="../../static/calendar/js/calculate.js"></script>
 </head>
 <body>
 <div class="container mt-4">
@@ -29,6 +30,7 @@
 </div>
 
 <input type="hidden" id="selectedFoodEnergy" />
+<input type="hidden" id="selectedFoodId" />
 
 <script>
     $(document).ready(function() {
@@ -71,6 +73,7 @@
                 success: function (response) {
                     if (response.data.length > 0) {
                         $("#selectedFoodEnergy").val(response.data[0].calories);
+                        $("#selectedFoodId").val(response.data[0].id);
                     } else {
                         $("#selectedFoodEnergy").val('');
                     }
@@ -87,6 +90,7 @@
 
 <script>
     function selectFood() {
+        let id = $("#selectedFoodId").val();
         let selectedOption = document.getElementById("foodSelect2").value; // 선택된 옵션 값 가져오기
         let selectedText = $("#foodSelect2 option:selected").text(); // 선택된 옵션의 텍스트 가져오기
         let foodConsumption = $("#selectedFoodEnergy").val(); // 칼로리 값 가져오기
@@ -101,9 +105,15 @@
 
 
         if (window.opener && !window.opener.closed) {
+            let foodIdElement = window.opener.document.getElementById(`foodId_${foodId}`);
             let foodNameElement = window.opener.document.getElementById(`foodName_${foodId}`)
             let foodConsumptionElement = window.opener.document.getElementById(`foodConsumption_${foodId}`)
             let foodHundredGramElement = window.opener.document.getElementById(`foodHundredGram_${foodId}`)
+
+
+            if (foodIdElement) {
+                foodIdElement.value = id;
+            }
 
             if (foodNameElement) {
                 foodNameElement.value = selectedText;

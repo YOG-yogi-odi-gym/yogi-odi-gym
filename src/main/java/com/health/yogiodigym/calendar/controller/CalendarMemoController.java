@@ -1,8 +1,6 @@
 package com.health.yogiodigym.calendar.controller;
 
-import com.health.yogiodigym.calendar.dto.CalendarMemoDto.InsertRequest;
-import com.health.yogiodigym.calendar.dto.CalendarMemoDto.SelectRequest;
-import com.health.yogiodigym.calendar.dto.CalendarMemoDto.UpdateRequest;
+import com.health.yogiodigym.calendar.dto.CalendarMemoDto.*;
 import com.health.yogiodigym.calendar.service.impl.CalendarMemoServiceImpl;
 import com.health.yogiodigym.common.response.HttpResponse;
 import lombok.RequiredArgsConstructor;
@@ -25,27 +23,27 @@ public class CalendarMemoController {
     @GetMapping
     public ResponseEntity<?> findByMemberId(@RequestParam("memberId") Long memberId) {
 
-        List<SelectRequest> calendarMemo =  calendarMemoServiceimpl.findByMemberId(memberId);
+        List<CalendarMemoSelectDto> calendarMemo =  calendarMemoServiceimpl.findByMemberId(memberId);
 
         return ResponseEntity
                 .ok()
                 .body(new HttpResponse(HttpStatus.OK,GET_CALENDAR_MEMO_SUCCESS.getMessage(), calendarMemo));
     }
 
-    @GetMapping("/date/get")
+    @GetMapping("/date")
     public ResponseEntity<?> findByDateAndMemberId(@RequestParam("date") String selectedDate, @RequestParam("memberId") Long memberId) {
 
         LocalDate requestedDate = LocalDate.parse(selectedDate);
 
-        List<SelectRequest> calendarMemo =  calendarMemoServiceimpl.findByDateAndMemberId(requestedDate, memberId);
+        List<CalendarMemoSelectDto> calendarMemo =  calendarMemoServiceimpl.findByDateAndMemberId(requestedDate, memberId);
 
         return ResponseEntity
                 .ok()
                 .body(new HttpResponse(HttpStatus.OK, GET_ONE_CALENDAR_MEMO_SUCCESS.getMessage(), calendarMemo));
     }
 
-    @PostMapping("/date/post")
-    public ResponseEntity<?> postMemoByDate(@RequestBody InsertRequest dto) {
+    @PostMapping("/date")
+    public ResponseEntity<?> postMemoByDate(@RequestBody CalendarMemoInsertDto dto) {
 
         calendarMemoServiceimpl.postMemoByDate(dto);
 
@@ -56,8 +54,8 @@ public class CalendarMemoController {
 
 
 
-    @PutMapping("/date/put")
-    public ResponseEntity<?> putMemoByDate(@RequestBody UpdateRequest dto) {
+    @PutMapping("/date")
+    public ResponseEntity<?> putMemoByDate(@RequestBody CalendarMemoUpdateDto dto) {
 
         calendarMemoServiceimpl.putMemoByDate(dto);
 
@@ -66,7 +64,7 @@ public class CalendarMemoController {
                 .body(new HttpResponse(HttpStatus.OK, PUT_CALENDAR_MEMO_SUCCESS.getMessage(), null));
     }
 
-    @DeleteMapping("/date/delete/{id}")
+    @DeleteMapping("/date/{id}")
     public ResponseEntity<?> DeleteMemoByDate(@PathVariable("id") Long id) {
 
         calendarMemoServiceimpl.deleteMemoByDate(id);

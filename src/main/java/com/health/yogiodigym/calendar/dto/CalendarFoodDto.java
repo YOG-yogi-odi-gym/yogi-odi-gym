@@ -1,5 +1,6 @@
 package com.health.yogiodigym.calendar.dto;
 
+import com.health.yogiodigym.calendar.entity.CalendarFood;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -12,7 +13,7 @@ public class CalendarFoodDto {
     @ToString
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class SelectRequest {
+    public static class CalendarFoodSelectDto {
 
         private Long id;
         private String name;
@@ -20,7 +21,19 @@ public class CalendarFoodDto {
         private Float calories;
         private LocalDate date;
         private Long memberId;
+        private Long foodId;
+        private Integer cal;
 
+        public CalendarFoodSelectDto(CalendarFood food) {
+            this.id = food.getId();
+            this.name = food.getName();
+            this.hundredGram = food.getHundredGram();
+            this.calories = food.getCalories();
+            this.date = food.getDate();
+            this.memberId = food.getMember().getId();
+            this.foodId = food.getDataFood().getId();
+            this.cal = food.getDataFood().getCalories();
+        }
     }
 
     @Getter
@@ -29,13 +42,14 @@ public class CalendarFoodDto {
     @ToString
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class InsertRequest {
+    public static class CalendarFoodInsertDto {
 
         private String name;
         private Float hundredGram;
         private Float calories;
         private LocalDate date;
         private Long memberId;
+        private Long foodId;
 
     }
 
@@ -45,7 +59,7 @@ public class CalendarFoodDto {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class UpdateRequest {
+    public static class CalendarFoodUpdateDto {
 
         private Long id;
         private String name;
@@ -53,8 +67,7 @@ public class CalendarFoodDto {
         private Float calories;
         private LocalDate date;
         private Long memberId;
-
+        private Long foodId;
     }
-
 
 }

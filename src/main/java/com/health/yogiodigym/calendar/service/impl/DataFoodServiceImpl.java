@@ -1,7 +1,7 @@
 package com.health.yogiodigym.calendar.service.impl;
 
 
-import com.health.yogiodigym.calendar.dto.DataFoodDto.*;
+import com.health.yogiodigym.calendar.dto.DataFoodDto;
 import com.health.yogiodigym.calendar.repository.DataFoodRepository;
 import com.health.yogiodigym.calendar.service.DataFoodService;
 import lombok.RequiredArgsConstructor;
@@ -20,11 +20,11 @@ public class DataFoodServiceImpl implements DataFoodService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<SelectRequest> findAll() {
+    public List<DataFoodDto> findAll() {
 
         return dataFoodRepository.findAll()
                 .stream()
-                .map(dataFoods -> SelectRequest.builder()
+                .map(dataFoods -> DataFoodDto.builder()
                         .id(dataFoods.getId())
                         .name(dataFoods.getName())
                         .calories(dataFoods.getCalories())
@@ -35,11 +35,11 @@ public class DataFoodServiceImpl implements DataFoodService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<SelectRequest> findByNameContainingIgnoreCase(String name) {
+    public List<DataFoodDto> findByNameContainingIgnoreCase(String name) {
 
         return dataFoodRepository.findByNameContainingIgnoreCase(name)
                 .stream()
-                .map(dataFood -> SelectRequest.builder()
+                .map(dataFood -> DataFoodDto.builder()
                         .id(dataFood.getId())
                         .name(dataFood.getName())
                         .calories(dataFood.getCalories())

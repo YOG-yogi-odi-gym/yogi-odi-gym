@@ -16,18 +16,18 @@ public class CalendarMemo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // 메모 번호 (기본키)
+    private Long id;
 
     @Column(nullable = false)
-    private String title; // 제목
+    private String title;
 
     @Column(columnDefinition = "TEXT", nullable = false)
-    private String context; // 내용
+    private String context;
 
     @Column(nullable = false)
-    private LocalDate date; // 날짜
+    private LocalDate date;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
-    private Member member; // 회원 아이디 (외래키)
+    private Member member;
 }

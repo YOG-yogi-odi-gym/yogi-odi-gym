@@ -1,8 +1,6 @@
 package com.health.yogiodigym.calendar.controller;
 
-import com.health.yogiodigym.calendar.dto.CalendarExerciseDto.InsertRequest;
-import com.health.yogiodigym.calendar.dto.CalendarExerciseDto.SelectRequest;
-import com.health.yogiodigym.calendar.dto.CalendarExerciseDto.UpdateRequest;
+import com.health.yogiodigym.calendar.dto.CalendarExerciseDto.*;
 import com.health.yogiodigym.calendar.service.impl.CalendarExerciseServiceImpl;
 import com.health.yogiodigym.common.response.HttpResponse;
 import lombok.RequiredArgsConstructor;
@@ -20,12 +18,12 @@ import static com.health.yogiodigym.common.message.SuccessMessage.*;
 @RequiredArgsConstructor
 public class CalendarExerciseController {
 
-    private final CalendarExerciseServiceImpl calendarExerciseServiceimpl;
+    private final CalendarExerciseServiceImpl calendarExerciseServiceImpl;
 
     @GetMapping
     public ResponseEntity<?> findByMemberId(@RequestParam("memberId") Long memberId) {
 
-        List<SelectRequest> calendarExercises = calendarExerciseServiceimpl.findByMemberId(memberId);
+        List<CalendarExerciseSelectDto> calendarExercises = calendarExerciseServiceImpl.findByMemberId(memberId);
 
         return ResponseEntity
                 .ok()
@@ -33,12 +31,12 @@ public class CalendarExerciseController {
 
     }
 
-    @GetMapping("/date/get")
+    @GetMapping("/date")
     public ResponseEntity<?> findByDateAndMemberId(@RequestParam("date") String selectedDate, @RequestParam("memberId") Long memberId) {
 
         LocalDate requestedDate = LocalDate.parse(selectedDate);
 
-        List<SelectRequest> calendarExercises = calendarExerciseServiceimpl.findByDateAndMemberId(requestedDate,memberId);
+        List<CalendarExerciseSelectDto> calendarExercises = calendarExerciseServiceImpl.findByDateAndMemberId(requestedDate,memberId);
 
         return ResponseEntity
                 .ok()
@@ -46,28 +44,28 @@ public class CalendarExerciseController {
 
     }
 
-    @PostMapping("/date/post")
-    public ResponseEntity<?> postExerciseByDate(@RequestBody InsertRequest dto) {
+    @PostMapping("/date")
+    public ResponseEntity<?> postExerciseByDate(@RequestBody CalendarExerciseInsertDto dto) {
 
-        calendarExerciseServiceimpl.postExerciseByDate(dto);
+        calendarExerciseServiceImpl.postExerciseByDate(dto);
 
         return ResponseEntity
                 .ok()
                 .body(new HttpResponse(HttpStatus.OK, POST_CALENDAR_EXERCISE_SUCCESS.getMessage(), null));
     }
 
-    @PutMapping("/date/put")
-    public ResponseEntity<?> putExerciseByDate(@RequestBody UpdateRequest dto) {
-        calendarExerciseServiceimpl.putExerciseByDate(dto);
+    @PutMapping("/date")
+    public ResponseEntity<?> putExerciseByDate(@RequestBody CalendarExerciseUpdateDto dto) {
+        calendarExerciseServiceImpl.putExerciseByDate(dto);
 
         return ResponseEntity
                 .ok()
                 .body(new HttpResponse(HttpStatus.OK, PUT_CALENDAR_EXERCISE_SUCCESS.getMessage(), null));
     }
 
-    @DeleteMapping("/date/delete/{id}")
+    @DeleteMapping("/date/{id}")
     public ResponseEntity<?> deleteExerciseByDate(@PathVariable("id") Long id) {
-        calendarExerciseServiceimpl.deleteExerciseByDate(id);
+        calendarExerciseServiceImpl.deleteExerciseByDate(id);
 
         return ResponseEntity
                 .ok()
