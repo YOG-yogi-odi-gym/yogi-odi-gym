@@ -27,7 +27,6 @@ import java.util.List;
 public class BoardServiceImpl implements BoardService {
 
     private final BoardRepository boardRepository;
-    private final MemberRepository memberRepository;
     private final CategoryRepository categoryRepository;
 
     @Override
