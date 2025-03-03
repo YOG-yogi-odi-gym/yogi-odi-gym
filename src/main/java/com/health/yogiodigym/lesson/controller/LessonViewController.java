@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequiredArgsConstructor
 public class LessonViewController {
 
-    private final MemberRepository memberRepository;
     private final LessonService lessonService;
 
     @GetMapping

@@ -1,0 +1,200 @@
+#kakaoMap {
+    width: 100%;
+    height: 400px;
+}
+
+.modal {
+    display: none;
+}
+
+.modal-dialog {
+    max-width: 780px;
+    border-radius: 10px;
+}
+
+.modal-header {
+    background-color: #f1f1f1;
+    border-radius: 10px 10px 0 0;
+}
+
+.modal-footer {
+    background-color: white;
+    border-radius: 0 0 10px 10px;
+}
+
+.card {
+    border-radius: 10px;
+    border: none;
+}
+
+#pagination {
+    text-align: center;
+    margin-top: 10px;
+}
+
+#pagination button {
+    border: none;
+    background-color: white;
+    padding: 8px 16px;
+    margin: 0 4px;
+    cursor: pointer;
+}
+
+#pagination button:hover {
+    background-color: #f1f1f1;
+}
+
+#pagination button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+#resultSearch a {
+    color: black;
+    text-decoration: none;
+}
+
+#resultSearch a:hover {
+    text-decoration: none;
+}
+
+.card-header {
+    background: white;
+    border: none;
+    padding-top: 20px;
+    padding-bottom: 5px;
+}
+
+.card-body {
+    height: 647px;
+    font-size: 13px;
+    padding: 5px 16px 16px 16px;
+    background: white;
+    border: none;
+    overflow-y: auto;
+}
+
+.card-footer {
+    display: flex;
+    justify-content: center;
+    background: white;
+    border: none;
+}
+
+.form-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0;
+    padding-bottom: 10px;
+}
+
+.form-control {
+    font-size: 13px;
+}
+
+button {
+    font-size: 13px;
+}
+
+th, td {
+    padding: 8px;
+    text-align: left;
+    vertical-align: middle;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+.btn{
+    font-size: 13px;
+}
+
+.small-btn {
+    padding: 4px 10px;
+    font-size: 13px;
+}
+
+.location-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.time-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.date-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.checkbox-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.checkbox-container input,
+.checkbox-container label {
+    font-size: 12px;
+    display: inline-block;
+}
+
+#search-label {
+    display: inline-block;
+}
+
+.checkbox-container div {
+    padding-right: 10px;
+}
+
+.day-label {
+    padding-right: 10px;
+}
+
+.search-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-right: 12px;
+}
+
+.day-container {
+    display: flex;
+}
+
+.btn-primary{
+    background: #27AE60;
+}
+
+.btn-search{
+    width: 92px;
+}
+
+.card-footer button {
+    margin-right: 15px;
+}
+
+.card-footer button:last-child {
+    margin-right: 0;
+}
+
+.comment-container {
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 5px;
+    background: #f9f9f9;
+}
+
+#commentList {
+    display: flex;
+    flex-direction: column-reverse;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}

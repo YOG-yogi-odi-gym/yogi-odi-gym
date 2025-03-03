@@ -1,0 +1,100 @@
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #F1F1F1;
+}
+
+.custom-container {
+    max-width: 1200px;
+    height: 900px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.header-container{
+    width: 1200px;
+    height: 60px;
+    border-radius: 0 0 12px 12px;
+    margin-bottom: 20px;
+}
+
+.main-container{
+    width: 1160px;
+    height: 800px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.side-card{
+    width: 220px;
+    height: 800px;
+    background: #F1F1F1;
+    margin-right: 20px;
+}
+
+.side-card .card-header{
+    width: 220px;
+    height: 320px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    background: #FFFFFF;
+}
+
+.side-card .card-body{
+    padding-bottom: 10px;
+    padding-top: 10px;
+    background: #F1F1F1;
+}
+
+.side-card .card-footer{
+    width: 220px;
+    height: 100px;
+    border-radius: 10px;
+    background: #FFFFFF;
+}
+
+.main-card{
+    width: 920px;
+    height: 800px;
+    border-radius: 10px;
+}
+
+.main-card .card-header{
+    border-radius: 10px 10px 0 0;
+}
+
+.main-card .card-footer{
+    border-radius: 0 0 10px 10px;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    /* justify-content: center; */
+    width: 180px;
+    height: 40px;
+    margin: 10px 0 0 15px;
+    font-size: 16px;
+    color: rgba(0, 0, 0, 0.87);
+    border-radius: 5px;
+    transition: background-color 0.3s;
+    text-decoration: none; /* 링크 스타일 제거 */
+}
+
+.nav-item i {
+    font-size: 20px;
+    margin: 0  15px 0 15px;
+}
+
+/* a 태그 호버 효과 */
+.nav-item:hover {
+    background-color: #007bff;
+}
