@@ -22,7 +22,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import java.util.List;
 import java.util.Map;
 
-import static com.health.yogiodigym.common.message.SuccessMessage.SEARCH_GYMS_SUCCESS;
+import static com.health.yogiodigym.common.message.SuccessMessage.*;
 
 @RestController
 @RequestMapping("/api/lesson")
@@ -45,7 +45,7 @@ public class LessonController {
 
         Page<LessonSearchDto> lessons = lessonService.searchLessons(lessonKeyword, searchColumn, days, categories, pageable);
 
-        return ResponseEntity.ok().body(new HttpResponse(HttpStatus.OK, SEARCH_GYMS_SUCCESS.getMessage(), lessons));
+        return ResponseEntity.ok().body(new HttpResponse(HttpStatus.OK, SEARCH_LESSON_SUCCESS.getMessage(), lessons));
     }
 
     @PostMapping("/register")

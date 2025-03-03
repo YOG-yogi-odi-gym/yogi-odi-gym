@@ -19,4 +19,6 @@ public interface BoardService {
     BoardDetailDto getBoardDetail(Long id);
 
     void editBoard(BoardDetailDto dto);
+
+    Page<BoardDetailDto> searchMyBoards(Long id, String boardKeyword, String searchColumn, List<Long> categories, Pageable pageable);
 }

@@ -20,6 +20,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import java.util.List;
 import java.util.Map;
 
+import static com.health.yogiodigym.common.message.SuccessMessage.SEARCH_BOARD_SUCCESS;
 import static com.health.yogiodigym.common.message.SuccessMessage.SEARCH_GYMS_SUCCESS;
 
 @RestController
@@ -39,7 +40,7 @@ public class BoardController {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
         Page<BoardDetailDto> boards = boardService.searchBoards(boardKeyword, searchColumn, categories, pageable);
 
-        return ResponseEntity.ok().body(new HttpResponse(HttpStatus.OK, SEARCH_GYMS_SUCCESS.getMessage(), boards));
+        return ResponseEntity.ok().body(new HttpResponse(HttpStatus.OK, SEARCH_BOARD_SUCCESS.getMessage(), boards));
     }
 
     @PostMapping("/register")

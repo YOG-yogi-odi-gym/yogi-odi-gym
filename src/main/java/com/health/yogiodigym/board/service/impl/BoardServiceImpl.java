@@ -43,6 +43,18 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public Page<BoardDetailDto> searchMyBoards(Long id, String boardKeyword, String searchColumn, List<Long> categories, Pageable pageable) {
+        boolean allCategories = isAllCategorySelected(categories);
+        boolean noKeyword = isKeywordEmpty(boardKeyword);
+
+        Page<Board> boardPage = noKeyword ? findMyBoardsByCategory(id, allCategories, categories, pageable)
+                : mySearchOrFallback(id, boardKeyword, searchColumn, allCategories ? null : categories, pageable);
+
+        return boardPage.map(BoardDetailDto::new);
+    }
+
+    @Override
     public void registerBoard(BoardRequestDto dto, Member member) {
         Category category = categoryRepository.findById(dto.getCategoryId())
                 .orElseThrow(() -> new CategoryNotFoundException(dto.getCategoryId()));
@@ -104,6 +116,16 @@ public class BoardServiceImpl implements BoardService {
 
     private Page<Board> searchOrFallback(String keyword, String column, List<Long> categories, Pageable pageable) {
         Page<Board> boardPage = boardRepository.searchBoards(keyword, column, categories, pageable);
+        return boardPage.isEmpty() ? findBoardsByCategory(categories == null, categories, pageable) : boardPage;
+    }
+
+    private Page<Board> findMyBoardsByCategory(Long id, boolean allCategories, List<Long> categories, Pageable pageable) {
+        return allCategories ? boardRepository.findByMemberId(id, pageable)
+                : boardRepository.findByMemberIdAndCategories(id, categories, pageable);
+    }
+
+    private Page<Board> mySearchOrFallback(Long id, String keyword, String column, List<Long> categories, Pageable pageable) {
+        Page<Board> boardPage = boardRepository.searchMyBoards(id, keyword, column, categories, pageable);
         return boardPage.isEmpty() ? findBoardsByCategory(categories == null, categories, pageable) : boardPage;
     }
 }
