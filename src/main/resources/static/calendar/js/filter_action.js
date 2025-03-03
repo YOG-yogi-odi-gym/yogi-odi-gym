@@ -1,3 +1,12 @@
+function getRandomColor() {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}
+
 function saveMemo(memoId, selectedDate, memberId) {
     let title = $(`#memoTitle_${memoId}`).val();
     let context = $(`#memoContent_${memoId}`).val();
@@ -250,7 +259,8 @@ function getLesson() {
                 start: new Date(item.date),
                 end: new Date(new Date(item.date).setHours(new Date(item.date).getHours() + 2)),
                 description: `${item.startTime} - ${item.endTime}`,
-                allDay: true
+                allDay: true,
+                color : getRandomColor()
             }));
 
             calendar.removeAllEvents();
@@ -317,7 +327,8 @@ function getMemo() {
                 title: item.title,
                 start: new Date(item.date),
                 description: item.context || "",
-                allDay: true
+                allDay: true,
+                color : getRandomColor()
             }));
             calendar.removeAllEvents();
             calendar.addEventSource(events);
@@ -342,16 +353,18 @@ function getMemoByDate(date) {
 
             let content = `<strong>${selectedDate}의 메모</strong><br>`;
 
-            content += `<button onclick="addMemoRow('${selectedDate}', ${memberId})">+ 추가</button>`;
+            content += `<div class="add-btn-container">`;
+            content += `<div class="add-box">`;
+            content += `<button class="add-btn" onclick="addMemoRow('${selectedDate}', ${memberId})"><i class="bi bi-plus"></i></button></div></div>`;
 
             if (response.data.length > 0) {
                 response.data.forEach(item => {
-                    content += `<div id="memo_${item.id}">`;
-                    content += `<strong>메모 수정</strong><br>`;
-                    content += `제목 : <input type="text" id="memoTitle_${item.id}" value="${item.title}" /><br>`;
-                    content += `내용 : <textarea id="memoContent_${item.id}">${item.context}</textarea><br>`;
-                    content += `<button onclick="updateMemo(${item.id}, '${selectedDate}', ${memberId})">수정</button>`;
-                    content += `<button onclick="deleteMemo(${item.id})">삭제</button></div>`;
+                    content += `<div id="memo_${item.id}" class="modal-container">`;
+                    content += `<input type="text" id="memoTitle_${item.id}" value="${item.title}" placeholder="제목 입력"/>`;
+                    content += `<button onClick="toggleMemo(${item.id})"  class="btn btn-info mb-2" id="memoToggle_${item.id}">메모 보기</button><br>`
+                    content += `<textarea style="display:none" id ="memoContent_${item.id}"  class="form-control mb-2 memoContent_${item.id}" rows="4" placeholder="내용 입력">${item.context}</textarea><br>`;
+                    content += `<button style="display:none" class="btn btn-success memoContent_${item.id}" onclick="updateMemo(${item.id}, '${selectedDate}', ${memberId})">수정</button>`;
+                    content += `<button style="display:none" class="btn btn-warning memoContent_${item.id}" onclick="deleteMemo(${item.id})">삭제</button></div>`;
                 });
             } else {
 
@@ -363,19 +376,35 @@ function getMemoByDate(date) {
         },
         error: function () {
             $("#modalContent").html("메모를 불러오는 데 실패했습니다.");
-            $("#openModalBtn").click(); 
+            $("#openModalBtn").click();
         }
     });
+}
+
+function toggleMemo(memoId) {
+    let memoContents = document.getElementsByClassName(`memoContent_${memoId}`);
+
+    // Loop through all elements with the class `memoContent_${memoId}`
+    for (let i = 0; i < memoContents.length; i++) {
+        let memoContent = memoContents[i];
+        if (memoContent.style.display === "none" || memoContent.style.display === "") {
+            memoContent.style.display = "inline-block";
+        } else {
+            memoContent.style.display = "none";
+        }
+    }
 }
 
 
 function createMemoRow(selectedDate, memberId) {
     let memoId = new Date().getTime();
-    return `<div id="memo_${memoId}">
-            제목 : <input type="text" id="memoTitle_${memoId}"/><br>
-            내용 : <textarea id="memoContent_${memoId}" placeholder="내용 입력"></textarea> <br>        
-            <button onclick="saveMemo('${memoId}','${selectedDate}', ${memberId})">저장</button>
-            <button onclick="deleteMemoRow('${memoId}')">취소</button><div>`
+    return `<div id="memo_${memoId}" class="modal-container">
+            <input type="text" id="memoTitle_${memoId}" placeholder="제목 입력"/>
+            <button onClick="toggleMemo(${memoId})" class="btn btn-info mb-2" id="memoToggle_${memoId}">메모 보기</button><br>
+            <textarea style="display:none"  id ="memoContent_${memoId}" class="form-control mb-2 memoContent_${memoId}" rows="4" placeholder="내용 입력"></textarea><br>
+            <button style="display:none" class="btn btn-primary memoContent_${memoId}" onclick="saveMemo('${memoId}','${selectedDate}', ${memberId})">저장</button>
+            <button style="display:none" class="btn btn-secondary memoContent_${memoId}" onclick="deleteMemoRow('${memoId}')">취소</button>
+            <div>`
 }
 
 function addMemoRow(selectedDate, memberId) {
@@ -400,7 +429,8 @@ function getExercise() {
                 title: item.name,
                 start: new Date(item.date),
                 description: item.context || "",
-                allDay: true
+                allDay: true,
+                color : getRandomColor()
             }));
             calendar.removeAllEvents();
             calendar.addEventSource(events);
@@ -427,19 +457,21 @@ function getExerciseByDate(date) {
             let content = `<strong>${selectedDate}의 운동</strong><br>`;
             let energyConsumptionValue = $("#selectedExerciseEnergy").val(); // 기본값 설정
 
-            content += `<button onclick="addExerciseRow('${selectedDate}', ${memberId})">+ 추가</button>`;
+            content += `<div class="add-btn-container">`;
+            content += `<div class="add-box">`;
+            content += `<button class="add-btn" onclick="addExerciseRow('${selectedDate}', ${memberId})"><i class="bi bi-plus"></i></button></div></div>`;
 
             if (response.data.length > 0) {
                 response.data.forEach(item => {
-                    content += `<div id="exercise_${item.id}">`;
-                    content += `<strong>운동 수정</strong><br>`;
-                    content += `운동명 : <input type="text" id="exerciseName_${item.id}" value="${item.name}" onkeyup="updateEnergyConsumption(${item.id})" disabled/><br>`;
+                    content += `<div id="exercise_${item.id}" class="modal-container">`;
+                    content += `운동명 : <input type="text" id="exerciseName_${item.id}"  value="${item.name}" onkeyup="updateEnergyConsumption(${item.id})" disabled/>`;
                     content += `운동시간 : <input type="text" id="exerciseTime_${item.id}" value="${item.time}" onkeyup="calculateCalories(${item.id})" onfocus="calculateCalories(${item.id})"/>`;
-                    content += `<input type="text" id="energyConsumption_${item.id}" value="${energyConsumptionValue}" disabled/><br>`;
-                    content += `운동 칼로리 : <input type="text" id="exerciseCalories_${item.id}" value="${item.calories}" onkeyup="calculateCalories(${item.id})" disabled /><br>`;
-                    content += `<button onclick="updateExercise(${item.id}, '${selectedDate}', ${memberId})">수정</button>`;
-                    content += `<button onclick="deleteExercise(${item.id})">삭제</button>`;
-                    content += `<button onClick="openSelectExerciseWindow('${item.id}')">운동 선택</button></div>`;
+                    content += `<input type="text" id="energyConsumption_${item.id}" value="${energyConsumptionValue}" disabled/>`;
+                    content += `운동 칼로리 : <input type="text" id="exerciseCalories_${item.id}" value="${item.calories}" onkeyup="calculateCalories(${item.id})" disabled />`;
+                    content += `<button class="btn btn-dark" onClick="openSelectExerciseWindow('${item.id}')">운동 선택</button>`;
+                    content += `<button class="btn btn-success" onclick="updateExercise(${item.id}, '${selectedDate}', ${memberId})">수정</button>`;
+                    content += `<button class="btn btn-danger" onclick="deleteExercise(${item.id})">삭제</button></div>`;
+
 
                     $("#modalContent").html(content);
 
@@ -484,14 +516,14 @@ function getExerciseByDate(date) {
 
 function createExerciseRow(selectedDate, memberId) {
     let exerciseId = new Date().getTime(); // 새 음식 ID 생성
-    return `<div id="exercise_${exerciseId}">
-            운동명 : <input type="text" id="exerciseName_${exerciseId}" onkeyup="updateEnergyConsumption(${exerciseId})" disabled/><br>
+    return `<div id="exercise_${exerciseId}" class="modal-container">
+            운동명 : <input type="text" id="exerciseName_${exerciseId}" onkeyup="updateEnergyConsumption(${exerciseId})" disabled/>
             운동시간 : <input type="text" id="exerciseTime_${exerciseId}" onkeyup="calculateCalories(${exerciseId})" onfocus="calculateCalories(${exerciseId})"/>
-            <input type="text" id="energyConsumption_${exerciseId}" disabled/><br>
-            운동 칼로리 : <input type="text" id="exerciseCalories_${exerciseId}" onkeyup="calculateCalories(${exerciseId})" disabled /><br>        
-            <button onClick="openSelectExerciseWindow('${exerciseId}')">운동선택</button>
-            <button onclick="saveExercise('${exerciseId}','${selectedDate}', ${memberId})">저장</button>
-            <button onclick="deleteExerciseRow('${exerciseId}')">취소</button><div> `
+            <input type="text" id="energyConsumption_${exerciseId}" disabled/>
+            운동 칼로리 : <input type="text" id="exerciseCalories_${exerciseId}" onkeyup="calculateCalories(${exerciseId})" disabled />       
+            <button class="btn btn-dark" onClick="openSelectExerciseWindow('${exerciseId}')">운동 선택</button>
+            <button class="btn btn-primary" onclick="saveExercise('${exerciseId}','${selectedDate}', ${memberId})">저장</button>
+            <button class="btn btn-secondary" onclick="deleteExerciseRow('${exerciseId}')">취소</button><div> `
 }
 
 function addExerciseRow(selectedDate, memberId) {
@@ -501,6 +533,7 @@ function addExerciseRow(selectedDate, memberId) {
 function deleteExerciseRow(exerciseId) {
     $(`#exercise_${exerciseId}`).remove();
 }
+
 
 
 function getFood() {
@@ -515,7 +548,8 @@ function getFood() {
                     title: item.name,
                     start: new Date(item.date),
                     description: item.context || "",
-                    allDay: true
+                    allDay: true,
+                    color : getRandomColor()
                 }));
                 calendar.removeAllEvents();
                 calendar.addEventSource(events);
@@ -542,19 +576,20 @@ function getFoodByDate(date) {
             let content = `<strong>${selectedDate}의 식단</strong><br>`;
             let foodConsumptionValue = $("#selectedFoodEnergy").val(); // 기본값 설정
 
-            content += `<button onclick="addFoodRow('${selectedDate}', ${memberId})">+ 추가</button>`;
+            content += `<div class="add-btn-container">`;
+            content += `<div class="add-box">`;
+            content += `<button class="add-btn" onclick="addFoodRow('${selectedDate}', ${memberId})"><i class="bi bi-plus"></i></button></div></div>`
 
             if (response.data.length > 0) {
                 response.data.forEach(item => {
-                    content += `<div id="food_${item.id}">`
-                    content += `<strong>식단 수정</strong><br>`;
-                    content += `음식명 : <input type="text" id="foodName_${item.id}" value="${item.name}" onkeyup="updateFoodConsumption(${item.id})" disabled /><br>`;
+                    content += `<div id="food_${item.id}" class="modal-container">`
+                    content += `음식명 : <input type="text" id="foodName_${item.id}" value="${item.name}" onkeyup="updateFoodConsumption(${item.id})" disabled />`;
                     content += `섭취량 : <input type="text" id="foodHundredGram_${item.id}" value="${item.hundredGram}" onkeyup="calculateFoodCalories(${item.id})" onfocus="calculateFoodCalories(${item.id})"/>`;
-                    content += `<input type="text" id="foodConsumption_${item.id}" value="${foodConsumptionValue}" disabled/><br>`;
-                    content += `섭취 칼로리 : <input type="text" id="foodCalories_${item.id}" value="${item.calories}" onkeyup="calculateFoodCalories(${item.id})" disabled /><br>`;
-                    content += `<button onClick="openSelectFoodWindow('${item.id}')">음식 선택</button>`;
-                    content += `<button onclick="updateFood(${item.id}, '${selectedDate}', ${memberId})">수정</button>`;
-                    content += `<button onclick="deleteFood(${item.id})">삭제</button></div>`
+                    content += `<input type="text" id="foodConsumption_${item.id}" value="${foodConsumptionValue}" disabled/>`;
+                    content += `섭취 칼로리 : <input type="text" id="foodCalories_${item.id}" value="${item.calories}" onkeyup="calculateFoodCalories(${item.id})" disabled />`;
+                    content += `<button class="btn btn-dark" onClick="openSelectFoodWindow('${item.id}')">음식 선택</button>`;
+                    content += `<button class="btn btn-success" onclick="updateFood(${item.id}, '${selectedDate}', ${memberId})">수정</button>`;
+                    content += `<button class="btn btn-danger" onclick="deleteFood(${item.id})">삭제</button></div>`
 
                     $("#modalContent").html(content);
 
@@ -600,14 +635,14 @@ function getFoodByDate(date) {
 
 function createFoodRow(selectedDate, memberId) {
     let foodId = new Date().getTime(); // 새 음식 ID 생성
-    return `<div id="food_${foodId}">
-            음식명: <input type="text" id="foodName_${foodId}" onkeyup="updateFoodConsumption(${foodId})" disabled /><br>
+    return `<div id="food_${foodId}" class="modal-container">
+            음식명: <input type="text" id="foodName_${foodId}" onkeyup="updateFoodConsumption(${foodId})" disabled />
             섭취량: <input type="text" id="foodHundredGram_${foodId}" onkeyup="calculateFoodCalories(${foodId})" onfocus="calculateFoodCalories(${foodId})"/>
-            <input type="text" id="foodConsumption_${foodId}" disabled/><br>
-            섭취 칼로리: <input type="text" id="foodCalories_${foodId}" onkeyup="calculateFoodCalories(${foodId})" disabled /><br>
-            <button onClick="openSelectFoodWindow('${foodId}')">음식 선택</button>
-            <button onclick="saveFood('${foodId}','${selectedDate}', ${memberId})">저장</button>
-            <button onclick="deleteFoodRow('${foodId}')">취소</button></div>`
+            <input type="text" id="foodConsumption_${foodId}" disabled/>
+            섭취 칼로리: <input type="text" id="foodCalories_${foodId}" onkeyup="calculateFoodCalories(${foodId})" disabled />
+            <button class="btn btn-dark" onClick="openSelectFoodWindow('${foodId}')">음식 선택</button>
+            <button class="btn btn-primary" onclick="saveFood('${foodId}','${selectedDate}', ${memberId})">저장</button>
+            <button class="btn btn-secondary" onclick="deleteFoodRow('${foodId}')">취소</button></div>`
 }
 
 function addFoodRow(selectedDate, memberId) {

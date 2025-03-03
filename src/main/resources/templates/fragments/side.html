@@ -39,10 +39,10 @@
       background-color: white;
     }
     .side-down img {
-      width: 80px;
-      height: 80px;
+      width: 160px;
+      height: 160px;
     }
-    .nav-item {
+    .side-item {
       display: flex;
       align-items: center;
       width: 180px;
@@ -54,15 +54,15 @@
       transition: background-color 0.3s;
       text-decoration: none;
     }
-    .nav-gym {
+    .side-gym {
       margin: 15px 0 15px 0;
     }
-    .nav-item i {
+    .side-item i {
       font-size: 20px;
       margin: 0 15px 0 15px;
     }
     /* a 태그 호버 효과 */
-    .nav-item:hover {
+    .side-item:hover {
       background-color: #007bff;
     }
   </style>
@@ -71,34 +71,34 @@
 
 <div class="side">
   <div class="side-up" style="background-color: white;">
-    <a th:href="@{/dashboard}" id="side_dashboard" class="nav-item nav-dashboard">
+    <a th:href="@{/dashboard}" id="side_dashboard" class="side-item side-dashboard">
       <i class="bi bi-border-all"></i>
       <span>대시보드</span>
     </a>
-    <a th:href="@{/community}" class="nav-item nav-community">
+    <a th:href="@{/community}" class="side-item side-community">
       <i class="bi bi-people-fill"></i>
       <span>커뮤니티</span>
     </a>
-    <a th:href="@{/lesson}" id="side_lesson" class="nav-item nav-courses">
+    <a th:href="@{/templates/lesson}" id="side_lesson" class="side-item side-courses">
       <i class="bi bi-search"></i>
       <span>강의 찾기</span>
     </a>
-    <a th:href="@{/my-courses}" class="nav-item nav-my-courses">
+    <a th:href="@{/my-courses}" class="side-item side-my-courses">
       <i class="bi bi-card-checklist"></i>
       <span>내 강의</span>
     </a>
-    <a th:href="@{/calendar/cal}" id="side_calendar" class="nav-item nav-calendar">
+    <a th:href="@{/calendar/cal}" id="side_calendar" class="side-item side-calendar">
       <i class="bi bi-calendar-event"></i>
       <span>캘린더</span>
     </a>
-    <a th:href="@{/gyms}" id="side_gym" class="nav-item nav-gym">
+    <a th:href="@{/gyms}" id="side_gym" class="side-item side-gym">
       <i class="bi bi-house-door"></i>
       <span>헬스장 찾기</span>
     </a>
   </div>
 
   <div class="side-down">
-    <img th:src="@{/images/source/yogi_side_img.jpg}" alt="Yogi logo">
+<!--    <img th:src="@{/images/source/YOG.jpg}" alt="Yogi logo">-->
   </div>
 </div>
 
