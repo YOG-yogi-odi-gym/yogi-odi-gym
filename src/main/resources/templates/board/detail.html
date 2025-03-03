@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>게시판 상세보기</title>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <script type="text/javascript"
+            th:src="@{'//dapi.kakao.com/v2/maps/sdk.js?appkey=' + ${@environment.getProperty('kakao.api.scriptKey')}}"></script>
+    <script type="text/javascript" th:src="@{'/js/bitmaskToDays.js'}"></script>
+    <link th:href="@{https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css}" rel="stylesheet">
+    <script th:src="@{https://code.jquery.com/jquery-3.5.1.slim.min.js}"></script>
+    <script th:src="@{https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js}"></script>
+    <script th:src="@{https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/board/register.css}">
+    <link rel="stylesheet" th:href="@{/css/lesson/lessonSearch.css}">
+    <link rel="stylesheet" th:href="@{/css/mainTool.css}">
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            loadComments();
+        })
+
+        function getCsrfToken() {
+            return {
+                header: document.querySelector("meta[name='_csrf_header']").content,
+                token: document.querySelector("meta[name='_csrf']").content
+            }
+        }
+
+        function loadComments() {
+            const boardId = [[${board.id}]];
+            fetch(`/api/comment/${boardId}`)
+                .then(response => response.json())
+                .then(comments => {
+                    let commentList = document.getElementById("commentList");
+                    commentList.innerHTML = "";
+
+                    comments.forEach(comment => {
+                        let listItem = document.createElement("li");
+                        listItem.className = "list-group-item";
+                        listItem.innerHTML = `
+                        <div>
+                            <strong>${comment.memberName}</strong> (${timeAgo(comment.createDateTime)})<br>
+                            ${comment.content}
+                        </div>
+                        ${comment.canDelete ? `<button class="btn btn-danger btn-sm" onclick="deleteComment(${comment.id})">삭제</button>` : ""}
+                    `;
+                        commentList.appendChild(listItem);
+                    });
+                });
+        }
+
+        function addComment() {
+            const boardId = [[${board.id}]];
+            const content = document.getElementById("commentContent").value;
+            let csrf = getCsrfToken();
+
+            fetch("/api/comment", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    [csrf.header]: csrf.token
+                },
+                body: new URLSearchParams({boardId: boardId, content: content})
+            }).then(() => {
+                document.getElementById("commentContent").value = "";
+                loadComments();
+            });
+        }
+
+        function deleteComment(commentId) {
+            let csrf = getCsrfToken();
+            fetch(`/api/comment/${commentId}`, {
+                method: "DELETE",
+                headers: {
+                    [csrf.header]: csrf.token
+                }
+            }).then(() => loadComments());
+        }
+
+        function timeAgo(dateTime) {
+            const now = new Date()
+            const past = new Date(dateTime)
+            const diffInSeconds = Math.floor((now - past) / 1000)
+
+            if (diffInSeconds < 60) {
+                if (diffInSeconds < 1) {
+                    return `1초 전`
+                }
+                return `${diffInSeconds}초 전`
+            }
+
+            const diffInMinutes = Math.floor(diffInSeconds / 60)
+            if (diffInMinutes < 60) {
+                return `${diffInMinutes}분 전`
+            }
+
+            const diffInHours = Math.floor(diffInMinutes / 60);
+            if (diffInHours < 24) {
+                return `${diffInHours}시간 전`
+            }
+
+            const diffInDays = Math.floor(diffInHours / 24);
+            if (diffInDays < 30) {
+                return `${diffInDays}일 전`
+            }
+
+            const diffInMonths = Math.floor(diffInDays / 30);
+            if (diffInMonths < 12) {
+                return `${diffInMonths}개월 전`
+            }
+
+            const diffInYears = Math.floor(diffInMonths / 12);
+            return `${diffInYears}년 전`
+        }
+    </script>
+</head>
+<body>
+<div class="container custom-container">
+    <div th:replace="~{navi/header :: header}"></div>
+
+    <div class="main-container">
+        <div th:replace="~{navi/sidebar :: sidebar}"></div>
+
+        <div class="card main-card">
+            <div class="card-header">
+                <div>
+                    <h2 th:text="${board.title}"></h2>
+                </div>
+                <div>
+                    조회수 : <span th:text="${board.view}"></span>
+                </div>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered table-striped">
+                    <tbody>
+                    <tr>
+                        <th class="text-center">카테고리</th>
+                        <td th:text="${board.categoryName}"></td>
+                    </tr>
+                    <tr>
+                        <th class="text-center">작성일</th>
+                        <td th:text="${board.createDateTime}"></td>
+                    </tr>
+                    <tr>
+                        <th class="text-center">작성자</th>
+                        <td th:text="${board.memberName}"></td>
+                    </tr>
+                    <tr>
+                        <th class="text-center">내용</th>
+                        <td colspan="9">
+                            <pre th:text="${board.context}"
+                                 style="font-family: inherit; white-space: pre-wrap; word-break: break-word;"></pre>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="comment-container">
+                    <div><h5>댓글</h5></div>
+                    <div th:if="${member != null}">
+                        <textarea id="commentContent" class="form-control" placeholder="댓글을 입력하세요"></textarea>
+                        <button class="btn btn-primary mt-2" onclick="addComment()">댓글 작성</button>
+                    </div>
+
+                    <div>
+                        <ul id="commentList" class="list-group mb-3"></ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-footer text-center" id="buttonContainer">
+                <button onclick="history.back()">뒤로 가기</button>
+                <button onclick="location.href='/board'">게시판 목록</button>
+                <div th:if="${member.id == board.memberId}">
+                    <button class="btn btn-warning" th:onclick="|location.href='/board/' + ${board.id} + '/edit'|">수정
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
