@@ -27,7 +27,6 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import static com.health.yogiodigym.member.auth.MemberStatus.ACTIVE;
@@ -130,21 +129,4 @@ public class MemberServiceImpl implements MemberService {
 
         securityContextRepository.saveContext(context, request, response);
     }
-
-//    @Override
-//    public boolean login(String email, String password) {
-//        Optional<Member> memberOptional = memberRepository.findByEmail(email);
-//        if (memberOptional.isPresent()) {
-//            Member member = memberOptional.get();
-//            return member.getPwd().equals(password);
-//        }
-//        return false;
-//    }
-//
-//    @Override
-//    public Member getMemberByEmail(String email) {
-//
-//        Optional<Member> member = memberRepository.findByEmail(email);
-//        return member.orElse(null);
-//    }
 }
