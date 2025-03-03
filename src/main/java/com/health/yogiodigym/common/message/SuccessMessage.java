@@ -19,7 +19,12 @@ public enum SuccessMessage {
     WITHDRAWAL_SUCCESS("회원탈퇴 처리되었습니다"),
     PROFILE_UPDATE_SUCCESS("프로필 이미지 저장에 성공하였습니다."),
     MEMBER_UPDATE_SUCCESS("회원정보 수정에 성공하였습니다."),
-    ENROLL_MASTER_SUCCESS("강사 신청에 성공하였습니다.");
+    ENROLL_MASTER_SUCCESS("강사 신청에 성공하였습니다."),
+    ADMIN_BOARD_SEARCH_SUCCESS("게시판 검색에 성공하였습니다."),
+    ADMIN_BOARD_DELETE_SUCCESS("게시판 삭제에 성공하였습니다."),
+    ADMIN_CATEGORY_DELETE_SUCCESS("카테고리 삭제에 성공하였습니다."),
+    ADMIN_CATEGORY_INSERT_SUCCESS("카테고리 추가에 성공하였습니다."),
+    ADMIN_CATEGORY_UPDATE_SUCCESS("카테고리 수정에 성공하였습니다.");
 
     private final String message;
 }

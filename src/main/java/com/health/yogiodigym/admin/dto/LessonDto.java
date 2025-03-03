@@ -2,7 +2,6 @@ package com.health.yogiodigym.admin.dto;
 
 
 import com.health.yogiodigym.lesson.entity.Lesson;
-import com.health.yogiodigym.member.entity.Member;
 import lombok.*;
 
 public class LessonDto {

@@ -1,4 +1,4 @@
-package com.health.yogiodigym.member.service.impl;
+package com.health.yogiodigym.member.service;
 
 import com.health.yogiodigym.member.UserInfo.GoogleUserInfo;
 import com.health.yogiodigym.member.UserInfo.KakaoUserInfo;
@@ -34,7 +34,7 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
         Map<String, Object> oAuthAttributes = oAuth2User.getAttributes();
-        log.info(userRequest.getClientRegistration().getRegistrationId() + " OAuth2 Response: " + oAuthAttributes);
+        log.info("{} OAuth2 Response: {}", userRequest.getClientRegistration().getRegistrationId(), oAuthAttributes);
 
         OAuth2UserInfo oAuth2UserInfo = null;
         String registrationId = userRequest.getClientRegistration().getRegistrationId();

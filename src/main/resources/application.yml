@@ -17,6 +17,11 @@ spring:
         use_sql_comments: true
     open-in-view: false
 
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
   kafka:
     bootstrap-servers: localhost:9092
     producer:
@@ -49,3 +54,7 @@ cloud:
       access-key: ENC(jymdZ7bw/7B1p3XiHvrTjbIfRTHAS1X9zg327Va/5Vc2GVEskGIUOQ==)
       secret-key: ENC(KKLFAF9a67ERD3xojAXA5Dn+IKSjJT3ZjimsyRvGPwtPrOnKOp8f6wYsi7K4bSYyOpnbHAYphnQ=)
       bucket: yog-img-storage
+
+kakao:
+  api:
+    scriptKey: ENC(rx4OdzFCwme5wNInUfdwd6gB9yQKjrUPUQQjYvoYckQQienCjDrV8NPhqKnoPHNA)

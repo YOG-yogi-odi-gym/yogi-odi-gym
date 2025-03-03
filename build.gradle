@@ -53,7 +53,9 @@ dependencies {
     // object storage
     implementation 'software.amazon.awssdk:s3:2.20.60'
 
-
+    // redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.session:spring-session-data-redis'
 }
 
 tasks.named('test') {

@@ -37,10 +37,10 @@ public class SecurityConfig {
                 .cors(withDefaults())
                 .csrf(withDefaults())
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/images/source/**", "/images/profile/**", "/css/**", "/js/**", "/", "/member/regist", "/api/member/regist").permitAll()
-                        .requestMatchers("/images/license/**").hasRole("ADMIN")
+                        .requestMatchers("/images/source/**", "/css/**", "/js/**", "/", "/member/regist", "/api/member/regist").permitAll()
+                        .requestMatchers("/images/license/**", "/templates/admin/**", "/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/member/login", "/login").not().authenticated()
-                        .requestMatchers("/logout", "/dashboard", "/images/license/**").authenticated()
+                        .requestMatchers("/logout", "/dashboard").authenticated()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
@@ -75,7 +75,6 @@ public class SecurityConfig {
                 )
                 .exceptionHandling(e -> e
                         .authenticationEntryPoint((request, response, authException) -> {
-                            log.error("서버오류 : "+authException.getMessage(), authException);
                             response.sendRedirect("/member/login");
                         })
                         .accessDeniedHandler((request, response, accessDeniedException) -> {

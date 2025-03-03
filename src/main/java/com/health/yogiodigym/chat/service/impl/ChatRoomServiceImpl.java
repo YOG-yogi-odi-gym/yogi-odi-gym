@@ -3,10 +3,10 @@ package com.health.yogiodigym.chat.service.impl;
 import static com.health.yogiodigym.chat.config.ChatConstants.ENTER_CHAT_ROOM_MESSAGE_PREFIX;
 import static com.health.yogiodigym.chat.config.ChatConstants.QUIT_CHAT_ROOM_MESSAGE_SUFFIX;
 
+import com.health.yogiodigym.chat.dto.MessageDto.MessageRequestDto;
 import com.health.yogiodigym.lesson.entity.LessonEnrollment;
 import com.health.yogiodigym.lesson.repository.LessonEnrollmentRepository;
 import com.health.yogiodigym.chat.dto.ChatRoomDto.ChatRoomResponseDto;
-import com.health.yogiodigym.chat.dto.MessageDto;
 import com.health.yogiodigym.chat.entity.ChatParticipant;
 import com.health.yogiodigym.chat.entity.ChatRoom;
 import com.health.yogiodigym.chat.repository.ChatMessageRepository;
@@ -127,7 +127,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     }
 
     private void sendChatMessage(Member member, String roomId, String content) {
-        MessageDto message = MessageDto.builder()
+        MessageRequestDto message = MessageRequestDto.builder()
                 .senderId(member.getId())
                 .senderName(member.getName())
                 .roomId(roomId)
