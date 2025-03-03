@@ -44,20 +44,11 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
                              @Param("categories") List<Long> categories,
                              Pageable pageable);
 
-    @Query("SELECT b FROM Board b " +
-            "LEFT JOIN b.category c " +
-            "WHERE c.id IN :categories")
-    Page<Board> findByCategories(@Param("categories") List<Long> categories, Pageable pageable);
+    Page<Board> findByCategoryIdIn(List<Long> categories, Pageable pageable);
 
-    @Modifying
-    @Query("UPDATE Board b SET b.view = b.view + 1 WHERE b.id = :id")
-    void incrementViewCount(@Param("id") Long id);
+    Page<Board> findByMemberId(Long id, Pageable pageable);
 
-    @Query("SELECT b FROM Board b WHERE b.member.id = :id")
-    Page<Board> findByMemberId(@Param("id") Long id, Pageable pageable);
-
-    @Query("SELECT b FROM Board b WHERE b.member.id = :id AND b.category.id IN :categories")
-    Page<Board> findByMemberIdAndCategories(@Param("id") Long id, @Param("categories") List<Long> categories, Pageable pageable);
+    Page<Board> findByMemberIdAndCategoryIdIn(Long id, List<Long> categories, Pageable pageable);
 
     List<Board> findAllByOrderByIdDesc();
 

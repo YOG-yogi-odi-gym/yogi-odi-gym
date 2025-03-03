@@ -100,6 +100,7 @@ public class BoardServiceImpl implements BoardService {
                 .orElseThrow(() -> new CategoryNotFoundException(dto.getCategoryId()));
 
         board.updateBoard(dto, category);
+        boardRepository.save(board);
     }
 
     private boolean isKeywordEmpty(String keyword) {
@@ -111,7 +112,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     private Page<Board> findBoardsByCategory(boolean allCategories, List<Long> categories, Pageable pageable) {
-        return allCategories ? boardRepository.findAll(pageable) : boardRepository.findByCategories(categories, pageable);
+        return allCategories ? boardRepository.findAll(pageable) : boardRepository.findByCategoryIdIn(categories, pageable);
     }
 
     private Page<Board> searchOrFallback(String keyword, String column, List<Long> categories, Pageable pageable) {
@@ -121,7 +122,7 @@ public class BoardServiceImpl implements BoardService {
 
     private Page<Board> findMyBoardsByCategory(Long id, boolean allCategories, List<Long> categories, Pageable pageable) {
         return allCategories ? boardRepository.findByMemberId(id, pageable)
-                : boardRepository.findByMemberIdAndCategories(id, categories, pageable);
+                : boardRepository.findByMemberIdAndCategoryIdIn(id, categories, pageable);
     }
 
     private Page<Board> mySearchOrFallback(Long id, String keyword, String column, List<Long> categories, Pageable pageable) {
