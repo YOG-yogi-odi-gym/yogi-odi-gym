@@ -35,6 +35,7 @@ public class AdminMemberController {
     public ResponseEntity<?> setInactiveStatus(@RequestBody List<Long> memberIds) {
 
         adminMemberService.setInactiveStatus(memberIds);
+
         return ResponseEntity.ok().body(new HttpResponse(HttpStatus.OK, ADMIN_MEMBER_STATUS_CHANGE_SUCCESS.getMessage(), null));
     }
 
@@ -44,8 +45,14 @@ public class AdminMemberController {
         Long applyMemberId = memberToMasterResponseDto.getMemberId();
         adminMemberToMasterService.setMasterStatus(applyMemberId);
 
-        System.out.println(applyMemberId);
-
         return ResponseEntity.ok().body(new HttpResponse(HttpStatus.OK, ADMIN_AUTHORITY_ADD_SUCCESS.getMessage(), null));
+    }
+
+    @PostMapping("/reject")
+    public ResponseEntity<?> rejectMasterStatus(@RequestBody Long applyId) {
+
+        adminMemberToMasterService.rejectMasterStatus(applyId);
+
+        return ResponseEntity.ok().body(new HttpResponse(HttpStatus.OK, ADMIN_AUTHORITY_REJECT_SUCCESS.getMessage(), null));
     }
 }

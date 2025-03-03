@@ -149,7 +149,7 @@ $(document).ready(function () {
     })
 
     $("#applyTableBody").on("click","tr", function () {
-        let applyId = $(this).find(".applyCheckbox").val();
+        let applyId = $(this).find(".applyId").val();
         let applyMemberId = $(this).find(".applyMemberId").val();
         let applyName = $(this).find(".applyName").text();
         let applyEmail = $(this).find(".applyEmail").text();
@@ -176,10 +176,9 @@ $(document).ready(function () {
     })
 
     $("#agreeApplyButton").click(function () {
-        let applyId = $("#applyId").val();
         let applyMemberId = $("#applyMemberId").val();
 
-        console.log(applyMemberId, applyId);
+        console.log(applyMemberId);
 
         $.ajax({
             url: "/api/admin/member/master",
@@ -424,6 +423,37 @@ $(document).ready(function () {
             }
         });
     });
+
+    $("#deleteApplyButton").click(function () {
+        let applyId = $("#applyId").val();
+
+        console.log(applyId);
+
+        $.ajax({
+            url: "/api/admin/member/reject",
+            type: "POST",
+            data: JSON.stringify(applyId),
+            contentType: 'application/json; charset=utf-8',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader(csrfHeader, csrfToken);
+            },
+            success: function (response) {
+                if (response.status === 200) {
+                    alert("신청이 거절되었습니다.");
+                    location.reload();
+                } else {
+                    alert("신청 거절에 실패했습니다.");
+                    console.log(response.status);
+                    console.log(response.data);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("AJAX Error : ", status, error);
+                console.error("Response : ", xhr.responseText);
+                alert("거절 중 오류가 발생했습니다.");
+            }
+        })
+    })
 
     $("#deleteCategoryButton").click(function () {
         let selectCategories = [];

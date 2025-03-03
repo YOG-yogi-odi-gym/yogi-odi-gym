@@ -36,7 +36,6 @@ public class AdminMemberToMasterServiceImpl implements AdminMemberToMasterServic
     }
 
     @Override
-    @Transactional
     public void setMasterStatus(Long applyMemberId) {
 
         MemberToMaster memberToMaster = memberToMasterRepository.findByMemberId(applyMemberId)
@@ -59,6 +58,11 @@ public class AdminMemberToMasterServiceImpl implements AdminMemberToMasterServic
 
         authorityRepository.save(authority);
         memberToMasterRepository.delete(memberToMaster);
+    }
+
+    @Override
+    public void rejectMasterStatus(Long applyId) {
+        memberToMasterRepository.deleteById(applyId);
     }
 }
 

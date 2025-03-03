@@ -9,4 +9,6 @@ public interface AdminMemberToMasterService {
     List<MemberToMasterResponseDto> findAllMemberToMasters();
 
     void setMasterStatus(Long applyMemberId);
+
+    void rejectMasterStatus(Long applyId);
 }
