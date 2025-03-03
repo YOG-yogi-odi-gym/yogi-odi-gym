@@ -16,7 +16,8 @@ public enum ErrorMessage {
     LESSON_NOT_FOUND("강의가 존재하지 않습니다."),
     CATEGORY_NOT_FOUND("카테고리가 존재하지 않습니다."),
     MEMBER_NOT_IN_CHAT_ROOM("채팅방 참여자가 아닙니다."),
-    ALREADY_CHAT_PARTICIPANT("이미 채팅방에 참여중입니다.");
+    ALREADY_CHAT_PARTICIPANT("이미 채팅방에 참여중입니다."),
+    WRONG_PASSWORD("잘못된 비밀번호입니다.");
 
     private final String message;
 }

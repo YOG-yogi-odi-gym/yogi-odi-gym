@@ -13,7 +13,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.health.yogiodigym.member.auth.MemberStatus.*;
+import static com.health.yogiodigym.member.status.MemberStatus.*;
 
 @Setter
 @Getter
@@ -56,6 +56,12 @@ public class MemberOAuth2User implements UserDetails, OAuth2User {
 
     @Override
     public boolean isAccountNonLocked() {
+        if (member.getStatus() == SUSPENDED) {
+            throw new LockedException(member.getDropDate()+"까지 정지된 계정입니다.");
+        }else if(member.getStatus() == BAN){
+            throw new LockedException("영구정지 계정입니다.");
+        }
+
         return true;
     }
 
@@ -66,12 +72,8 @@ public class MemberOAuth2User implements UserDetails, OAuth2User {
 
     @Override
     public boolean isEnabled() {
-        if (member.getStatus() == SUSPENDED) {
-            throw new LockedException(member.getDropDate()+"까지 정지된 계정입니다.");
-        }else if(member.getStatus() == BAN){
-            throw new LockedException("영구정지 계정입니다.");
-        }else if(member.getStatus() == INACTIVE){
-            throw new DisabledException("탈퇴대기 계정입니다. "+member.getDropDate()+"부터 다시 회원가입이 가능합니다");
+        if(member.getStatus() == INACTIVE){
+            throw new DisabledException("탈퇴대기 계정입니다. "+member.getDropDate().plusDays(3)+"부터 다시 회원가입이 가능합니다");
         }
         return true;
     }

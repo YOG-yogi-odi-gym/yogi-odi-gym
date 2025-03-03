@@ -73,7 +73,7 @@
             <div class="profile-container">
                 <h2 class="text-2xl font-semibold text-gray-800">관리자 정보</h2>
                 <div class="user-info">
-                    <img th:src="${#authentication.principal.member.profile}" alt="Profile Image">
+                    <img th:src="${#authentication.principal.member.profile != null ? #authentication.principal.member.profile : '/images/source/anonymous.png'}">
                     <h3 th:text="${#authentication.principal.member.name}"></h3>
                     <p th:text="${#authentication.name}"></p>
                 </div>
@@ -91,6 +91,7 @@
             <div sec:authorize="isAuthenticated()">
                 <p class="text-center">대시보드에 오신 것을 환영합니다. 관리자 권한으로 다양한 관리 작업을 수행하실 수 있습니다.</p>
                 <a href="/admin" class="admin-button">관리자 페이지로 이동</a>
+                <a href="/my/info" class="admin-button">마이 페이지로 이동</a>
             </div>
 
             <div sec:authorize="!isAuthenticated()">

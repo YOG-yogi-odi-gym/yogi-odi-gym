@@ -6,8 +6,8 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-<!--    <meta name="_csrf" th:content="${_csrf.token}"/>-->
-<!--    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>-->
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <script type="text/javascript" th:src="@{'//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js'}"></script>
     <script type="text/javascript"
             th:src="@{'//dapi.kakao.com/v2/maps/sdk.js?appkey=' + ${@environment.getProperty('kakao.api.scriptKey')} + '&libraries=services'}"></script>
@@ -82,8 +82,8 @@
         }
     </style>
     <script>
-        // const csrfToken = $("meta[name='_csrf']").attr("content");
-        // const csrfHeader = $("meta[name='_csrf_header']").attr("content");
+        const csrfToken = $("meta[name='_csrf']").attr("content");
+        const csrfHeader = $("meta[name='_csrf_header']").attr("content");
 
         $(document).ready(function () {
             document.getElementById("profile").addEventListener("change", function (event) {
@@ -98,6 +98,10 @@
                     reader.readAsDataURL(file);
                 }
             });
+
+            document.body.querySelector("#addr").addEventListener("change", function () {
+                document.body.querySelector("#latitude").value = "";
+            })
         });
 
         function goLogin(authenticated) {
@@ -106,7 +110,7 @@
             if (authenticated === 'true') {
                 logoutForm.submit();
             } else {
-                window.location.href = "/member/login"; // 로그인 페이지로 이동
+                window.location.href = "/member/login";
             }
         }
 
@@ -127,9 +131,9 @@
                 processData: false,
                 contentType: false,
                 dataType: "json",
-                // beforeSend: function (xhr) {
-                //     xhr.setRequestHeader(csrfHeader, csrfToken);
-                // },
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(csrfHeader, csrfToken);
+                },
                 success: function (res) {
                     console.log(res);
                     window.location.href = "/dashboard"
@@ -140,7 +144,7 @@
 
                     let resJSON = res.responseJSON;
 
-                    if (res.status == 400) {
+                    if (res.status === 400) {
                         let errors = resJSON.data;
                         const errorMap = errors.reduce((acc, error) => {
                             acc[error.field] = error.defaultMessage;
@@ -281,7 +285,7 @@
         </div>
     </div>
 </div>
-<div th:replace="public/modal :: modalFragment"></div>
+<div th:replace="fragments/modal :: modalFragment"></div>
 </body>
 </html>
 

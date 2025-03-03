@@ -1,6 +1,6 @@
 package com.health.yogiodigym.member.entity;
 
-import com.health.yogiodigym.member.auth.MemberStatus;
+import com.health.yogiodigym.member.status.MemberStatus;
 import com.health.yogiodigym.member.auth.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
