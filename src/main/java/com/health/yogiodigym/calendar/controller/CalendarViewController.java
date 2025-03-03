@@ -13,24 +13,24 @@ public class CalendarViewController {
     @GetMapping("/select_food")
     public String showFoodSelection() {
 
-        return "/calendar/select_food";
+        return "calendar/select_food";
 
     }
 
     @GetMapping("/select_exercise")
     public String showExerciseSelection() {
 
-        return "/calendar/select_exercise";
+        return "calendar/select_exercise";
 
     }
 
     @PostMapping("/cal")
     public String memberTestPage() {
-        return "/calendar/cal";
+        return "calendar/cal";
     }
 
     @GetMapping("/cal")
     public String memberTestPageGet() {
-        return "/calendar/cal";
+        return "calendar/cal";
     }
 }

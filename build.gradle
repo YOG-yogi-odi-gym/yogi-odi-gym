@@ -48,6 +48,10 @@ dependencies {
 
     // kafka
     implementation 'org.springframework.kafka:spring-kafka'
+
+
+    // 임시
+    implementation 'org.springframework.boot:spring-boot-devtools'
 }
 
 tasks.named('test') {

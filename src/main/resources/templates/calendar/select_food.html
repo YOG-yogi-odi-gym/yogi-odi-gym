@@ -17,6 +17,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.0.0/mdb.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="../../static/calendar/js/filter_action.js"></script>
 </head>
 <body>
 <div class="container mt-4">
@@ -32,28 +33,24 @@
 <script>
     $(document).ready(function() {
 
-        // Initialize Select2
         const select = $('#foodSelect2');
         select.select2({
             placeholder: "음식을 검색하세요",
             allowClear: true
         });
 
-        // Load food data using AJAX
         $.ajax({
             url: "/api/food/all",
             type: "GET",
             dataType: "json",
             success: function(data) {
-                select.empty(); // Clear existing options
+                select.empty();
                 select.append('<option value="" disabled selected>음식을 선택하세요</option>');
 
-                // Add food options dynamically
                 $.each(data, function(index, food) {
                     select.append(`<option value="${food.id}">${food.name}</option>`);
                 });
 
-                // Reinitialize Select2 to reflect the new data
                 select.trigger('change');
 
             },
@@ -62,7 +59,6 @@
             }
         });
 
-        // Handle change event to fetch energyConsumption from /search API
         select.on('change', function () {
             let selectedId = $(this).val();
             if (!selectedId) return;
@@ -100,29 +96,30 @@
             return;
         }
 
+        const urlParams = new URLSearchParams(window.location.search);
+        let foodId = urlParams.get("foodId");
+
 
         if (window.opener && !window.opener.closed) {
-            let foodNameElements = window.opener.document.getElementsByClassName("foodName"); // 부모 창에서 'exerciseName' 클래스 요소들
-            let foodConsumptionElements = window.opener.document.getElementsByClassName("foodConsumption"); // 부모 창에서 'energyConsumption' 클래스 요소들
+            let foodNameElement = window.opener.document.getElementById(`foodName_${foodId}`)
+            let foodConsumptionElement = window.opener.document.getElementById(`foodConsumption_${foodId}`)
+            let foodHundredGramElement = window.opener.document.getElementById(`foodHundredGram_${foodId}`)
 
-            for (let i = 0; i < foodNameElements.length; i++) {
-                foodNameElements[i].value = selectedText;
+            if (foodNameElement) {
+                foodNameElement.value = selectedText;
             }
 
-            for (let i = 0; i < foodConsumptionElements.length; i++) {
-                foodConsumptionElements[i].value = foodConsumption;
+            if (foodConsumptionElement) {
+                foodConsumptionElement.value = foodConsumption;
             }
 
-            let foodHundredGramElements = window.opener.document.getElementsByClassName("foodHundredGram");
-
-            if (foodHundredGramElements.length > 0) {
-                foodHundredGramElements[0].focus(); // 첫 번째 exerciseTime 요소에 포커스
+            if (foodHundredGramElement) {
+                foodHundredGramElement.focus();
             }
         } else {
-            alert("부모 창이 존재하지 않습니다."); // 부모 창이 존재하지 않으면 경고
+            alert("부모 창이 존재하지 않습니다.");
         }
-
-        window.close(); // 팝업 창 닫기
+        window.close();
     }
 </script>
 
