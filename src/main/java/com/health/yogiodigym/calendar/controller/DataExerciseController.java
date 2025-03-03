@@ -1,31 +1,40 @@
 package com.health.yogiodigym.calendar.controller;
 
-import com.health.yogiodigym.calendar.entity.DataExercise;
+import com.health.yogiodigym.calendar.dto.DataExerciseDto.*;
 import com.health.yogiodigym.calendar.service.DataExerciseService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.health.yogiodigym.common.response.HttpResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.health.yogiodigym.common.message.SuccessMessage.*;
+
 @RestController
 @RequestMapping("/api/exercise")
-@CrossOrigin(origins = "*") // CORS 문제 방지
+@CrossOrigin(origins = "*")
+@RequiredArgsConstructor
 public class DataExerciseController {
 
-    @Autowired
-    private DataExerciseService dataExerciseService;
+    private final DataExerciseService dataExerciseService;
 
     @GetMapping("/all")
-    public List<DataExercise> findAll() {
-        return dataExerciseService.findAll();
+    public ResponseEntity<?> findAll() {
+        List<SelectRequest> dataExercises= dataExerciseService.findAll();
+
+        return ResponseEntity
+                .ok()
+                .body(new HttpResponse(HttpStatus.OK,GET_DATA_EXERCISE_SUCCESS.getMessage(), dataExercises));
     }
 
-    // 음식명 검색 API (Ajax 요청을 처리)
     @GetMapping("/search")
-    public List<DataExercise> findByNameContainingIgnoreCase(String name) {
-        return dataExerciseService.findByNameContainingIgnoreCase(name);
+    public ResponseEntity<?> findByNameContainingIgnoreCase(String name) {
+        List<SelectRequest> dataExercise=  dataExerciseService.findByNameContainingIgnoreCase(name);
+
+        return ResponseEntity
+                .ok()
+                .body(new HttpResponse(HttpStatus.OK,GET_ONE_DATA_EXERCISE_SUCCESS.getMessage(), dataExercise));
     }
 }

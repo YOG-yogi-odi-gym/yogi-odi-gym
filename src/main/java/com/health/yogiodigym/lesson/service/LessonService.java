@@ -21,5 +21,4 @@ public interface LessonService {
     boolean[] daysSelected(int days);
 
     List<CategoryDto> getCategoriesByCode(String code);
-
 }

@@ -24,13 +24,13 @@ public class CalendarViewController {
 
     }
 
-    @PostMapping("/cal")
-    public String memberTestPage() {
+    @PostMapping
+    public String PostCalendarPage() {
         return "calendar/cal";
     }
 
-    @GetMapping("/cal")
-    public String memberTestPageGet() {
+    @GetMapping
+    public String GetCalendar() {
         return "calendar/cal";
     }
 }

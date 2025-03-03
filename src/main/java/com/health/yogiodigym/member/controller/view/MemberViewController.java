@@ -6,7 +6,6 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import static com.health.yogiodigym.member.auth.MemberStatus.INCOMPLETE;
@@ -35,12 +34,4 @@ public class MemberViewController {
 
         return "member/regist";
     }
-
-//        @GetMapping("/detail/{id}")
-//        public String showLessonStatus(Model model, @PathVariable("id") Long lessonId) {
-//
-//            model.addAttribute("id", lessonService.selectLesson(lessonId));
-//            return "lesson";
-//        }
-    
 }

@@ -16,7 +16,7 @@ import java.util.List;
 import static com.health.yogiodigym.common.message.SuccessMessage.*;
 
 @RestController
-@RequestMapping("/exercise")
+@RequestMapping("/api/calendar/exercise")
 @RequiredArgsConstructor
 public class CalendarExerciseController {
 
@@ -33,7 +33,7 @@ public class CalendarExerciseController {
 
     }
 
-    @GetMapping("/date")
+    @GetMapping("/date/get")
     public ResponseEntity<?> findByDateAndMemberId(@RequestParam("date") String selectedDate, @RequestParam("memberId") Long memberId) {
 
         LocalDate requestedDate = LocalDate.parse(selectedDate);

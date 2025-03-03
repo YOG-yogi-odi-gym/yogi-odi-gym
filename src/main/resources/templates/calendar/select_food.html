@@ -43,11 +43,11 @@
             url: "/api/food/all",
             type: "GET",
             dataType: "json",
-            success: function(data) {
+            success: function(response) {
                 select.empty();
                 select.append('<option value="" disabled selected>음식을 선택하세요</option>');
 
-                $.each(data, function(index, food) {
+                $.each(response.data, function(index, food) {
                     select.append(`<option value="${food.id}">${food.name}</option>`);
                 });
 
@@ -68,9 +68,9 @@
                 type: "GET",
                 data: { name: $("#foodSelect2 option:selected").text() },
                 dataType: "json",
-                success: function (data) {
-                    if (data.length > 0) {
-                        $("#selectedFoodEnergy").val(data[0].calories);
+                success: function (response) {
+                    if (response.data.length > 0) {
+                        $("#selectedFoodEnergy").val(response.data[0].calories);
                     } else {
                         $("#selectedFoodEnergy").val('');
                     }

@@ -14,13 +14,13 @@ import java.util.List;
 import static com.health.yogiodigym.common.message.SuccessMessage.*;
 
 @RestController
-@RequestMapping("/calendar")
+@RequestMapping("/api/calendar/lesson")
 @RequiredArgsConstructor
 public class CalendarLessonController {
 
     private final CalendarLessonServiceImpl calendarLessonServiceimpl;
 
-    @GetMapping("/lesson")
+    @GetMapping
     public ResponseEntity<?> getLessonsByMember(@RequestParam("memberId") Long memberId) {
 
         List<CalendarLessonDto> calendarLesson = calendarLessonServiceimpl.getLessonsByMemberId(memberId);
@@ -31,7 +31,7 @@ public class CalendarLessonController {
     }
 
     // 특정 회원이 신청한 강의 중, 특정 날짜에 해당하는 것만 조회
-    @GetMapping("/lesson/date")
+    @GetMapping("/date/get")
     public ResponseEntity<?> getLessonsByMemberAndDate(
             @RequestParam("memberId") Long memberId,
             @RequestParam("date") String selectedDate) {

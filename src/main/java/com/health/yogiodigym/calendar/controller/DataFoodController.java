@@ -1,27 +1,40 @@
 package com.health.yogiodigym.calendar.controller;
 
-import com.health.yogiodigym.calendar.entity.DataFood;
-import com.health.yogiodigym.calendar.service.DataFoodService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.health.yogiodigym.calendar.dto.DataFoodDto.*;
+import com.health.yogiodigym.calendar.service.impl.DataFoodServiceImpl;
+import com.health.yogiodigym.common.response.HttpResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.health.yogiodigym.common.message.SuccessMessage.*;
+
 @RestController
 @RequestMapping("/api/food")
-@CrossOrigin(origins = "*") // CORS 문제 방지
+@CrossOrigin(origins = "*")
+@RequiredArgsConstructor
 public class DataFoodController {
 
-    @Autowired
-    private DataFoodService dataFoodService;
+    private final DataFoodServiceImpl dataFoodServiceImpl;
 
     @GetMapping("/all")
-    public List<DataFood> findAll() {
-        return dataFoodService.findAll();
+    public ResponseEntity<?> findAll() {
+        List<SelectRequest> datafoods= dataFoodServiceImpl.findAll();;
+
+        return ResponseEntity
+                .ok()
+                .body(new HttpResponse(HttpStatus.OK,GET_DATA_EXERCISE_SUCCESS.getMessage(), datafoods));
     }
 
     @GetMapping("/search")
-    public List<DataFood> findByNameContainingIgnoreCase(@RequestParam("name") String name) {
-        return dataFoodService.findByNameContainingIgnoreCase(name);
+    public ResponseEntity<?> findByNameContainingIgnoreCase(String name) {
+        List<SelectRequest> datafood=  dataFoodServiceImpl.findByNameContainingIgnoreCase(name);
+
+        return ResponseEntity
+                .ok()
+                .body(new HttpResponse(HttpStatus.OK,GET_ONE_DATA_FOOD_SUCCESS.getMessage(), datafood));
     }
 }

@@ -1,25 +1,14 @@
 package com.health.yogiodigym.calendar.service;
 
-import com.health.yogiodigym.calendar.entity.DataExercise;
-import com.health.yogiodigym.calendar.repository.DataExerciseRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import com.health.yogiodigym.calendar.dto.DataExerciseDto.*;
+
 
 import java.util.List;
 
-@Service
-public class DataExerciseService {
+public interface DataExerciseService {
 
-    @Autowired
-    private DataExerciseRepository dataExerciseRepository;
+    List<SelectRequest> findByNameContainingIgnoreCase(String name);
 
-    public List<DataExercise> findByNameContainingIgnoreCase(String name) {
-        return dataExerciseRepository.findByNameContainingIgnoreCase(name);
-    }
-
-    public List<DataExercise> findAll() {
-        return dataExerciseRepository.findAll();
-    }
-
+    List<SelectRequest> findAll();
 
 }

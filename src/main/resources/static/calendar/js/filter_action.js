@@ -27,7 +27,7 @@
 
 
         $.ajax({
-            url: "/memo/date/post",
+            url: "/api/calendar/memo/date/post",
             method: "POST",
             contentType: "application/json",
             beforeSend: function (xhr) {
@@ -62,7 +62,7 @@
 
 
         $.ajax({
-            url: "/memo/date/put",
+            url: "/api/calendar/memo/date/put",
             method: "PUT",
             contentType: "application/json",
             beforeSend: function (xhr) {
@@ -84,7 +84,7 @@
     function deleteMemo(memoId) {
 
         $.ajax({
-            url: "/memo/date/delete/" + memoId,
+            url: "/api/calendar/memo/date/delete/" + memoId,
             method: "DELETE",
             beforeSend: function (xhr) {
                 xhr.setRequestHeader(csrfHeader, csrfToken);
@@ -115,7 +115,7 @@
         };
 
         $.ajax({
-            url: "/food/date/post",
+            url: "/api/calendar/food/date/post",
             method: "POST",
             contentType: "application/json",  // content-type을 application/json으로 설정
             data: JSON.stringify(requestData),
@@ -150,7 +150,7 @@
 
 
         $.ajax({
-            url: "/food/date/put",
+            url: "/api/calendar/food/date/put",
             method: "PUT",
             contentType: "application/json",
             data: JSON.stringify(requestData),
@@ -172,7 +172,7 @@
     function deleteFood(foodId) {
 
         $.ajax({
-            url: "/food/date/delete/" + foodId,
+            url: "/api/calendar/food/date/delete/" + foodId,
             method: "DELETE",
             beforeSend: function (xhr) {
                 xhr.setRequestHeader(csrfHeader, csrfToken);
@@ -204,7 +204,7 @@
         };
 
         $.ajax({
-            url: "/exercise/date/post",
+            url: "/api/calendar/exercise/date/post",
             method: "POST",
             contentType: "application/json",  // content-type을 application/json으로 설정
             data: JSON.stringify(requestData),
@@ -238,7 +238,7 @@
         };
 
         $.ajax({
-            url: "/exercise/date/put",
+            url: "/api/calendar/exercise/date/put",
             method: "PUT",
             contentType: "application/json",
             data: JSON.stringify(requestData),
@@ -260,7 +260,7 @@
     function deleteExercise(exerciseId) {
 
         $.ajax({
-            url: "/exercise/date/delete/" + exerciseId,
+            url: "/api/calendar/exercise/date/delete/" + exerciseId,
             method: "DELETE",
             beforeSend: function (xhr) {
                 xhr.setRequestHeader(csrfHeader, csrfToken);
@@ -281,7 +281,7 @@
         let memberId = document.getElementById('memberId').value;
 
         $.ajax({
-            url: '/calendar/lesson',
+            url: '/api/calendar/lesson',
             method: 'GET',
             data: {memberId: memberId},
             success: function (response) {
@@ -310,7 +310,7 @@
         console.log("선택한 날짜:", selectedDate);
 
         $.ajax({
-            url: '/calendar/lesson/date',
+            url: '/api/calendar/lesson/date/get',
             method: 'GET',
             data: {
                 memberId: memberId,
@@ -350,7 +350,7 @@
         console.log(memberId);
 
         $.ajax({
-            url: '/memo',
+            url: '/api/calendar/memo',
             method: 'GET',
             data: {memberId: memberId},
             success: function (response) {
@@ -375,7 +375,7 @@
         let memberId = document.getElementById('memberId').value;
 
         $.ajax({
-            url: '/memo/date',
+            url: '/api/calendar/memo/date/get',
             method: 'GET',
             data: {
                 date: selectedDate,
@@ -452,7 +452,7 @@
         let memberId = document.getElementById('memberId').value;
 
         $.ajax({
-            url: '/exercise',  // 실제 API URL로 변경
+            url: '/api/calendar/exercise',  // 실제 API URL로 변경
             method: 'GET',
             data: {memberId: memberId},
             success: function (response) {
@@ -477,7 +477,7 @@
         let memberId = document.getElementById('memberId').value;
 
         $.ajax({
-            url: '/exercise/date',
+            url: '/api/calendar/exercise/date/get',
             method: 'GET',
             data: {
                 date: selectedDate,
@@ -571,7 +571,7 @@
         let memberId = document.getElementById('memberId').value;
 
         $.ajax({
-            url: '/food',  // 실제 API URL로 변경
+            url: '/api/calendar/food',  // 실제 API URL로 변경
             method: 'GET',
             data: {memberId: memberId},
             success: function (response) {
@@ -596,7 +596,7 @@
         let memberId = document.getElementById('memberId').value;
 
         $.ajax({
-            url: '/food/date',
+            url: '/api/calendar/food/date/get',
             method: 'GET',
             data: {
                 date: selectedDate,

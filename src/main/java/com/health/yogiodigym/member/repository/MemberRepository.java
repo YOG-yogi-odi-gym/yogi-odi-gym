@@ -9,9 +9,10 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Optional;
+
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByEmail(String email);
@@ -45,5 +46,4 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     int setInactiveStatus(@Param("memberIds") List<Long> memberIds,
                           @Param("status") MemberStatus memberStatus,
                           @Param("dropDate") LocalDate dropDate);
-
 }

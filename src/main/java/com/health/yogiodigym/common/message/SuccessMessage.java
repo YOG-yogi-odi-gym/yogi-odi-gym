@@ -24,6 +24,10 @@ public enum SuccessMessage {
     POST_CALENDAR_MEMO_SUCCESS("유저의 메모를 삽입하는데 성공하였습니다."),
     PUT_CALENDAR_MEMO_SUCCESS("유저의 메모를 수정하는데 성공하였습니다."),
     DELETE_CALENDAR_MEMO_SUCCESS("유저의 메모를 삭제하는데 성공하였습니다."),
+    GET_DATA_EXERCISE_SUCCESS("운동 데이터를 불러오는데 성공했습니다."),
+    GET_ONE_DATA_EXERCISE_SUCCESS("해당 운동 정보를 불러오는데 성공했습니다."),
+    GET_DATA_FOOD_SUCCESS("운동 데이터를 불러오는데 성공했습니다."),
+    GET_ONE_DATA_FOOD_SUCCESS("해당 운동 정보를 불러오는데 성공했습니다."),
 
     REGIST_SUCCESS("회원가입에 성공하였습니다."),
     SEARCH_GYMS_SUCCESS("헬스장 조회에 성공하였습니다."),
