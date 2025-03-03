@@ -16,33 +16,9 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: white;
+            background-color: black;
         }
-        .contain {
-            width: 1200px;
-            height: 900px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            background-color: #E5E5E5;
-        }
-        .header {
-            width: 1200px;
-            height: 50px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 40px;
-            border-radius: 10px;
-        }
-        .main {
-            width: 100%;
-            height: 850px;
-            display: flex;
-            flex-direction: flex-start;
-            border-radius: 10px;
-        }
+
         .side {
             width: 220px;
             height: 800px;
@@ -55,7 +31,7 @@
         }
 
         .side-up {
-            width: 220px;
+            width: 100%;
             height: 320px;
             display: flex;
             flex-direction: column;
@@ -64,7 +40,7 @@
             border-radius: 10px;
         }
         .side-down {
-            width: 220px;
+            width: 100%;
             height: 80px;
             display: flex;
             flex-direction: column;
@@ -72,11 +48,6 @@
             align-items: center;
             border-radius: 10px;
             background-color: white;
-        }
-        .content {
-            width: 920px;
-            height: 800px;
-            
         }
 
         .nav-item {
@@ -105,37 +76,36 @@
     </style>
 </head>
 <body>
+<div class="side">
+    <div class="side-up" style="background-color: white;">
+        <a th:href="@{/dashboard}" id="side_dashboard" class="nav-item nav-dashboard">
+            <i class="bi bi-border-all"></i>
+            <span>대시보드</span>
+        </a>
+        <a th:href="@{/community}" class="nav-item nav-community">
+            <i class="bi bi-people-fill"></i>
+            <span>커뮤니티</span>
+        </a>
+        <a th:href="@{/lesson}" id="side_lesson" class="nav-item nav-courses">
+            <i class="bi bi-search"></i>
+            <span>강의 찾기</span>
+        </a>
+        <a th:href="@{/my-courses}" class="nav-item nav-my-courses">
+            <i class="bi bi-card-checklist"></i>
+            <span>내 강의</span>
+        </a>
+        <a th:href="@{/calendar/cal}" id="side_calendar" class="nav-item nav-calendar">
+            <i class="bi bi-calendar-event"></i>
+            <span>캘린더</span>
+        </a>
+        <a th:href="@{/gyms}" id="side_gym" class="nav-item nav-gym">
+            <i class="bi bi-house-door"></i>
+            <span>헬스장 찾기</span>
+        </a>
+    </div>
 
-<div class="side-up" style="background-color: white;">
-    <a th:href="@{/dashboard}" id="side_dashboard" class="nav-item nav-dashboard">
-        <i class="bi bi-border-all"></i>
-        <span>대시보드</span>
-    </a>
-    <a th:href="@{/community}" class="nav-item nav-community">
-        <i class="bi bi-people-fill"></i>
-        <span>커뮤니티</span>
-    </a>
-    <a th:href="@{/lesson}" id="side_lesson" class="nav-item nav-courses">
-        <i class="bi bi-search"></i>
-        <span>강의 찾기</span>
-    </a>
-    <a th:href="@{/my-courses}" class="nav-item nav-my-courses">
-        <i class="bi bi-card-checklist"></i>
-        <span>내 강의</span>
-    </a>
-    <a th:href="@{/calendar/cal}" id="side_calendar" class="nav-item nav-calendar">
-        <i class="bi bi-calendar-event"></i>
-        <span>캘린더</span>
-    </a>
-    <a th:href="@{/gyms}" id="side_gym" class="nav-item nav-gym">
-        <i class="bi bi-house-door"></i>
-        <span>헬스장 찾기</span>
-    </a>
+    <div class="side-down">
+    </div>
 </div>
-
-<div class="side-down">
-
-</div>
-
 </body>
 </html>
