@@ -15,7 +15,6 @@ import static com.health.yogiodigym.common.message.SuccessMessage.*;
 @RestController
 @RequestMapping("/api/exercise")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 public class DataExerciseController {
 
     private final DataExerciseService dataExerciseService;
