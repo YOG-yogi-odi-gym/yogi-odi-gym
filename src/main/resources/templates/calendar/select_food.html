@@ -91,9 +91,9 @@
 <script>
     function selectFood() {
         let id = $("#selectedFoodId").val();
-        let selectedOption = document.getElementById("foodSelect2").value; // 선택된 옵션 값 가져오기
-        let selectedText = $("#foodSelect2 option:selected").text(); // 선택된 옵션의 텍스트 가져오기
-        let foodConsumption = $("#selectedFoodEnergy").val(); // 칼로리 값 가져오기
+        let selectedOption = document.getElementById("foodSelect2").value;
+        let selectedText = $("#foodSelect2 option:selected").text();
+        let foodConsumption = $("#selectedFoodEnergy").val();
 
         if (!selectedOption) {
             alert("음식을 선택하세요!");

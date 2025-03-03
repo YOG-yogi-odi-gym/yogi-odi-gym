@@ -47,7 +47,7 @@
     }
 
     function updateMemo(memoId, selectedDate, memberId) {
-        let title = $(`#memoTitle_${memoId}`).val(); // 각 메모의 ID를 가져오기
+        let title = $(`#memoTitle_${memoId}`).val();
         let context = $(`#memoContent_${memoId}`).val();
 
         let requestData = {
@@ -138,7 +138,7 @@
 
     function updateFood(foodId, selectedDate, memberId) {
         let id = $(`#foodId_${foodId}`).val();
-        let name = $(`#foodName_${foodId}`).val(); // 각 메모의 ID를 가져오기
+        let name = $(`#foodName_${foodId}`).val();
         let hundredGram = $(`#foodHundredGram_${foodId}`).val();
         let calories = $(`#foodCalories_${foodId}`).val();
 
@@ -313,7 +313,7 @@
     }
 
     function getLessonByDate(date) {
-        let selectedDate = date.toISOString().split('T')[0]; // 'YYYY-MM-DD' 형식으로 변환
+        let selectedDate = date.toISOString().split('T')[0];
         let memberId = document.getElementById('memberId').value;
         console.log("선택한 날짜:", selectedDate);
 
@@ -337,16 +337,16 @@
                 }
 
                 $("#modalContent").html(content);
-                $("#openModalBtn").click(); // 모달 버튼 클릭 이벤트 트리거
+                $("#openModalBtn").click();
 
                 $(".lessonDetailBtn").on("click", function () {
                     let id = $(this).data("id");
-                    window.location.href = `/lesson/${id}`; // 강의 상세 페이지 이동
+                    window.location.href = `/lesson/${id}`;
                 });
             },
             error: function () {
                 $("#modalContent").html("일정을 불러오는 데 실패했습니다.");
-                $("#openModalBtn").click(); // 모달 버튼 클릭 이벤트 트리거
+                $("#openModalBtn").click();
             }
         });
     }
@@ -497,7 +497,7 @@
             success: function (response) {
 
                 let content = `<strong>${selectedDate}의 운동</strong><br>`;
-                let energyConsumptionValue = $("#selectedExerciseEnergy").val(); // 기본값 설정
+                let energyConsumptionValue = $("#selectedExerciseEnergy").val();
 
                 content += `<div class="add-btn-container">`;
                 content += `<div class="add-box">`;
@@ -544,17 +544,17 @@
                 }
 
                 $("#modalContent").html(content);
-                $("#openModalBtn").click(); // 모달 버튼 클릭 이벤트 트리거
+                $("#openModalBtn").click();
             },
             error: function () {
                 $("#modalContent").html("일정을 불러오는 데 실패했습니다.");
-                $("#openModalBtn").click(); // 모달 버튼 클릭 이벤트 트리거
+                $("#openModalBtn").click();
             }
         });
     }
 
     function createExerciseRow(selectedDate, memberId) {
-        let exerciseId = new Date().getTime(); // 새 음식 ID 생성
+        let exerciseId = new Date().getTime();
         return `<div id="exercise_${exerciseId}"><div class="modal-container">
             운동명 : <input type="text" id="exerciseName_${exerciseId}" onkeyup="updateEnergyConsumption(${exerciseId})" disabled/>
             운동시간 : <input type="text" id="exerciseTime_${exerciseId}" onkeyup="calculateCalories(${exerciseId})" onfocus="calculateCalories(${exerciseId})"/>
@@ -581,7 +581,7 @@
         let memberId = document.getElementById('memberId').value;
 
         $.ajax({
-            url: '/api/calendar/food',  // 실제 API URL로 변경
+            url: '/api/calendar/food',
             method: 'GET',
             data: {memberId: memberId},
             success: function (response) {
@@ -615,7 +615,7 @@
             success: function (response) {
 
                 let content = `<strong>${selectedDate}의 식단</strong><br>`;
-                let foodConsumptionValue = $("#selectedFoodEnergy").val(); // 기본값 설정
+                let foodConsumptionValue = $("#selectedFoodEnergy").val();
 
                 content += `<div class="add-btn-container">`;
                 content += `<div class="add-box">`;
@@ -662,20 +662,19 @@
                 }
 
 
-                // 모달에 기본 데이터 추가
                 $("#modalContent").html(content);
-                $("#openModalBtn").click(); // 모달 열기
+                $("#openModalBtn").click();
             },
             error: function () {
                 $("#modalContent").html("일정을 불러오는 데 실패했습니다.");
-                $("#openModalBtn").click(); // 모달 버튼 클릭 이벤트 트리거
+                $("#openModalBtn").click();
             }
         });
     }
 
 
     function createFoodRow(selectedDate, memberId) {
-        let foodId = new Date().getTime(); // 새 음식 ID 생성
+        let foodId = new Date().getTime();
         return `<div id="food_${foodId}"><div class="modal-container">
             음식명: <input type="text" id="foodName_${foodId}" onkeyup="updateFoodConsumption(${foodId})" disabled />
             섭취량: <input type="text" id="foodHundredGram_${foodId}" onkeyup="calculateFoodCalories(${foodId})" onfocus="calculateFoodCalories(${foodId})"/>

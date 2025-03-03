@@ -33,7 +33,6 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            /*font-size: 40px;*/
             border-radius: 10px;
         }
         .main {
@@ -75,37 +74,6 @@
             border: 1px solid #ced4da;
             border-radius: 5px;
         }
-
-        /*.modal-container {*/
-        /*    margin-bottom: 15px;*/
-        /*    padding: 10px;*/
-        /*    border-radius: 8px;*/
-        /*    background: #f8f9fa;*/
-        /*    display: block; !* flex 대신 block 사용 *!*/
-        /*}*/
-
-        /*.modal-container div {*/
-        /*    display: flex;*/
-        /*    align-items: center;*/
-        /*    gap: 10px;*/
-        /*    flex-wrap: wrap;*/
-        /*    margin-bottom: 5px; !* 각 입력 필드 간 간격 *!*/
-        /*}*/
-
-        /*.modal-container input {*/
-        /*    flex: 1;*/
-        /*    padding: 5px;*/
-        /*    border: 1px solid #ced4da;*/
-        /*    border-radius: 5px;*/
-        /*}*/
-
-        /*.modal-container button {*/
-        /*    display: flex;*/
-        /*    width: 100px; !* 버튼 크기 통일 *!*/
-        /*    margin-top: 5px;*/
-        /*}*/
-
-
         .btn-group {
             margin-top: 10px;
         }
@@ -203,7 +171,7 @@
 
                 document.addEventListener('DOMContentLoaded', () => {
                     const calendarEl = document.getElementById('calendar');
-                    setupCalendar(calendarEl); // 캘린더 설정 및 렌더링
+                    setupCalendar(calendarEl);
                 });
 
                 let selectedStatus = 0;
@@ -263,10 +231,10 @@
                                 }
                             }
                         },
-                        dayMaxEventRows: true, // for all non-TimeGrid views
+                        dayMaxEventRows: true,
                         views: {
                             dayGrid: {
-                                dayMaxEventRows: 4 // adjust to 6 only for timeGridWeek/timeGridDay
+                                dayMaxEventRows: 4
                             }
                         }
                     });
@@ -283,9 +251,6 @@
                 function handleNavLinkDayClick(date, jsEvent) {
                     let timezoneOffset = date.getTimezoneOffset() * 60000;
                     let adjustedDate = new Date(date.getTime() - timezoneOffset);
-
-                    console.log("Current view:", this.view.type); // 디버깅용 로그
-                    console.log(this);
 
                     if (this.view.type === "multiMonthYear") {
                         this.changeView("dayGridMonth");
