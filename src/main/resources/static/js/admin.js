@@ -150,11 +150,13 @@ $(document).ready(function () {
 
     $("#applyTableBody").on("click","tr", function () {
         let applyId = $(this).find(".applyCheckbox").val();
+        let applyMemberId = $(this).find(".applyMemberId").val();
         let applyName = $(this).find(".applyName").text();
         let applyEmail = $(this).find(".applyEmail").text();
         let applyFile = $(this).data("apply_file");
 
         $("#applyId").val(applyId)
+        $("#applyMemberId").val(applyMemberId)
         $("#applyName").text(applyName)
         $("#applyEmail").text(applyEmail)
 
@@ -171,6 +173,39 @@ $(document).ready(function () {
         }
 
         $("#applyDetailModal").modal("show");
+    })
+
+    $("#agreeApplyButton").click(function () {
+        let applyId = $("#applyId").val();
+        let applyMemberId = $("#applyMemberId").val();
+
+        console.log(applyMemberId, applyId);
+
+        $.ajax({
+            url: "/api/admin/member/master",
+            type: "POST",
+            data: JSON.stringify({memberId: Number(applyMemberId)}),
+            contentType: 'application/json; charset=utf-8',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader(csrfHeader, csrfToken);
+            },
+            success: function (response) {
+                if (response.status === 200) {
+                    $("#applyDetailModal").modal("hide");
+                    alert("강사 신청이 승인되었습니다.");
+                    location.reload();
+                } else {
+                    alert("승인에 실패하였습니다.");
+                    console.log(response.status);
+                    console.log(response.data);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("AJAX Error : ", status, error);
+                console.error("Response : ", xhr.responseText);
+                alert("추가 중 오류가 발생하였습니다.")
+            }
+        })
     })
 
     $("#insertSaveCategoryButton").click(function () {
@@ -282,8 +317,6 @@ $(document).ready(function () {
         $(".memberCheckbox:checked").each(function () {
             selectMembers.push(Number($(this).val()));
         });
-
-        console.log(selectMembers);
 
         if (selectMembers.length === 0) {
             alert("삭제할 회원을 선택해 주세요!")

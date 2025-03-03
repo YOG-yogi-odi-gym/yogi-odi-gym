@@ -3,9 +3,6 @@ package com.health.yogiodigym.admin.dto;
 import com.health.yogiodigym.member.entity.MemberToMaster;
 import lombok.*;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class MemberToMasterDto {
 
@@ -26,7 +23,7 @@ public class MemberToMasterDto {
 
             return MemberToMasterResponseDto.builder()
                     .id(memberToMaster.getId())
-                    .memberId(memberToMaster.getId())
+                    .memberId(memberToMaster.getMember().getId())
                     .memberName(memberToMaster.getMember().getName())
                     .memberEmail(memberToMaster.getMember().getEmail())
                     .file(memberToMaster.getFile())

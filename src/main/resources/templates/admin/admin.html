@@ -108,16 +108,19 @@
                 <table id="applyTable" class="table table-bordered table-hover">
                     <thead class="thead-dark">
                     <tr>
-                        <th></th>
                         <th>이름</th>
                         <th>이메일</th>
+                        <th>신청 시간</th>
                     </tr>
                     </thead>
                     <tbody id="applyTableBody">
                     <tr th:each="memberToMaster : ${memberToMasters}" style="cursor: default;" th:data-apply_file="${memberToMaster.file}">
-                        <td><input type="checkbox" class="applyCheckbox" th:value="${memberToMaster.id}"></td>
                         <td class="applyName" th:text="${memberToMaster.memberName}"></td>
                         <td class="applyEmail" th:text="${memberToMaster.memberEmail}"></td>
+                        <td>
+                            <input type="hidden" class="applyId" th:value="${memberToMaster.id}">
+                            <input type="hidden" class="applyMemberId" th:value="${memberToMaster.memberId}">
+                        </td>
                     </tr>
                     </tbody>
                 </table>
@@ -179,6 +182,7 @@
                     <div class="modal-body">
                         <form id="applyDetailForm">
                             <input type="hidden" id="applyId">
+                            <input type="hidden" id="applyMemberId">
                             <div class="form-group">
                                 <label for="applyName">이름</label>
                                 <p><span id="applyName"></span></p>

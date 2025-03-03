@@ -7,4 +7,6 @@ import java.util.List;
 public interface AdminMemberToMasterService {
 
     List<MemberToMasterResponseDto> findAllMemberToMasters();
+
+    void setMasterStatus(Long applyMemberId);
 }
