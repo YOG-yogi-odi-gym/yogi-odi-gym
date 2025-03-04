@@ -2,10 +2,11 @@ package com.health.yogiodigym.member.controller.rest;
 
 import com.health.yogiodigym.common.response.HttpResponse;
 import com.health.yogiodigym.member.dto.RegistMemberDto;
-import com.health.yogiodigym.member.entity.MemberOAuth2User;
-import com.health.yogiodigym.member.service.MemberServiceImpl;
+import com.health.yogiodigym.member.dto.RegistOAuthMemberDto;
+import com.health.yogiodigym.member.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -22,22 +23,31 @@ import static com.health.yogiodigym.common.message.SuccessMessage.REGIST_SUCCESS
 @RequiredArgsConstructor
 public class MemberController {
 
-    private final MemberServiceImpl memberServiceImpl;
+    private final MemberService memberService;
 
     @PostMapping("/regist")
-    public ResponseEntity<HttpResponse> regist(Authentication authentication,
-                                               @ModelAttribute RegistMemberDto registMemberDto,
-                                               @RequestParam(value = "profile", required = false) MultipartFile profile,
-                                               HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<?> regist(@Valid @ModelAttribute RegistMemberDto registMemberDto,
+                                    @RequestParam(value = "profile", required = false) MultipartFile profile,
+                                    HttpServletRequest request, HttpServletResponse response) {
 
-        if (authentication != null && (authentication.getPrincipal() instanceof MemberOAuth2User principal)) {
-            memberServiceImpl.registWithOAuth2(registMemberDto, principal);
-        } else {
-            memberServiceImpl.registWithEmail(registMemberDto, profile);
-        }
+        log.info("일반회원가입DTO : " + registMemberDto.toString());
 
-        memberServiceImpl.updateAuthentication(registMemberDto.getEmail(), request, response);
+        memberService.registWithEmail(registMemberDto, profile);
+        memberService.updateAuthentication(registMemberDto.getEmail(), request, response);
 
+        return ResponseEntity.ok().body(new HttpResponse(HttpStatus.OK, REGIST_SUCCESS.getMessage(), null));
+    }
+
+    @PostMapping("/oAuthRegist")
+    public ResponseEntity<?> oAuthRegist(Authentication authentication,
+                                         @Valid @ModelAttribute RegistOAuthMemberDto registOAuthMemberDto,
+                                         @RequestParam(value = "profile", required = false) MultipartFile profile,
+                                         HttpServletRequest request, HttpServletResponse response) {
+
+        log.info("소셜회원가입DTO : " + registOAuthMemberDto.toString());
+
+        memberService.registWithOAuth2(registOAuthMemberDto, profile);
+        memberService.updateAuthentication(registOAuthMemberDto.getEmail(), request, response);
         return ResponseEntity.ok().body(new HttpResponse(HttpStatus.OK, REGIST_SUCCESS.getMessage(), null));
     }
 }
