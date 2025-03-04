@@ -1,5 +1,7 @@
 package com.health.yogiodigym.chat.service.impl;
 
+import static com.health.yogiodigym.chat.config.ChatConstants.PAGE_SIZE;
+
 import com.health.yogiodigym.chat.dto.MessageDto.MessageRequestDto;
 import com.health.yogiodigym.chat.dto.MessageDto.MessageResponseDto;
 import com.health.yogiodigym.chat.entity.ChatMessage;
@@ -15,6 +17,7 @@ import com.health.yogiodigym.common.exception.MemberNotInChatRoomException;
 import com.health.yogiodigym.member.entity.Member;
 import com.health.yogiodigym.member.repository.MemberRepository;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -26,8 +29,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @RequiredArgsConstructor
 public class ChatMessageServiceImpl implements ChatMessageService {
-
-    private static final int PAGE_SIZE = 30;
 
     private final ChatMessageRepository chatMessageRepository;
     private final ChatRoomRepository chatRoomRepository;
@@ -60,13 +61,13 @@ public class ChatMessageServiceImpl implements ChatMessageService {
         ChatParticipant chatParticipant = chatParticipantRepository.findByMemberAndChatRoom(member, chatRoom)
                 .orElseThrow(() -> new MemberNotInChatRoomException(member.getId()));
 
-        Long lastReadMessageId = chatParticipant.getLast_read_message_id();
-        List<ChatMessage> unreadMessages = chatMessageRepository.findByMemberAndChatRoomAndIdGreaterThan(member, chatRoom, lastReadMessageId);
+        List<ChatMessage> unreadMessages =
+                chatMessageRepository.findByChatRoomAndIdGreaterThan(chatRoom, chatParticipant.getLast_read_message_id());
 
         if (!unreadMessages.isEmpty()) {
             chatParticipant.updateLastReadMessageId(unreadMessages.get(unreadMessages.size() - 1).getId());
         } else {
-            return null;
+            return new ArrayList<>();
         }
 
         return unreadMessages.stream()
@@ -87,29 +88,35 @@ public class ChatMessageServiceImpl implements ChatMessageService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<MessageResponseDto> getReadMessages(Member member, String roomId, Pageable pageable) {
+    public List<MessageResponseDto> getReadMessages(Member member, String roomId, Long lastReadMessageId, Pageable pageable) {
+        ChatRoom chatRoom = chatRoomRepository.findByRoomId(roomId)
+                .orElseThrow(() -> new ChatRoomNotFoundException(roomId));
+
+        Page<ChatMessage> chatMessages = chatMessageRepository
+                .findByChatRoomAndIdLessThanEqualOrderByIdDesc(chatRoom, lastReadMessageId, pageable);
+
+        List<ChatMessage> messages = new ArrayList<>(chatMessages.getContent());
+        messages.sort(Comparator.comparing(ChatMessage::getId));
+
+        return messages.stream()
+                .map(MessageResponseDto::new)
+                .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Long getLastMessageId(Member member, String roomId) {
         ChatRoom chatRoom = chatRoomRepository.findByRoomId(roomId)
                 .orElseThrow(() -> new ChatRoomNotFoundException(roomId));
 
         ChatParticipant chatParticipant = chatParticipantRepository.findByMemberAndChatRoom(member, chatRoom)
                 .orElseThrow(() -> new MemberNotInChatRoomException(member.getId()));
 
-        Long lastReadMessageId = chatParticipant.getLast_read_message_id();
-        Page<ChatMessage> chatMessages =
-                chatMessageRepository.findByMemberAndChatRoomAndIdLessThanEqualOrderByIdDesc(member, chatRoom, lastReadMessageId, pageable);
-
-        return reverseReadMessages(chatMessages.getContent());
-    }
-
-    private List<MessageResponseDto> reverseReadMessages(List<ChatMessage> chatMessages) {
-        List<MessageResponseDto> result = new ArrayList<>();
-        for (int i = chatMessages.size() - 1;i >= 0;i--) {
-            result.add(new MessageResponseDto(chatMessages.get(i)));
-        }
-        return result;
+        return chatParticipant.getLast_read_message_id();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public int getTotalPage(Member member, String roomId) {
         ChatRoom chatRoom = chatRoomRepository.findByRoomId(roomId)
                 .orElseThrow(() -> new ChatRoomNotFoundException(roomId));

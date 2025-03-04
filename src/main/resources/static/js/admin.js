@@ -21,7 +21,7 @@ $(document).ready(function () {
                 tableBody.empty();
 
                 if (members.length === 0) {
-                    tableBody.append("<tr><td colspan='4' class='text-center'>검색 결과가 없습니다.</td></tr>");
+                    tableBody.append("<tr><td colspan='5' class='text-center'>검색 결과가 없습니다.</td></tr>");
                     return;
                 }
 
@@ -31,6 +31,7 @@ $(document).ready(function () {
                                 <td><input type="checkbox" class="memberCheckbox" value="${member.id}"></td>
                                 <td>${member.name}</td>
                                 <td>${member.email}</td>
+                                <td></td>
                                 <td>${member.status}</td>
                             </tr>`;
                     tableBody.append(row);
@@ -143,6 +144,171 @@ $(document).ready(function () {
         }
     })
 
+    $("#insertCategoryButton").click(function () {
+        $('#insertCategoryModal').modal('show');
+    })
+
+    $("#applyTableBody").on("click","tr", function () {
+        let applyId = $(this).find(".applyId").val();
+        let applyMemberId = $(this).find(".applyMemberId").val();
+        let applyName = $(this).find(".applyName").text();
+        let applyEmail = $(this).find(".applyEmail").text();
+        let applyFile = $(this).data("apply_file");
+
+        $("#applyId").val(applyId)
+        $("#applyMemberId").val(applyMemberId)
+        $("#applyName").text(applyName)
+        $("#applyEmail").text(applyEmail)
+
+        $("#applyImgContainer").empty();
+
+        if (applyFile) {
+            let imageUrl = `/license/${applyFile}`;
+            let img = $("<img>").attr("src", imageUrl).attr("alt", "자격증 이미지").css({
+                "max-width": "100%",
+                "max-height": "300px",
+                "margin-bottom": "10px"
+            });
+            $("#applyImgContainer").append(img);
+        }
+
+        $("#applyDetailModal").modal("show");
+    })
+
+    $("#agreeApplyButton").click(function () {
+        let applyMemberId = $("#applyMemberId").val();
+
+        console.log(applyMemberId);
+
+        $.ajax({
+            url: "/api/admin/member/master",
+            type: "POST",
+            data: JSON.stringify({memberId: Number(applyMemberId)}),
+            contentType: 'application/json; charset=utf-8',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader(csrfHeader, csrfToken);
+            },
+            success: function (response) {
+                if (response.status === 200) {
+                    $("#applyDetailModal").modal("hide");
+                    alert("강사 신청이 승인되었습니다.");
+                    location.reload();
+                } else {
+                    alert("승인에 실패하였습니다.");
+                    console.log(response.status);
+                    console.log(response.data);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("AJAX Error : ", status, error);
+                console.error("Response : ", xhr.responseText);
+                alert("추가 중 오류가 발생하였습니다.")
+            }
+        })
+    })
+
+    $("#insertSaveCategoryButton").click(function () {
+        const categoryData = {
+            name: $("#categoryName").val(),
+            code: $("#categoryCode").val(),
+        }
+
+        if (categoryName.length === 0) {
+            alert("카테고리명을 입력해주세요!");
+            return
+        }
+
+        $.ajax({
+            url: "/api/admin/category/insert",
+            type: "POST",
+            data: JSON.stringify(categoryData),
+            contentType: 'application/json; charset=utf-8',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader(csrfHeader, csrfToken);
+            },
+            success: function (response) {
+                if (response.status === 200) {
+                    $("#categoryModal").modal("hide");
+                    alert("카테고리가 추가되었습니다!");
+                    location.reload();
+                } else {
+                    alert("카테고리 추가에 실패했습니다.");
+                    console.log(response.status);
+                    console.log(response.data);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("AJAX Error : ", status, error);
+                console.error("Response : ", xhr.responseText);
+                alert("추가중 오류가 발생하엿습니다.")
+            }
+        });
+    });
+
+    $("#updateCategoryButton").click(function () {
+        let selectCategories = [];
+        let selectCategoriesName = "";
+
+        $(".categoryCheckbox:checked").each(function () {
+            selectCategories.push(Number($(this).val()));
+            selectCategoriesName = $(this).closest('tr').find('td:eq(1)').text();
+        });
+
+        if (selectCategories.length !== 1) {
+            alert("한개의 카테고리만 골라주세요!");
+            return;
+        }
+        $("#originalCategoryName").val(selectCategoriesName);
+        $("#updateCategoryId").val(selectCategories[0]);
+
+        $("#updateCategoryModal").modal('show');
+    })
+
+    $("#updateSaveCategoryButton").click(function () {
+        const categoryId = $("#updateCategoryId").val();
+        const categoryName = $("#updateCategoryName").val();
+        const categoryCode = $("#updateCategoryCode").val();
+
+        if (!categoryName || categoryName.trim() === "") {
+            alert("카테고리명을 입력해주세요!");
+            return;
+        }
+
+        console.log(categoryId, categoryName, categoryCode);
+
+        const updateData = {
+            id: Number(categoryId),
+            name: categoryName,
+            code: categoryCode
+        };
+
+        $.ajax({
+            url: "/api/admin/category/update",
+            type: "PUT",
+            data: JSON.stringify(updateData),
+            contentType: 'application/json; charset=utf-8',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader(csrfHeader, csrfToken);
+            },
+            success: function (response) {
+                if (response.status === 200) {
+                    alert("카테고리가 수정되었습니다.");
+                    $("#updateCategoryModal").modal("hide");
+                    location.reload();
+                } else {
+                    alert("카테고리 수정에 실패했습니다.");
+                    console.log(response.status);
+                    console.log(response.data);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("AJAX Error : ", status, error);
+                console.error("Response : ", xhr.responseText);
+                alert("수정 중 오류가 발생했습니다.");
+            }
+        });
+    });
+
     $("#deleteMemberButton").click(function () {
 
         let selectMembers = [];
@@ -150,8 +316,6 @@ $(document).ready(function () {
         $(".memberCheckbox:checked").each(function () {
             selectMembers.push(Number($(this).val()));
         });
-
-        console.log(selectMembers);
 
         if (selectMembers.length === 0) {
             alert("삭제할 회원을 선택해 주세요!")
@@ -260,36 +424,25 @@ $(document).ready(function () {
         });
     });
 
-    $("#insertCategoryButton").click(function () {
-        $('#insertCategoryModal').modal('show');
-    })
+    $("#deleteApplyButton").click(function () {
+        let applyId = $("#applyId").val();
 
-    $("#insertSaveCategoryButton").click(function () {
-        const categoryData = {
-            name: $("#categoryName").val(),
-            code: $("#categoryCode").val(),
-        }
-
-        if (categoryName.length === 0) {
-            alert("카테고리명을 입력해주세요!");
-            return
-        }
+        console.log(applyId);
 
         $.ajax({
-            url: "/api/admin/category/insert",
+            url: "/api/admin/member/reject",
             type: "POST",
-            data: JSON.stringify(categoryData),
+            data: JSON.stringify(applyId),
             contentType: 'application/json; charset=utf-8',
             beforeSend: function (xhr) {
                 xhr.setRequestHeader(csrfHeader, csrfToken);
             },
             success: function (response) {
                 if (response.status === 200) {
-                    $("#categoryModal").modal("hide");
-                    alert("카테고리가 추가되었습니다!");
+                    alert("신청이 거절되었습니다.");
                     location.reload();
                 } else {
-                    alert("카테고리 추가에 실패했습니다.");
+                    alert("신청 거절에 실패했습니다.");
                     console.log(response.status);
                     console.log(response.data);
                 }
@@ -297,74 +450,10 @@ $(document).ready(function () {
             error: function (xhr, status, error) {
                 console.error("AJAX Error : ", status, error);
                 console.error("Response : ", xhr.responseText);
-                alert("추가중 오류가 발생하엿습니다.")
+                alert("거절 중 오류가 발생했습니다.");
             }
-        });
-    });
-
-    $("#updateCategoryButton").click(function () {
-        let selectCategories = [];
-        let selectCategoriesName = "";
-
-        $(".categoryCheckbox:checked").each(function () {
-            selectCategories.push(Number($(this).val()));
-            selectedCategoryName = $(this).closest('tr').find('td:eq(1)').text();
-        });
-
-        if (selectCategories.length !== 1) {
-            alert("한개의 카테고리만 골라주세요!");
-            return;
-        }
-        $("#originalCategoryName").val(selectedCategoryName);
-        $("#updateCategoryId").val(selectCategories[0]);
-
-        $("#updateCategoryModal").modal('show');
+        })
     })
-
-    $("#updateSaveCategoryButton").click(function () {
-        const categoryId = $("#updateCategoryId").val();
-        const categoryName = $("#updateCategoryName").val();
-        const categoryCode = $("#updateCategoryCode").val();
-
-        if (!categoryName || categoryName.trim() === "") {
-            alert("카테고리명을 입력해주세요!");
-            return;
-        }
-
-        console.log(categoryId, categoryName, categoryCode);
-
-        const updateData = {
-            id: Number(categoryId),
-            name: categoryName,
-            code: categoryCode
-        };
-
-        $.ajax({
-            url: "/api/admin/category/update",
-            type: "PUT",
-            data: JSON.stringify(updateData),
-            contentType: 'application/json; charset=utf-8',
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader(csrfHeader, csrfToken);
-            },
-            success: function (response) {
-                if (response.status === 200) {
-                    alert("카테고리가 수정되었습니다.");
-                    $("#updateCategoryModal").modal("hide");
-                    location.reload();
-                } else {
-                    alert("카테고리 수정에 실패했습니다.");
-                    console.log(response.status);
-                    console.log(response.data);
-                }
-            },
-            error: function (xhr, status, error) {
-                console.error("AJAX Error : ", status, error);
-                console.error("Response : ", xhr.responseText);
-                alert("수정 중 오류가 발생했습니다.");
-            }
-        });
-    });
 
     $("#deleteCategoryButton").click(function () {
         let selectCategories = [];

@@ -1,76 +1,79 @@
 .chat-container {
     width: 920px;
     height: 800px;
-    margin: 50px auto auto;
-    border-radius: 14px;
-    border: 1px solid black;
-
-    padding: 10px;
-    display: flex;
-    flex-direction: row;
 }
-.left {
-    width: 350px;
-    height: 850px;
+.row {
+    height: 100%;
+}
+.chat-room-info {
     display: flex;
     flex-direction: column;
+    height: 100%;
+}
 
-    padding: 5px;
+.chat-participant, .chat-room {
+    flex: 1;
 }
-#chat_room {
-    width: 300px;
-    height: 380px;
-    border-radius: 14px;
-    border: 1px solid black;
-    padding: 5px;
 
-    display: flex;
-    flex-direction: column;
-    align-content: center;
+.chat-message-info {
+    height: 100%;
 }
-.left h3 {
-    width: 100%;
-    height: 20px;
-    background-color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-#chat_participants {
-    width: 300px;
-    height: 380px;
-    border-radius: 14px;
-    border: 1px solid black;
-    padding: 5px;
-
-    display: flex;
-    flex-direction: column;
-    align-content: center;
-}
-.right {
-    padding: 5px;
-    width: 800px;
+.chat-content {
+    height: 100%;
 }
 .chat-box {
-    height: 700px;
-    overflow-y: auto;
-    padding: 10px;
-    border-radius: 14px;
-    border: 1px solid black;
-
     display: flex;
     flex-direction: column;
 }
-.chat-box .msg {
-    border: 1px solid black;
-    background-color: lightgreen;
+#unReadMessagesContainer {
+    display: flex;
+    flex-direction: column;
 }
-.message-input {
-    width: 100%;
-    height: 100%;
-    padding: 10px;
-    border-radius: 14px;
+.my-message {
+    text-align: right;
+    display: inline-block;
+    margin-left: auto;
+    max-width: 80%;
+    padding: 8px 16px;
+    background-color: #d1ecf1;
+    border-radius: 10px;
+    margin-bottom: 10px;
 }
-.message {
+.other-message {
+    text-align: left;
+    display: inline-block;
+    margin-right: auto;
+    max-width: 80%;
+    padding: 8px 16px;
+    background-color: #f8d7da;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+/* 프로필 사진 크기와 스타일 */
+.profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 10px;  /* 이미지와 이름 간 간격 */
+}
 
+/* 메시지의 헤더 (프로필 사진과 이름을 가로로 나열) */
+.message-header {
+    display: flex;
+    align-items: center; /* 수직 정렬 */
+    margin-bottom: 5px; /* 아래쪽에 약간의 간격 */
 }
+
+/* 시간 표시 스타일 */
+.message-time {
+    font-size: 12px;
+    color: gray;
+    margin-bottom: 5px;  /* 메시지와 간격 */
+}
+
+/* 메시지 내용 */
+p {
+    margin: 0;
+}
+
