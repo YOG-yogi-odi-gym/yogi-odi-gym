@@ -53,7 +53,6 @@
         .nav-item {
             display: flex;
             align-items: center;
-            /* justify-content: center; */
             width: 180px;
             height: 40px;
             margin: 10px 0 0 15px;
@@ -61,7 +60,7 @@
             color: rgba(0, 0, 0, 0.87);
             border-radius: 5px;
             transition: background-color 0.3s;
-            text-decoration: none; /* 링크 스타일 제거 */
+            text-decoration: none;
         }
 
         .nav-item i {
@@ -69,7 +68,6 @@
             margin: 0  15px 0 15px;
         }
 
-        /* a 태그 호버 효과 */
         .nav-item:hover {
             background-color: #007bff;
         }
@@ -90,17 +88,13 @@
             <i class="bi bi-search"></i>
             <span>강의 찾기</span>
         </a>
-        <a th:href="@{/my-courses}" class="nav-item nav-my-courses">
-            <i class="bi bi-card-checklist"></i>
-            <span>내 강의</span>
+        <a th:href="@{/gyms}" id="side_gym" class="nav-item nav-gym">
+            <i class="bi bi-house-door"></i>
+            <span>헬스장 찾기</span>
         </a>
         <a th:href="@{/calendar/cal}" id="side_calendar" class="nav-item nav-calendar">
             <i class="bi bi-calendar-event"></i>
             <span>캘린더</span>
-        </a>
-        <a th:href="@{/gyms}" id="side_gym" class="nav-item nav-gym">
-            <i class="bi bi-house-door"></i>
-            <span>헬스장 찾기</span>
         </a>
     </div>
 
