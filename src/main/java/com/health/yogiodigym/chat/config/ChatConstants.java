@@ -8,4 +8,6 @@ public interface ChatConstants {
 
     String ENTER_CHAT_ROOM_MESSAGE_PREFIX = "님이 입장했습니다.";
     String QUIT_CHAT_ROOM_MESSAGE_SUFFIX = "님이 채팅방을 나갔습니다.";
+
+    int PAGE_SIZE = 30;
 }

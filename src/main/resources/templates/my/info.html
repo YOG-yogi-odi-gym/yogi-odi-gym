@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <script type="text/javascript" th:src="@{'//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js'}"></script>
+    <script type="text/javascript"
+            th:src="@{'//dapi.kakao.com/v2/maps/sdk.js?appkey=' + ${@environment.getProperty('kakao.api.scriptKey')} + '&libraries=services'}"></script>
+    <script type="text/javascript" th:src="@{'/js/latLonApi.js'}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link th:href="@{https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.css}" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f1f1f1;
+        }
+
+        .container {
+            width: 1200px;
+            height: 900px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .BB {
+            display: flex;
+            flex-direction: row;
+        }
+
+        .c {
+            width: 900px;
+            margin: 25px 30px 25px 30px;
+            display: flex;
+            height: fit-content;
+            flex-direction: row;
+            border-radius: 10px;
+            background-color: white;
+        }
+
+        .info-container {
+            display: flex;
+            flex-direction: column;
+            width: 620px;
+            margin: 20px;
+        }
+
+        .profile-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 200px;
+            margin: 20px;
+        }
+
+        .info-title {
+            display: flex;
+            flex-direction: row;
+            margin-bottom: 16px;
+        }
+
+        .info-data {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+        }
+
+        .info-container-left {
+            width: 400px;
+            display: flex;
+            flex-direction: column;
+            margin-right: 20px;
+        }
+
+        .info-container-left .pwd-container {
+            display: none;
+        }
+
+        .info-container-right {
+            width: 200px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-container {
+            display: flex;
+        }
+
+        #edit-btn-box {
+            margin-left: 20px;
+            display: inline-block;
+            height: fit-content;
+            background-color: #F1F1F1;
+            border-radius: 5px;
+        }
+
+        .info-container h3 {
+            display: inline-block;
+            height: fit-content;
+            margin-top: 4px;
+        }
+
+        .info-container img {
+            margin: 6px;
+            width: 26px;
+            height: 26px;
+        }
+
+        .profile-container p {
+            margin: 0;
+        }
+
+        .c button {
+            font-size: 14px;
+        }
+
+        .profile-btn-container {
+            margin-top: 10px;
+            display: flex;
+            flex-direction: row;
+            gap: 10px;
+        }
+
+        .img-container {
+            width: 180px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .img-container img {
+            width: 160px;
+            height: 160px;
+            margin: 10px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .position-right-container {
+            margin-top: 100px;
+            width: 100%;
+            text-align: right;
+        }
+
+        .submit-container {
+            margin-top: 29px;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        #enroll-master-modal .modal-dialog {
+            height: 600px;
+        }
+
+        #enroll-master-modal .modal-content {
+            height: 600px;
+            overflow: hidden;
+        }
+
+        #enroll-master-modal .modal-body {
+            height: calc(100% - 120px);
+            overflow-y: auto;
+        }
+
+        #upload-form .certificate {
+            display: none;
+        }
+
+    </style>
+    <script>
+        const csrfToken = $("meta[name='_csrf']").attr("content");
+        const csrfHeader = $("meta[name='_csrf_header']").attr("content");
+        let pwdModal;
+        let masterModal;
+        let oAuthMember;
+
+        document.addEventListener('DOMContentLoaded', function () {
+            pwdModal = new bootstrap.Modal(document.body.querySelector("#pwd-check-modal"));
+            masterModal = new bootstrap.Modal(document.body.querySelector("#enroll-master-modal"));
+
+            oAuthMember = document.getElementById("hasPassword").value === "true";
+
+            const fileContainer = document.getElementById("file-container");
+            const certificateForm = document.getElementById("certificate-form");
+
+            let fileIndex = 0;
+
+            document.getElementById("file-add").addEventListener("click", function () {
+                fileIndex++;
+
+                const fileInput = document.createElement("input");
+                fileInput.type = "file";
+                fileInput.name = "certificate";
+                fileInput.accept = "image/*,application/pdf";
+                fileInput.classList.add("d-none"); // 숨김 (보이지도 클릭도 안 됨)
+
+                // 파일 선택 시 이벤트
+                fileInput.addEventListener("change", function () {
+                    if (fileInput.files.length > 0) {
+                        const fileItem = document.createElement("div");
+                        fileItem.classList.add("d-flex", "justify-content-between", "align-items-center", "mt-1");
+                        fileItem.style.width = "100%"; // 🎯 부모 요소 전체 너비 차지
+
+                        // 파일 이름을 감싸는 div
+                        const fileNameContainer = document.createElement("div");
+                        fileNameContainer.classList.add("px-2", "py-1", "rounded", "bg-light", "border", "flex-grow-1"); // 🎯 flex-grow-1 추가
+                        fileNameContainer.style.borderRadius = "5px"; // 추가적인 border-radius
+
+                        // 파일 이름 표시
+                        const fileName = document.createElement("span");
+                        fileName.textContent = fileInput.files[0].name;
+
+                        // 삭제 버튼
+                        const deleteButton = document.createElement("button");
+                        deleteButton.textContent = "삭제";
+                        deleteButton.classList.add("btn", "btn-danger", "btn-sm", "ms-2");
+
+                        // 삭제 버튼 클릭 시 파일 제거
+                        deleteButton.addEventListener("click", function () {
+                            fileContainer.removeChild(fileItem);
+                            certificateForm.removeChild(fileInput);
+                        });
+
+                        // 요소 추가
+                        fileNameContainer.appendChild(fileName); // div 안에 파일명 추가
+                        fileItem.appendChild(fileNameContainer); // fileItem에 추가
+                        fileItem.appendChild(deleteButton);
+                        fileContainer.appendChild(fileItem);
+                        certificateForm.appendChild(fileInput);
+                    }
+                });
+
+                // body에 추가 후 클릭 이벤트 실행 (파일 선택 창 열기)
+                document.body.appendChild(fileInput);
+                fileInput.click();
+            });
+
+
+            document.getElementById("master-submit").addEventListener("click", function () {
+                const formData = new FormData(certificateForm);
+
+                let hasFile = false;
+                for (let value of formData.values()) {
+                    if (value instanceof File && value.size > 0) {
+                        hasFile = true;
+                        break;
+                    }
+                }
+
+                if (!hasFile) {
+                    alert("증명서를 최소 하나 이상 업로드해야 합니다.");
+                    return;
+                }
+
+                let url = "/api/my/master";
+                let headers = {
+                    [csrfHeader]: csrfToken
+                };
+                fetch(url, {
+                    method: 'POST',
+                    headers: headers,
+                    body: formData,
+                })
+                    .then(response => {
+                        if (response.status !== 200) {
+                            return response.json().then(errorData => {
+                                throw new Error(errorData.message || '강사 신청 실패');
+                            });
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        alert(data.message);
+                        masterModal.hide();
+                        console.log("Success:", data);
+                    })
+                    .catch(error => {
+                        alert(error.message);
+                        console.error("Error:", error.message);
+                    });
+            });
+
+            document.body.querySelector("#enroll-master-btn").addEventListener("click", function () {
+                masterModal.show();
+            });
+
+            document.body.querySelector("#edit-btn-box").addEventListener("click", function () {
+                if (oAuthMember) {
+                    updateAble();
+                } else {
+                    showPwdModal('수정')
+                }
+            });
+
+            document.body.querySelector("#addr").addEventListener("change", function () {
+                document.body.querySelector("#latitude").value = "";
+            })
+
+            document.body.querySelector("#pwd-check-submit").addEventListener("click", function () {
+                const warningState = document.body.querySelector("#withdrawal-warning").style.display;
+                const pwd = document.body.querySelector("#pwd").value;
+
+                let url;
+                let headers = {
+                    "Content-Type": "application/json",
+                    [csrfHeader]: csrfToken
+                };
+                if (warningState === 'none') {
+                    url = '/api/my/pwd'
+
+                    fetch(url, {
+                        method: "POST",
+                        headers: headers,
+                        body: JSON.stringify({pwd: pwd})
+                    })
+                        .then(response => {
+                            if (response.status !== 200) {
+                                return response.json().then(errorData => {
+                                    throw new Error(errorData.message || '비밀번호 틀렸음 ㅋ');
+                                });
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            updateAble();
+                            closePwdModal();
+                            console.log("Success:", data);
+                        })
+                        .catch(error => {
+                            const wrongPwd = document.body.querySelector("#wrong-pwd");
+                            wrongPwd.textContent = error.message
+                            wrongPwd.style.display = 'block'
+
+                            console.error("Error:", error.message);
+                        });
+
+                } else if (warningState === 'block') {
+                    url = '/api/my/withdrawal'
+
+                    fetch(url, {
+                        method: "POST",
+                        headers: headers,
+                        body: JSON.stringify({pwd: pwd})
+                    })
+                        .then(response => {
+                            if (response.status !== 200) {
+                                return response.json().then(errorData => {
+                                    throw new Error(errorData.message || '비밀번호 틀렸음 ㅋ');
+                                });
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            alert(data.message);
+                            window.location.href = '/';
+                        })
+                        .catch(error => {
+                            const wrongPwd = document.body.querySelector("#wrong-pwd");
+                            wrongPwd.textContent = error.message
+                            wrongPwd.style.display = 'block'
+
+                            console.error("Error:", error.message);
+                        });
+                }
+            })
+
+            document.body.querySelector("#withdrawal-btn").addEventListener("click", function () {
+                showPwdModal('삭제')
+            })
+
+            document.body.querySelector("#save-profile-btn").addEventListener("click", function () {
+                const form = document.querySelector("#profile-form");
+                const formData = new FormData(form);
+
+                let url = "/api/my/profile";
+                let headers = {
+                    [csrfHeader]: csrfToken
+                };
+
+                fetch(url, {
+                    method: "POST",
+                    headers: headers,
+                    body: formData,
+                })
+                    .then(response => {
+                        console.log(response)
+                        if (response.status !== 200) {
+                            return response.json().then(errorData => {
+                                throw new Error(errorData.message || '사진 저장 실패');
+                            });
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        document.getElementById("save-profile-btn").style.display = "none";
+                        alert(data.message);
+                    })
+                    .catch(error => {
+                        console.error("Error:", error.message);
+                        alert(error.message);
+                    });
+            });
+
+            document.body.querySelector("#update-member-btn").addEventListener("click", function () {
+                const modalDiv = new bootstrap.Modal(document.querySelector("#modalDiv"));
+                document.querySelector("#modalLabel").textContent = "회원정보 수정오류";
+                const formData = new FormData(document.querySelector("#registForm"));
+                const jsonObject = {};
+
+                formData.forEach((value, key) => {
+                    jsonObject[key] = value;
+                });
+                delete jsonObject["_csrf"];
+
+                let url;
+                let headers = {
+                    "Content-Type": "application/json",
+                    [csrfHeader]: csrfToken
+                };
+                let body = JSON.stringify(jsonObject);
+
+                if (oAuthMember) {
+                    url = "/api/my/oauthinfo"
+
+                    fetch(url, {
+                        method: 'PUT',
+                        headers: headers,
+                        body: body,
+                    })
+                        .then(response => {
+                            if (!response.ok) {
+                                return response.json().then(errorData => {
+                                    throw new Error(JSON.stringify(errorData));
+                                });
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            alert(data.message);
+                            window.location.reload();
+                        })
+                        .catch(error => {
+                            let jsonErrors = JSON.parse(error.message);
+
+                            if (jsonErrors.status === 400) {
+                                let errors = jsonErrors.data;
+                                const errorMap = errors.reduce((acc, error) => {
+                                    acc[error.field] = error.defaultMessage;
+                                    return acc;
+                                }, {})
+
+                                console.log(errors);
+                                const errorArray = [
+                                    errorMap['name'],
+                                    errorMap['email'],
+                                    errorMap['pwd'],
+                                    errorMap['pwd2'],
+                                    errorMap['passwordMatching'],
+                                    errorMap['gender'],
+                                    errorMap['weight'],
+                                    errorMap['height'],
+                                    errorMap['latitude']
+                                ];
+                                console.log(errorArray);
+
+                                const errorArrayFiltered = errorArray.filter(Boolean);
+
+                                if (errorArrayFiltered.length > 0) {
+                                    document.querySelector("#modalMessage").textContent = errorArrayFiltered[0];
+                                    modalDiv.show();
+                                }
+                            }
+                        })
+                } else {
+                    url = "/api/my/info"
+
+                    fetch(url, {
+                        method: 'PUT',
+                        headers: headers,
+                        body: body,
+                    })
+                        .then(response => {
+                            if (!response.ok) {
+                                return response.json().then(errorData => {
+                                    throw new Error(JSON.stringify(errorData));
+                                });
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            alert(data.message);
+                            window.location.reload();
+                        })
+                        .catch(error => {
+                            let jsonErrors = JSON.parse(error.message);
+
+                            if (jsonErrors.status === 400) {
+                                let errors = jsonErrors.data;
+                                const errorMap = errors.reduce((acc, error) => {
+                                    acc[error.field] = error.defaultMessage;
+                                    return acc;
+                                }, {})
+
+                                const errorArray = [
+                                    errorMap['name'],
+                                    errorMap['email'],
+                                    errorMap['pwd'],
+                                    errorMap['pwd2'],
+                                    errorMap['passwordMatching'],
+                                    errorMap['gender'],
+                                    errorMap['weight'],
+                                    errorMap['height'],
+                                    errorMap['latitude']
+                                ];
+                                console.log(errorArray);
+
+                                const errorArrayFiltered = errorArray.filter(Boolean);
+
+                                if (errorArrayFiltered.length > 0) {
+                                    document.querySelector("#modalMessage").textContent = errorArrayFiltered[0];
+                                    modalDiv.show();
+                                }
+                            }
+                        })
+                }
+            });
+
+            document.body.querySelector("#profile").addEventListener("change", function (event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const preview = document.getElementById("preview");
+                        preview.src = e.target.result;
+                        preview.style.display = "block";
+                    };
+                    document.getElementById("save-profile-btn").style.display = "block";
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+
+        function updateAble() {
+            document.body.querySelector("#update-member-btn").style.display = "block";
+            document.body.querySelector("#name").removeAttribute("disabled");
+            document.body.querySelector("#height").removeAttribute("disabled");
+            document.body.querySelector("#weight").removeAttribute("disabled");
+            document.body.querySelector("#addr").removeAttribute("disabled");
+            document.body.querySelector("#addr-search-btn").style.display = "block"
+
+            if (!oAuthMember) {
+                document.body.querySelector("#pwd1").removeAttribute("disabled");
+                document.body.querySelector("#pwd2").removeAttribute("disabled");
+
+                const pwdContainer = document.body.querySelector(".pwd-container");
+                pwdContainer.style.display = "block";
+
+                const plusHeight = pwdContainer.getBoundingClientRect().height;
+
+                const positionRightContainer = document.body.querySelector(".position-right-container");
+                const submitContainer = document.body.querySelector(".submit-container");
+
+                positionRightContainer.style.marginTop =
+                    (parseFloat(window.getComputedStyle(positionRightContainer).marginTop) + plusHeight) + "px";
+
+                submitContainer.style.marginTop =
+                    (parseFloat(window.getComputedStyle(submitContainer).marginTop) + plusHeight) + "px";
+            }
+        }
+
+        function showPwdModal(request) {
+            document.body.querySelector("#wrong-pwd").style.display = 'none';
+            let pwdField = document.body.querySelector("#pwd");
+            let pwdLabel = document.body.querySelector("#pwd-label");
+            let pwdModalLabel = document.body.querySelector("#pwd-check-label");
+
+
+            pwdField.value = '';
+            if (request == '삭제') {
+                pwdModalLabel.textContent = '경고';
+                if(oAuthMember){
+                    pwdModalLabel.textContent = '경고';
+                    pwdLabel.style.display = 'none';
+                    pwdField.style.display = 'none';
+                }else{
+                    pwdLabel.style.display = 'block';
+                    pwdField.style.display = 'block';
+                }
+                document.body.querySelector("#withdrawal-warning").style.display = "block"
+            } else if (request == '수정') {
+                pwdModalLabel.textContent = '비밀번호 확인';
+                document.body.querySelector("#withdrawal-warning").style.display = "none"
+            }
+            pwdModal.show();
+        }
+
+        function closePwdModal() {
+            pwdModal.hide();
+        }
+    </script>
+</head>
+<body>
+<div class="container">
+   <div th:replace="~{fragments/navbar :: custom-navbar}"></div>
+
+    <div class="BB">
+        <div th:replace="~{fragments/side :: side}"></div>
+
+        <div class="c">
+            <div class="info-container">
+                <input type="hidden" id="hasPassword" th:value="${#authentication.principal.member.pwd == null}">
+                <div class="info-title">
+                    <h3>내 정보 </h3>
+                    <div id="edit-btn-box"><img src="/images/source/edit.png" alt="Profile Image"></div>
+                </div>
+                <form id="registForm" class="info-data" th:action="@{/member/regist}" method="post"
+                      enctype="multipart/form-data">
+                    <input type="hidden" id="latitude" name="latitude"
+                           th:value="${#authentication.principal.member.latitude}">
+                    <input type="hidden" id="longitude" name="longitude"
+                           th:value="${#authentication.principal.member.longitude}">
+
+                    <div class="info-container-left">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">이메일</label>
+                            <input type="text" id="email" name="email" class="form-control" placeholder="이메일"
+                                   th:value="${#authentication.principal.member.email}"
+                                   disabled>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="name" class="form-label">이름</label>
+                            <input type="text" id="name" name="name" class="form-control" placeholder="이름"
+                                   th:value="${#authentication.principal.member.name}"
+                                   disabled required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="addr" class="form-label">주소</label>
+                            <div class="input-group">
+                                <input type="text" id="addr" name="addr" class="form-control"
+                                       th:value="${#authentication.principal.member.addr}"
+                                       disabled>
+                                <input id="addr-search-btn" type="button" class="btn btn-success"
+                                       onclick="searchAddress('addr')"
+                                       value="주소찾기" style="display: none">
+                            </div>
+                        </div>
+
+                        <div class="pwd-container">
+                            <div class="mb-3">
+                                <label for="pwd1" class="form-label">비밀번호</label>
+                                <input type="password" id="pwd1" name="pwd" class="form-control" placeholder="password"
+                                       required disabled>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="pwd2" class="form-label">비밀번호 확인</label>
+                                <input type="password" id="pwd2" name="pwd2" class="form-control"
+                                       placeholder="password check" required disabled>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-container-right">
+                        <div class="mb-3">
+                            <label class="form-label">성별</label><br>
+                            <label style="margin: 5px 0 9px 0">
+                                <input type="radio" name="gender" value="남성"
+                                       th:checked="${#authentication.principal.member.gender == '남성'}"
+                                       disabled>
+                                남성 &nbsp;&nbsp;
+                            </label>
+
+                            <label style="margin: 5px 0 9px 0">
+                                <input type="radio" name="gender" value="여성"
+                                       th:checked="${#authentication.principal.member.gender == '여성'}"
+                                       disabled>
+                                여성
+                            </label>
+                        </div>
+
+                        <div class="mb-3">
+                            <div>
+                                <label for="height" class="form-label">키(cm) </label>
+                                <input type="number" id="height" name="height" class="form-control" step="0.1"
+                                       th:value="${#authentication.principal.member.height}" disabled
+                                       placeholder="cm">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div>
+                                <label for="weight" class="form-label">체중(kg) </label>
+                                <input type="number" id="weight" name="weight" class="form-control" step="0.1"
+                                       th:value="${#authentication.principal.member.weight}" disabled
+                                       placeholder="kg">
+                            </div>
+                        </div>
+
+                        <div class="submit-container">
+                            <button id="save-profile-btn" class="btn btn-info" type="button" style="display: none">
+                                사진저장
+                            </button>
+                            <button id="update-member-btn" class="btn btn-success" type="button" style="display: none">
+                                정보저장
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="profile-container">
+                <div class="img-container">
+                    <img id="preview"
+                         th:src="${#authentication.principal.member.profile != null ? #authentication.principal.member.profile : '/images/source/anonymous.png'}">
+                    <p>
+                        <span th:text="${#authentication.principal.member.name}"></span>
+                        /
+                        <span th:text="${role}"></span>
+                    </p>
+                    <div class="profile-btn-container">
+                        <button id="enroll-master-btn" class="btn btn-secondary" type="button">강사신청</button>
+                        <form id="profile-form" th:action="@{/api/my/profile}" method="post"
+                              enctype="multipart/form-data">
+                            <input type="file" id="profile" name="profile" class="form-control d-none"
+                                   accept="image/*">
+                            <label for="profile" class="btn btn-secondary" style="font-size: 14px;">사진수정</label>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="position-right-container">
+                    <button class="btn btn-danger" type="button" id="withdrawal-btn">회원탈퇴</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="pwd-check-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+     aria-labelledby="pwd-check-label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="pwd-check-label">비밀번호 확인</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="pwd" class="form-label" id="pwd-label">비밀번호</label>
+                    <input type="password" id="pwd" name="pwd" class="form-control" placeholder="password"
+                           style="background-color: #F1F1F1"
+                           required>
+                    <p id="withdrawal-warning" style="color: red; margin-top: 5px">삭제하시면 3일 동안 다시 회원가입 하실 수 없습니다.</p>
+                    <p id="wrong-pwd" style="color: red; margin-top: 5px"></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="pwd-check-submit">확인</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="enroll-master-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="enroll-master-label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="enroll-master-label">강사 자격 신청</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <button id="file-add" type="button" class="btn btn-success">업로드</button>
+                <p style="font-size: 10px; margin: 5px 0 20px 0">*pdf, png, jpg, jpeg 등 이미지 파일만 업로드 가능합니다</p>
+                <div id="file-container" class="file-input-container">
+
+                </div>
+
+                <form id="certificate-form" th:action="@{/api/my/master}" method="post" enctype="multipart/form-data">
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button id="master-submit" type="button" class="btn btn-primary">제출</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="fragments/modal :: modalFragment"></div>
+</body>
+</html>

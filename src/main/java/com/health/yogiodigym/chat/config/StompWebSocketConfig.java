@@ -19,7 +19,7 @@ public class StompWebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint(ChatConstants.CONNECT_URL)
-                .setAllowedOrigins("http://localhost:8080", "http://localhost:8081") // TODO 변경
+                .setAllowedOrigins("http://localhost:8080")
                 .withSockJS()
                 .setInterceptors(handshakeInterceptor);
     }
