@@ -17,7 +17,7 @@ import static com.health.yogiodigym.member.auth.MemberStatus.INCOMPLETE;
 public class IncompleteUserFilter extends OncePerRequestFilter {
 
     private static final List<String> EXCLUDED_PATHS = List.of(
-            "/member/regist", "/member/login", "/login", "/api/member/regist"
+            "/member/regist", "/member/login", "/login", "/api/member/regist", "/api/member/oAuthRegist"
     );
 
     private static final List<String> EXCLUDED_PATTERNS = List.of(
