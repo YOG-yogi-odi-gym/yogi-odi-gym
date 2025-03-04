@@ -101,12 +101,6 @@ public class LessonController {
         return new RedirectView("/lesson/" + lessonDto.getId());
     }
 
-//    @PostMapping("/delete")
-//    public RedirectView deleteLesson(@RequestBody List<Long> ids) {
-//        adminLessonService.deleteAllById(ids);
-//        return new RedirectView("/lesson");
-//    }
-
     @PostMapping("/delete")
     public ResponseEntity<?> adminDeleteLesson(@RequestBody List<Long> ids) {
 
