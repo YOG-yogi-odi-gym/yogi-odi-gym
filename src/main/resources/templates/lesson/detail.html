@@ -70,7 +70,7 @@
                     "Content-Type": "application/json; charset=utf-8",
                     'X-CSRF-TOKEN': csrfToken
                 },
-                body: JSON.stringify([lessonId])  // ⬅ 배열 형태로 변경
+                body: JSON.stringify([lessonId])
             })
                 .then(response => {
                     if (!response.ok) {
