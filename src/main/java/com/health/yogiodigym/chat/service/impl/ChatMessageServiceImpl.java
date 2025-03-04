@@ -62,7 +62,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
                 .orElseThrow(() -> new MemberNotInChatRoomException(member.getId()));
 
         List<ChatMessage> unreadMessages =
-                chatMessageRepository.findByChatRoomAndIdGreaterThan(chatRoom, chatParticipant.getLast_read_message_id());
+                chatMessageRepository.findByChatRoomAndIdGreaterThan(chatRoom, chatParticipant.getLastReadMessageId());
 
         if (!unreadMessages.isEmpty()) {
             chatParticipant.updateLastReadMessageId(unreadMessages.get(unreadMessages.size() - 1).getId());
@@ -112,7 +112,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
         ChatParticipant chatParticipant = chatParticipantRepository.findByMemberAndChatRoom(member, chatRoom)
                 .orElseThrow(() -> new MemberNotInChatRoomException(member.getId()));
 
-        return chatParticipant.getLast_read_message_id();
+        return chatParticipant.getLastReadMessageId();
     }
 
     @Override

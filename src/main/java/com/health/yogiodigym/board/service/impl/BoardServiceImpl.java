@@ -1,25 +1,22 @@
 package com.health.yogiodigym.board.service.impl;
 
+import com.health.yogiodigym.board.dto.BoardDto.BoardDetailDto;
+import com.health.yogiodigym.board.dto.BoardDto.BoardRequestDto;
 import com.health.yogiodigym.board.entity.Board;
-import com.health.yogiodigym.board.dto.BoardDto.*;
 import com.health.yogiodigym.board.repository.BoardRepository;
 import com.health.yogiodigym.board.service.BoardService;
 import com.health.yogiodigym.common.exception.BoardNotFoundException;
 import com.health.yogiodigym.common.exception.CategoryNotFoundException;
-import com.health.yogiodigym.common.exception.LessonNotFoundException;
-import com.health.yogiodigym.common.exception.MemberNotFoundException;
 import com.health.yogiodigym.lesson.entity.Category;
 import com.health.yogiodigym.lesson.repository.CategoryRepository;
 import com.health.yogiodigym.member.entity.Member;
-import com.health.yogiodigym.member.repository.MemberRepository;
+import java.time.LocalDateTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -100,6 +97,14 @@ public class BoardServiceImpl implements BoardService {
 
         board.updateBoard(dto, category);
         boardRepository.save(board);
+    }
+
+    @Transactional(readOnly = true)
+    public List<BoardDetailDto> getBoardsTop10() {
+        List<Board> boards = boardRepository.findTop10ByOrderByViewDescIdDesc();
+        return boards.stream()
+                .map(BoardDetailDto::new)
+                .toList();
     }
 
     private boolean isKeywordEmpty(String keyword) {

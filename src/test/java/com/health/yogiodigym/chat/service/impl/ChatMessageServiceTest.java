@@ -81,7 +81,7 @@ class ChatMessageServiceTest {
         ChatParticipant chatParticipant = ChatParticipant.builder()
                 .member(mockMember)
                 .chatRoom(mockChatRoom)
-                .last_read_message_id(2L)
+                .lastReadMessageId(2L)
                 .build();
         when(chatParticipantRepository.findByMemberAndChatRoom(any(Member.class), any(ChatRoom.class)))
                 .thenReturn(Optional.of(chatParticipant));

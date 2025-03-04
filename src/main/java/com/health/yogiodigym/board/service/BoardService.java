@@ -21,4 +21,6 @@ public interface BoardService {
     void editBoard(BoardDetailDto dto);
 
     Page<BoardDetailDto> searchMyBoards(Long id, String boardKeyword, String searchColumn, List<Long> categories, Pageable pageable);
+
+    List<BoardDetailDto> getBoardsTop10();
 }

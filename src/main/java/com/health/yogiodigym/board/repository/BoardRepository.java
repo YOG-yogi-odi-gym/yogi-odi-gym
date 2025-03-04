@@ -55,4 +55,6 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     @Query("SELECT b FROM Board b WHERE b.title LIKE %:boardKeyword% OR b.member.name LIKE %:boardKeyword% ORDER BY b.createDateTime DESC")
     List<Board> adminSearchBoards(@Param("boardKeyword") String boardKeyword);
 
+    List<Board> findTop10ByOrderByViewDescIdDesc();
+
 }

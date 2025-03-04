@@ -1,8 +1,6 @@
 package com.health.yogiodigym.board.dto;
 
 import com.health.yogiodigym.board.entity.Board;
-import com.health.yogiodigym.lesson.entity.Category;
-import com.health.yogiodigym.member.entity.Member;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -36,6 +34,7 @@ public class BoardDto {
     @Getter
     @Setter
     @Builder
+    @ToString
     @AllArgsConstructor
     @NoArgsConstructor
     public static class BoardDetailDto{

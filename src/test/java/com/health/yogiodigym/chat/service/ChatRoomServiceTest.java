@@ -232,6 +232,14 @@ class ChatRoomServiceTest {
             );
             when(lessonEnrollmentRepository.findAllByMember(any(Member.class))).thenReturn(enrolls);
 
+            ChatParticipant mockChatParticipant = ChatParticipant.builder()
+                    .member(mockMember)
+                    .chatRoom(chatRoom1)
+                    .lastReadMessageId(1L)
+                    .build();
+            when(chatParticipantRepository.findByMemberAndChatRoom(any(Member.class), any(ChatRoom.class)))
+                    .thenReturn(Optional.of(mockChatParticipant));
+
             // when
             List<ChatRoomResponseDto> chatRoomsResponse = chatRoomService.getChatRooms(mock(Member.class));
 
