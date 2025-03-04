@@ -29,7 +29,6 @@
                     <th></th>
                     <th>이름</th>
                     <th>이메일</th>
-                    <th>등급</th>
                     <th>상태</th>
                 </tr>
                 </thead>
@@ -38,7 +37,6 @@
                     <td><input type="checkbox" class="memberCheckbox" th:value="${member.id}"></td>
                     <td th:text="${member.name}"></td>
                     <td th:text="${member.email}"></td>
-                    <td th:text="${member.roles[0]}"></td>
                     <td th:text="${member.status}"></td>
                 </tr>
                 </tbody>

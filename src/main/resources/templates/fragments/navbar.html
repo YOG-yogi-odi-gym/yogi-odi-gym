@@ -1,32 +1,37 @@
-<!doctype html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head th:fragment="custom-navbar">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link th:href="@{https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.css}" rel="stylesheet">
-
-    <style>
-        .custom-navbar {
-            width: 1200px;
-            height: 50px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 20px;
-            border-radius: 10px;
-            background-color: white;
-        }
-    </style>
-
-</head>
-<body th:fragment="custom-navbar">
-<div class="custom-navbar">
-    <form th:action="@{/logout}" method="post">
-        <button type="submit" class="logout-button">로그아웃</button>
-    </form>
-
-    <a href="/my/info" class="admin-button">마이 페이지로 이동</a>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<style th:fragment="custom-navbar">
+    .custom-navbar {
+        width: 1200px;
+        height: 50px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 20px;
+        border-radius: 10px;
+        background-color: white;
+        padding: 0 20px;
+    }
+</style>
+<div class="custom-navbar" th:fragment="custom-navbar">
+    <div>navbar</div>
+    <div class="dropdown">
+        <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <img th:src="${#authentication.principal.member.profile}" alt="사진" style="width: 40px;height: 40px;border-radius: 50%;">
+            <span th:text="${#authentication.principal.member.name}"/>
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" href="/info">내 정보</a>
+            <a class="dropdown-item" href="/my/lesson">내 강의</a>
+            <a class="dropdown-item" href="/my/board">내 게시글</a>
+            <a class="dropdown-item" href="#" onclick="document.getElementById('logoutForm').submit();">로그아웃</a>
+            <form id="logoutForm" th:action="@{/logout}" method="post" style="display: none;">
+                <input type="submit">
+            </form>
+            <div sec:authorize="hasRole('ROLE_ADMIN')">
+                <a class="dropdown-item" href="/admin">관리자 페이지</a>
+            </div>
+        </div>
+    </div>
 </div>
-</body>
-</html>
