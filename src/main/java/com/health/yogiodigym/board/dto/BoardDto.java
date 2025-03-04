@@ -78,5 +78,4 @@ public class BoardDto {
         private int view;
         private boolean edit;
     }
-
 }

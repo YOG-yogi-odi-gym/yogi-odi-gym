@@ -7,7 +7,7 @@
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <script type="text/javascript"
             th:src="@{'//dapi.kakao.com/v2/maps/sdk.js?appkey=' + ${@environment.getProperty('kakao.api.scriptKey')}}"></script>
-    <script type="text/javascript" th:src="@{'/js/bitmaskToDays.js'}"></script>
+    <script type="text/javascript" th:src="@{'/js/lesson/bitmaskToDays.js'}"></script>
     <link th:href="@{https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css}" rel="stylesheet">
     <script th:src="@{https://code.jquery.com/jquery-3.5.1.slim.min.js}"></script>
     <script th:src="@{https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js}"></script>
@@ -19,6 +19,7 @@
     <script>
         const memberId = [[${member.id}]];
         const lessonId = [[${lesson.id}]];
+        const roomId = `[[${lesson.roomId}]]`;
 
         function enrollLesson() {
             fetch(`/api/lesson/enroll`, {
@@ -49,7 +50,7 @@
         }
 
         function enterChatRoom() {
-            location.href = `/chatroom/${lessonId}`;
+            location.href = `/chat?roomId=${roomId}`;
         }
 
         function updateLesson() {
@@ -269,6 +270,7 @@
                 <button id="cancelEnrollBtn" style="display: none;" onclick="cancelEnrollment()">수강 취소</button>
                 <button id="enrollBtn" style="display: none;" onclick="enrollLesson()">수강 신청</button>
                 <button id="updateBtn" style="display: none;" onclick="updateLesson()">수정</button>
+                <button id="deleteBtn" style="display: none;" onclick="deleteLesson()">삭제</button>
             </div>
         </div>
     </div>

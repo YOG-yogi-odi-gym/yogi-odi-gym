@@ -10,7 +10,7 @@
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <script type="text/javascript" th:src="@{'//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js'}"></script>
     <script type="text/javascript" th:src="@{'//dapi.kakao.com/v2/maps/sdk.js?appkey=' + ${@environment.getProperty('kakao.api.scriptKey')} + '&libraries=services'}"></script>
-    <script type="text/javascript" th:src="@{'/js/latLonApi.js'}"></script>
+    <script type="text/javascript" th:src="@{'/js/lesson/latLonApi.js'}"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>

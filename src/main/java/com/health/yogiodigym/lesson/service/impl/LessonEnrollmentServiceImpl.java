@@ -1,5 +1,6 @@
 package com.health.yogiodigym.lesson.service.impl;
 
+import com.health.yogiodigym.chat.service.ChatRoomService;
 import com.health.yogiodigym.common.exception.LessonEnrollmentException;
 import com.health.yogiodigym.common.exception.LessonNotFoundException;
 import com.health.yogiodigym.common.exception.MemberNotFoundException;
@@ -22,6 +23,8 @@ public class LessonEnrollmentServiceImpl implements LessonEnrollmentService {
     private final LessonEnrollmentRepository lessonEnrollmentRepository;
     private final LessonRepository lessonRepository;
     private final MemberRepository memberRepository;
+    private final ChatRoomService chatRoomService;
+    private final LessonServiceImpl lessonService;
 
     @Override
     public boolean enrollLesson(Long memberId, Long lessonId) {

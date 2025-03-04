@@ -79,6 +79,7 @@ public interface LessonRepository extends JpaRepository<Lesson, Long> {
                     "AND (:days IS NULL OR (l.days & :days) > 0) " +
                     "AND (:categories IS NULL OR l.category_id IN :categories)",
             nativeQuery = true)
+
     Page<Lesson> searchMyLessonsByCategories(
             @Param("id") Long id,
             @Param("keyword") String keyword,
@@ -88,4 +89,7 @@ public interface LessonRepository extends JpaRepository<Lesson, Long> {
             Pageable pageable);
 
     Optional<Lesson> findByChatRoom(ChatRoom chatRoom);
+
+    @Query("SELECT l.chatRoom.roomId FROM Lesson l WHERE l.id = :lessonId")
+    String findRoomIdByLessonId(@Param("lessonId") Long lessonId);
 }

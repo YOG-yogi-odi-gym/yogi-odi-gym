@@ -3,6 +3,7 @@ package com.health.yogiodigym.lesson.controller;
 import com.health.yogiodigym.chat.service.ChatRoomService;
 import com.health.yogiodigym.common.response.HttpResponse;
 import com.health.yogiodigym.lesson.dto.LessonDto.*;
+import com.health.yogiodigym.lesson.repository.LessonRepository;
 import com.health.yogiodigym.lesson.service.LessonEnrollmentService;
 import com.health.yogiodigym.lesson.service.LessonService;
 import com.health.yogiodigym.member.entity.Member;
@@ -32,6 +33,7 @@ public class LessonController {
     private final LessonService lessonService;
     private final ChatRoomService chatRoomService;
     private final LessonEnrollmentService lessonEnrollmentService;
+    private final LessonRepository lessonRepository;
 
     @GetMapping("/search")
     public ResponseEntity<?> searchLessons(@RequestParam(required = false) String lessonKeyword,
@@ -58,8 +60,12 @@ public class LessonController {
     }
 
     @PostMapping("/enroll")
-    public ResponseEntity<?> enrollLesson(@RequestBody LessonEnrollmentDto request) {
+    public ResponseEntity<?> enrollLesson(@RequestBody LessonEnrollmentDto request,
+                                          @AuthenticationPrincipal MemberOAuth2User loginUser) {
         boolean success = lessonEnrollmentService.enrollLesson(request.getMemberId(), request.getLessonId());
+        Member loginMember = loginUser.getMember();
+
+        chatRoomService.enterChatRoom(loginMember, lessonService.getRoomIdByLessonId(request.getLessonId()));
 
         return ResponseEntity.ok().body(
                 new HttpResponse(HttpStatus.OK, "수업 등록 성공", Map.of("success", success))
@@ -67,8 +73,12 @@ public class LessonController {
     }
 
     @DeleteMapping("/cancel/{memberId}/{lessonId}")
-    public ResponseEntity<?> cancelEnrollment(@PathVariable Long memberId, @PathVariable Long lessonId) {
+    public ResponseEntity<?> cancelEnrollment(@PathVariable Long memberId, @PathVariable Long lessonId,
+                                              @AuthenticationPrincipal MemberOAuth2User loginUser) {
         boolean success = lessonEnrollmentService.cancelEnrollment(memberId, lessonId);
+        Member loginMember = loginUser.getMember();
+
+        chatRoomService.quitChatRoom(loginMember, lessonService.getRoomIdByLessonId(lessonId));
 
         return ResponseEntity.ok().body(
                 new HttpResponse(HttpStatus.OK, "수업 등록 취소 성공", Map.of("success", success))
