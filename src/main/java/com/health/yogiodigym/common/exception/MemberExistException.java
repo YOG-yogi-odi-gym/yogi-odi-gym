@@ -9,7 +9,7 @@ public class MemberExistException extends CustomException {
 
     @Override
     public HttpStatus getStatus() {
-        return HttpStatus.BAD_REQUEST;
+        return HttpStatus.CONFLICT;
     }
 
     @Override
