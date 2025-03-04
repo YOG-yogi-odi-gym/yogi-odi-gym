@@ -61,12 +61,8 @@ public class LessonController {
     }
 
     @PostMapping("/enroll")
-    public ResponseEntity<?> enrollLesson(@RequestBody LessonEnrollmentDto request,
-                                          @AuthenticationPrincipal MemberOAuth2User loginUser) {
+    public ResponseEntity<?> enrollLesson(@RequestBody LessonEnrollmentDto request) {
         boolean success = lessonEnrollmentService.enrollLesson(request.getMemberId(), request.getLessonId());
-        Member loginMember = loginUser.getMember();
-
-        chatRoomService.enterChatRoom(loginMember, lessonService.getRoomIdByLessonId(request.getLessonId()));
 
         return ResponseEntity.ok().body(
                 new HttpResponse(HttpStatus.OK, "수업 등록 성공", Map.of("success", success))
@@ -74,12 +70,8 @@ public class LessonController {
     }
 
     @DeleteMapping("/cancel/{memberId}/{lessonId}")
-    public ResponseEntity<?> cancelEnrollment(@PathVariable Long memberId, @PathVariable Long lessonId,
-                                              @AuthenticationPrincipal MemberOAuth2User loginUser) {
+    public ResponseEntity<?> cancelEnrollment(@PathVariable Long memberId, @PathVariable Long lessonId) {
         boolean success = lessonEnrollmentService.cancelEnrollment(memberId, lessonId);
-        Member loginMember = loginUser.getMember();
-
-        chatRoomService.quitChatRoom(loginMember, lessonService.getRoomIdByLessonId(lessonId));
 
         return ResponseEntity.ok().body(
                 new HttpResponse(HttpStatus.OK, "수업 등록 취소 성공", Map.of("success", success))

@@ -46,6 +46,8 @@ public class LessonEnrollmentServiceImpl implements LessonEnrollmentService {
                 .member(member)
                 .build());
 
+        chatRoomService.enterChatRoom(member, lesson.getChatRoom().getRoomId());
+
         lesson.incrementCurrent();
         lessonRepository.save(lesson);
         return true;
@@ -57,6 +59,8 @@ public class LessonEnrollmentServiceImpl implements LessonEnrollmentService {
                 .orElseThrow(() -> new LessonNotFoundException(lessonId));
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException(memberId));
+
+        chatRoomService.quitChatRoom(member, lesson.getChatRoom().getRoomId());
 
         LessonEnrollment enrollment = lessonEnrollmentRepository.findByLessonAndMember(lesson, member)
                 .orElseThrow(() -> new LessonEnrollmentException("CANCEL"));

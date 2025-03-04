@@ -20,13 +20,15 @@
         const memberId = [[${member.id}]];
         const lessonId = [[${lesson.id}]];
         const roomId = `[[${lesson.roomId}]]`;
-        let csrfToken = "[[${_csrf.token}]]"
+        let csrfToken = document.querySelector("meta[name='_csrf']").getAttribute("content");
+        let csrfHeader = document.querySelector("meta[name='_csrf_header']").getAttribute("content");
 
         function enrollLesson() {
             fetch(`/api/lesson/enroll`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
+                    [csrfHeader]: csrfToken
                 },
                 body: JSON.stringify({memberId, lessonId}),
             })
@@ -41,6 +43,10 @@
         function cancelEnrollment() {
             fetch(`/api/lesson/cancel/${memberId}/${lessonId}`, {
                 method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    [csrfHeader]: csrfToken
+                }
             })
                 .then(response => response.json())
                 .then(data => {
@@ -68,7 +74,7 @@
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json; charset=utf-8",
-                    'X-CSRF-TOKEN': csrfToken
+                    [csrfHeader]: csrfToken
                 },
                 body: JSON.stringify([lessonId])
             })

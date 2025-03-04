@@ -24,5 +24,4 @@ public interface LessonService {
 
     Page<LessonSearchDto> searchMyLessons(Long id, String lessonKeyword, String searchColumn, Integer days, List<Long> categories, Pageable pageable);
 
-    String getRoomIdByLessonId(Long lessonId);
 }

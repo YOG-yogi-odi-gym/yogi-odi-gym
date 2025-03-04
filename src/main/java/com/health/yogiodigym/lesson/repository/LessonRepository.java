@@ -90,6 +90,4 @@ public interface LessonRepository extends JpaRepository<Lesson, Long> {
 
     Optional<Lesson> findByChatRoom(ChatRoom chatRoom);
 
-    @Query("SELECT l.chatRoom.roomId FROM Lesson l WHERE l.id = :lessonId")
-    String findRoomIdByLessonId(@Param("lessonId") Long lessonId);
 }

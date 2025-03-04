@@ -147,8 +147,4 @@ public class LessonServiceImpl implements LessonService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
-    public String getRoomIdByLessonId(Long lessonId) {
-        return lessonRepository.findRoomIdByLessonId(lessonId);
-    }
 }
