@@ -14,7 +14,7 @@
     <link rel="stylesheet" th:href="@{css/admin.css}">
 </head>
 <body>
-<div th:replace="admin/navbar.html"></div>
+<div th:replace="~{admin/navbar.html}"></div>
 <div class="container-fluid d-flex flex-row table-list">
     <div class="member-container">
         <h3>회원 목록</h3>
@@ -29,6 +29,7 @@
                     <th></th>
                     <th>이름</th>
                     <th>이메일</th>
+                    <th>등급</th>
                     <th>상태</th>
                 </tr>
                 </thead>
@@ -37,6 +38,7 @@
                     <td><input type="checkbox" class="memberCheckbox" th:value="${member.id}"></td>
                     <td th:text="${member.name}"></td>
                     <td th:text="${member.email}"></td>
+                    <td th:text="${member.roles[0]}"></td>
                     <td th:text="${member.status}"></td>
                 </tr>
                 </tbody>
@@ -102,26 +104,27 @@
     <div class="apply-category-container">
         <div class="apply-container">
             <h3>강사 신청</h3>
-            <div class="search-container">
-                <input type="text" id="applySearchInput" name="applyKeyword" class="form-control" placeholder="신청자 검색...">
-                <button id="applySearchButton" class="btn btn-primary ml-2">검색</button>
-            </div>
             <div class="applyTable-container">
                 <table id="applyTable" class="table table-bordered table-hover">
                     <thead class="thead-dark">
                     <tr>
-                        <th></th>
-                        <th>강의명</th>
-                        <th>강사</th>
+                        <th>이름</th>
+                        <th>이메일</th>
+                        <th>신청 시간</th>
                     </tr>
                     </thead>
                     <tbody id="applyTableBody">
-                    <tr>
+                    <tr th:each="memberToMaster : ${memberToMasters}" style="cursor: default;" th:data-apply_file="${memberToMaster.file}">
+                        <td class="applyName" th:text="${memberToMaster.memberName}"></td>
+                        <td class="applyEmail" th:text="${memberToMaster.memberEmail}"></td>
+                        <td>
+                            <input type="hidden" class="applyId" th:value="${memberToMaster.id}">
+                            <input type="hidden" class="applyMemberId" th:value="${memberToMaster.memberId}">
+                        </td>
                     </tr>
                     </tbody>
                 </table>
             </div>
-            <button class="btn btn-danger" id="deleteApplyButton">삭제</button>
         </div>
 
         <div class="category-container">
@@ -166,6 +169,45 @@
                 <button class="btn btn-danger" id="deleteCategoryButton">삭제</button>
             </div>
         </div>
+
+        <div class="modal fade" id="applyDetailModal" tabindex="-1" role="dialog" aria-labelledby="applyDetailModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content" style="border-radius: 10px;">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="applyDetailModalLabel">강사 신청</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="applyDetailForm">
+                            <input type="hidden" id="applyId">
+                            <input type="hidden" id="applyMemberId">
+                            <div class="form-group">
+                                <label for="applyName">이름</label>
+                                <p><span id="applyName"></span></p>
+                            </div>
+                            <hr>
+                            <div class="form-group">
+                                <label for="applyEmail">이메일</label>
+                                <p><span id="applyEmail"></span></p>
+                            </div>
+                            <hr>
+                            <div class="form-group">
+                                <label for="applyFile">자격증</label><br>
+                                <a href="#" id="applyFile" target="_blank">첨부 파일</a><br>
+                                <div id="applyImgContainer"></div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-success" id="agreeApplyButton">승인</button>
+                        <button class="btn btn-danger" id="deleteApplyButton">거절</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
         <div class="modal fade" id="insertCategoryModal" tabindex="-1" role="dialog" aria-labelledby="categoryModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
