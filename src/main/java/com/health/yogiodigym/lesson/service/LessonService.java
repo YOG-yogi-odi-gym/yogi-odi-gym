@@ -21,4 +21,6 @@ public interface LessonService {
     boolean[] daysSelected(int days);
 
     List<CategoryDto> getCategoriesByCode(String code);
+
+    Page<LessonSearchDto> searchMyLessons(Long id, String lessonKeyword, String searchColumn, Integer days, List<Long> categories, Pageable pageable);
 }

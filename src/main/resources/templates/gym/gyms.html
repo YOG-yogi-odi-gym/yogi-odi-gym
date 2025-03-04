@@ -3,31 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <title>test</title>
-    <script type="text/javascript" th:src="@{'//dapi.kakao.com/v2/maps/sdk.js?appkey=' + ${@environment.getProperty('kakao.api.scriptKey')}}"></script>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <script type="text/javascript"
+            th:src="@{'//dapi.kakao.com/v2/maps/sdk.js?appkey=' + ${@environment.getProperty('kakao.api.scriptKey')}}"></script>
+    <link th:href="@{https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css}" rel="stylesheet">
+    <script th:src="@{https://code.jquery.com/jquery-3.5.1.slim.min.js}"></script>
+    <script th:src="@{https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js}"></script>
+    <script th:src="@{https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/gyms.css}">
+    <link rel="stylesheet" th:href="@{/css/mainTool.css}">
+
     <script>
         window.onload = function () {
             gymSearch()
         }
 
-        let currentPage=0;
-        const pageSize=10;
+        let currentPage = 0;
+        const pageSize = 10;
 
         let memberLat = [[${member.latitude}]];
         let memberLon = [[${member.longitude}]];
 
-        function gymSearch(page = 0){
+        function gymSearch(page = 0) {
             currentPage = page;
 
             let gymKeyword = document.getElementById("gymKeyword").value
             let searchColumn = document.getElementById("searchColumn").value
+            let csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content')
+            let csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content')
 
-            fetch(`/api/gyms/search?gymKeyword=${gymKeyword}&page=${page}&size=${pageSize}&searchColumn=${searchColumn}`)
+            fetch(`/api/gyms/search?gymKeyword=${gymKeyword}&page=${page}&size=${pageSize}&searchColumn=${searchColumn}`, {
+                method: 'GET',
+                headers: {
+                    [csrfHeader]: csrfToken
+                }
+            })
                 .then(response => response.json())
                 .then(data => {
                     let gyms = data.data
 
                     let resultSearch = document.getElementById("resultSearch")
-                    resultSearch.innerHTML=""
+                    resultSearch.innerHTML = ""
 
                     let gymNo = page * 10 + 1;
 
@@ -38,8 +55,18 @@
                         let gymTdOldAddress = document.createElement("td")
                         let gymTdDistance = document.createElement("td")
 
+                        gymTdName.style.whiteSpace = "nowrap";
+                        gymTdName.style.overflow = "hidden";
+                        gymTdName.style.textOverflow = "ellipsis";
+                        gymTdName.style.maxWidth = "300px"; // 조정 가능
+
+                        gymTdOldAddress.style.whiteSpace = "nowrap";
+                        gymTdOldAddress.style.overflow = "hidden";
+                        gymTdOldAddress.style.textOverflow = "ellipsis";
+                        gymTdOldAddress.style.maxWidth = "300px"; // 조정 가능
+
                         let modalLink = document.createElement("a")
-                        modalLink.href="#"
+                        modalLink.href = "#"
                         modalLink.textContent = gym.name
                         modalLink.onclick = () => openModal(gym)
                         gymTdName.appendChild(modalLink)
@@ -73,7 +100,7 @@
                     pagination.appendChild(prevBtn)
 
 
-                    for (let i = startPage; i< endPage; i++){
+                    for (let i = startPage; i < endPage; i++) {
                         let pageBtn = document.createElement("button")
                         pageBtn.textContent = i + 1
                         pageBtn.onclick = () => gymSearch(i)
@@ -92,18 +119,20 @@
                 })
         }
 
-        function openModal(gym){
+        function openModal(gym) {
             let modal = document.getElementById("mapModal")
             modal.style.display = "block"
 
             let kakaoMap = document.getElementById("kakaoMap")
             kakaoMap.innerHTML = "";
 
+            document.getElementById("modal-title").innerHTML = `${gym.name}`
             document.getElementById("modalContent").innerHTML = `
-                <strong>이름:</strong> ${gym.name} <br>
-                <strong>주소:</strong> ${gym.oldAddress} <br>
-                <strong>위도:</strong> ${gym.latitude} <br>
-                <strong>경도:</strong> ${gym.longitude} <br>
+                <p><strong>주소</strong> <br> ${gym.oldAddress} <br> ${gym.streetAddress} <br></p>
+                <p><strong>연락처</strong> <br> ${gym.phoneNum} <br></p>
+                <p><strong>건축물연면적</strong> <br> ${gym.totalArea} <br></p>
+                <p><strong>인허가일자</strong> <br> ${gym.approvalDate} <br></p>
+                <p><strong>지도자수</strong> <br> ${gym.trainers} <br></p>
             `
 
             let mapOption = {
@@ -120,7 +149,7 @@
             marker.setMap(map)
         }
 
-        function closeModal(){
+        function closeModal() {
             document.getElementById("mapModal").style.display = "none"
         }
 
@@ -138,53 +167,72 @@
             return R * c;
         }
     </script>
-
-    <style>
-        #mapModal {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            padding: 20px;
-            border: 1px solid black;
-        }
-        #kakaoMap{
-            width: 500px;
-            height: 400px;
-        }
-    </style>
 </head>
 <body>
-<h2>Gym Search</h2>
-    <select id="searchColumn">
-        <option value="name">이름</option>
-        <option value="oldAddress">주소</option>
-    </select>
+<div class="container custom-container">
+    <div th:replace="~{navi/header :: header}"></div>
 
-    <input type="text" id="gymKeyword" placeholder="Enter name" >
-    <button onclick="gymSearch()">Search</button>
+    <div class="main-container">
+        <div th:replace="~{navi/sidebar :: sidebar}"></div>
 
-    <table border="1">
-        <thead>
-        <tr>
-            <th>번호</th>
-            <th>이름</th>
-            <th>주소</th>
-            <th>거리</th>
-        </tr>
-        </thead>
-        <tbody id="resultSearch"></tbody>
-    </table>
+        <div class="card main-card">
+            <div class="card-header">
+                <div class="form-group row">
+                    <div class="col-sm-2">
+                        <select id="searchColumn" class="form-control">
+                            <option value="name">이름</option>
+                            <option value="oldAddress">주소</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-8">
+                        <input type="text" id="gymKeyword" class="form-control" placeholder="Enter name">
+                    </div>
+                    <button onclick="gymSearch()" class="btn btn-primary small-btn">Search</button>
+                </div>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped mt-4">
+                    <thead>
+                    <tr>
+                        <th>번호</th>
+                        <th>이름</th>
+                        <th>주소</th>
+                        <th>거리</th>
+                    </tr>
+                    </thead>
+                    <tbody id="resultSearch"></tbody>
+                </table>
 
-    <div id="pagination"></div>
-
-    <div id="mapModal">
-        <p id="modalContent"></p>
-        <div id="kakaoMap" ></div>
-        <button onclick="closeModal()">Close</button>
+            </div>
+            <div class="card-footer">
+                <div id="pagination" class="mt-3"></div>
+            </div>
+        </div>
     </div>
+</div>
 
+<div id="mapModal" class="modal">
+    <div class="modal-dialog" style="max-width: 780px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="modal-title" class="modal-title"></h4>
+                <button type="button" class="close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p id="modalContent"></p>
+                    </div>
+                    <div class="col-md-6">
+                        <div id="kakaoMap"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeModal()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>
