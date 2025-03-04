@@ -65,9 +65,7 @@ public class MemberServiceImpl implements MemberService {
     public void enrollMaster(MultipartFile[] certificate) {
         Set<String> certificates = new HashSet<>();
         for (MultipartFile file : certificate) {
-            if (!file.isEmpty()) {
-                certificates.add(ncpStorageService.uploadImage(file, NCPStorageServiceImpl.DirectoryPath.CERTIFICATE));
-            }
+            addCertificateURL(file,certificates);
         }
 
         MemberOAuth2User principal = (MemberOAuth2User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -80,6 +78,12 @@ public class MemberServiceImpl implements MemberService {
                 .build();
 
         memberToMasterRepository.save(addEnrollMaster);
+    }
+
+    private void addCertificateURL(MultipartFile file, Set<String> certificates) {
+        if(!file.isEmpty()) {
+            certificates.add(ncpStorageService.uploadImage(file, NCPStorageServiceImpl.DirectoryPath.CERTIFICATE));
+        }
     }
 
     @Override
