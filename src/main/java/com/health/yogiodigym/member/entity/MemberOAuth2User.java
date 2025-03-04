@@ -1,5 +1,6 @@
 package com.health.yogiodigym.member.entity;
 
+import com.health.yogiodigym.member.status.MemberStatus;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.authentication.DisabledException;
@@ -56,9 +57,10 @@ public class MemberOAuth2User implements UserDetails, OAuth2User {
 
     @Override
     public boolean isAccountNonLocked() {
-        if (member.getStatus() == SUSPENDED) {
+        MemberStatus status = member.getStatus();
+        if (status == SUSPENDED) {
             throw new LockedException(member.getDropDate()+"까지 정지된 계정입니다.");
-        }else if(member.getStatus() == BAN){
+        }else if(status == BAN){
             throw new LockedException("영구정지 계정입니다.");
         }
 
@@ -72,8 +74,11 @@ public class MemberOAuth2User implements UserDetails, OAuth2User {
 
     @Override
     public boolean isEnabled() {
-        if(member.getStatus() == INACTIVE){
+        MemberStatus status = member.getStatus();
+        if(status == INACTIVE){
             throw new DisabledException("탈퇴대기 계정입니다. "+member.getDropDate().plusDays(3)+"부터 다시 회원가입이 가능합니다");
+        }else if(status != ACTIVE){
+            throw new DisabledException("사용하실 수 없는 계정입니다.");
         }
         return true;
     }
