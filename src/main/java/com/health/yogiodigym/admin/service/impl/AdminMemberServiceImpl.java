@@ -2,7 +2,7 @@ package com.health.yogiodigym.admin.service.impl;
 
 import com.health.yogiodigym.admin.dto.MemberDto.*;
 import com.health.yogiodigym.admin.service.service.AdminMemberService;
-import com.health.yogiodigym.member.auth.MemberStatus;
+import com.health.yogiodigym.member.status.MemberStatus;
 import com.health.yogiodigym.member.entity.Member;
 import com.health.yogiodigym.member.repository.MemberRepository;
 import jakarta.transaction.Transactional;

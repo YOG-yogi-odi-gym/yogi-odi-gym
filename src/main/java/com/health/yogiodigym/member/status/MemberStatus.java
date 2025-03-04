@@ -1,4 +1,4 @@
-package com.health.yogiodigym.member.auth;
+package com.health.yogiodigym.member.status;
 
 public enum MemberStatus {
     ACTIVE, INCOMPLETE, INACTIVE, SUSPENDED, BAN
