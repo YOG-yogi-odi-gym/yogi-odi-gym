@@ -12,9 +12,13 @@ public interface ChatRoomService {
 
     void deleteChatRoom(ChatRoom chatRoom);
 
+    ChatRoomResponseDto getChatRoomDetail(String roomId);
+
     List<ChatRoomResponseDto> getChatRooms(Member member);
 
     void kickMember(Member instructor, Long memberId, String chatRoomId);
 
     void quitChatRoom(Member member, String chatRoomId);
+
+    void checkParticipant(Long memberId, String roomId);
 }

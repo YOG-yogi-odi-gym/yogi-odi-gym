@@ -4,6 +4,7 @@ import static com.health.yogiodigym.chat.config.ChatConstants.ENTER_CHAT_ROOM_ME
 import static com.health.yogiodigym.chat.config.ChatConstants.QUIT_CHAT_ROOM_MESSAGE_SUFFIX;
 
 import com.health.yogiodigym.chat.dto.MessageDto.MessageRequestDto;
+import com.health.yogiodigym.lesson.entity.Lesson;
 import com.health.yogiodigym.lesson.entity.LessonEnrollment;
 import com.health.yogiodigym.lesson.repository.LessonEnrollmentRepository;
 import com.health.yogiodigym.chat.dto.ChatRoomDto.ChatRoomResponseDto;
@@ -18,6 +19,7 @@ import com.health.yogiodigym.common.exception.AlreadyChatParticipantException;
 import com.health.yogiodigym.common.exception.ChatRoomNotFoundException;
 import com.health.yogiodigym.common.exception.MemberNotFoundException;
 import com.health.yogiodigym.common.exception.MemberNotInChatRoomException;
+import com.health.yogiodigym.lesson.repository.LessonRepository;
 import com.health.yogiodigym.member.entity.Member;
 import com.health.yogiodigym.member.repository.MemberRepository;
 import java.util.List;
@@ -39,13 +41,14 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     private final ChatMessageRepository chatMessageRepository;
     private final LessonEnrollmentRepository lessonEnrollmentRepository;
     private final KafkaProducerService kafkaProducerService;
+    private final LessonRepository lessonRepository;
 
     @Override
     public void enterChatRoom(Member member, String roomId) {
         ChatRoom chatRoom = chatRoomRepository.findByRoomId(roomId)
                 .orElseThrow(() -> new ChatRoomNotFoundException(roomId));
 
-        validateChatParticipant(member, chatRoom);
+        validateAlreadyChatParticipant(member, chatRoom);
 
         ChatParticipant chatParticipant = ChatParticipant.builder()
                 .member(member)
@@ -56,7 +59,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         sendChatMessage(member, roomId, member.getName() + ENTER_CHAT_ROOM_MESSAGE_PREFIX);
     }
 
-    private void validateChatParticipant(Member member, ChatRoom chatRoom) {
+    private void validateAlreadyChatParticipant(Member member, ChatRoom chatRoom) {
         if (chatParticipantRepository.existsByMemberAndChatRoom(member, chatRoom)) {
             throw new AlreadyChatParticipantException();
         }
@@ -88,6 +91,17 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         chatMessageRepository.deleteAllByChatRoomInBatch(chatRoom);
         chatParticipantRepository.deleteByChatRoom(chatRoom);
         chatRoomRepository.delete(chatRoom);
+    }
+
+    @Override
+    public ChatRoomResponseDto getChatRoomDetail(String roomId) {
+        ChatRoom chatRoom = chatRoomRepository.findByRoomId(roomId)
+                .orElseThrow(() -> new ChatRoomNotFoundException(roomId));
+
+        Lesson lesson = lessonRepository.findByChatRoom(chatRoom)
+                .orElseThrow(() -> new RuntimeException("레슨이 존재하지 않음"));  // TODO CustomException
+
+        return new ChatRoomResponseDto(lesson);
     }
 
     @Override
@@ -124,6 +138,23 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         chatParticipantRepository.delete(chatParticipant);
 
         sendChatMessage(member, roomId, member.getName() + QUIT_CHAT_ROOM_MESSAGE_SUFFIX);
+    }
+
+    @Override
+    public void checkParticipant(Long memberId, String roomId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException(memberId));
+
+        ChatRoom chatRoom = chatRoomRepository.findByRoomId(roomId)
+                .orElseThrow(() -> new ChatRoomNotFoundException(roomId));
+
+        validateNotInChatParticipant(member, chatRoom);
+    }
+
+    private void validateNotInChatParticipant(Member member, ChatRoom chatRoom) {
+        if (!chatParticipantRepository.existsByMemberAndChatRoom(member, chatRoom)) {
+            throw new MemberNotInChatRoomException();
+        }
     }
 
     private void sendChatMessage(Member member, String roomId, String content) {
