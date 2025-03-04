@@ -57,6 +57,29 @@
             location.href = `/lesson/${lessonId}/edit`;
         }
 
+        function deleteLesson() {
+            if (!confirm("정말 이 강의를 삭제하시겠습니까?")) {
+                return;
+            }
+
+            fetch("/api/admin/lesson/delete", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify([lessonId])  // 강의 ID 배열로 전송
+            })
+                .then(response => response.json())
+                .then(data => {
+                    alert("강의가 삭제되었습니다.");
+                    location.href = "/lesson";  // 강의 목록 페이지로 이동
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    alert("강의 삭제에 실패했습니다.");
+                });
+        }
+
         function openModal() {
             let modal = document.getElementById("mapModal");
             modal.style.display = "block";
@@ -141,27 +164,23 @@
             const bitmask = [[${lesson.days}]]
             document.getElementById("lessonDays").textContent = bitmaskToDays(parseInt(bitmask));
 
-            // 강의 마스터인 경우
             if (lessonMasterId === memberId) {
                 chatRoomBtn.style.display = "block";
                 updateBtn.style.display = "block";
+                deleteBtn.style.display = "block";
             } else {
-                // 수강 인원이 최대에 도달한 경우
                 if (lessonCurrent >= lessonMax) {
                     enrollBtn.textContent = "마감";
                     enrollBtn.disabled = true;
                     enrollBtn.style.display = "block";
 
-                    // 이미 수강 신청한 경우
                     fetch(`/api/lesson/enrolled?lessonId=${lessonId}&memberId=${memberId}`)
                         .then(response => response.json())
                         .then(isEnrolled => {
                             if (isEnrolled.data.enrolled) {
-                                // 수강 인원이 마감되었고, 이미 신청한 경우
                                 cancelEnrollBtn.style.display = "block";
-                                chatRoomBtn.style.display = "block";  // 채팅방 입장 버튼 표시
+                                chatRoomBtn.style.display = "block";
                             } else {
-                                // 수강 신청하지 않은 경우
                                 cancelEnrollBtn.style.display = "none";
                             }
                         })
@@ -172,12 +191,10 @@
                         .then(response => response.json())
                         .then(isEnrolled => {
                             if (isEnrolled.data.enrolled) {
-                                // 이미 수강 신청한 경우
                                 cancelEnrollBtn.style.display = "block";
                                 chatRoomBtn.style.display = "block";
                                 enrollBtn.style.display = "none";
                             } else {
-                                // 수강 신청하지 않은 경우
                                 enrollBtn.style.display = "block";
                                 cancelEnrollBtn.style.display = "none";
                             }
