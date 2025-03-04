@@ -1,8 +1,8 @@
 package com.health.yogiodigym.admin.dto;
 
-import com.health.yogiodigym.member.auth.MemberStatus;
 import com.health.yogiodigym.member.auth.Role;
 import com.health.yogiodigym.member.entity.Member;
+import com.health.yogiodigym.member.status.MemberStatus;
 import lombok.*;
 
 import java.util.Set;
