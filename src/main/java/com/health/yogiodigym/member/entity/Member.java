@@ -2,6 +2,8 @@ package com.health.yogiodigym.member.entity;
 
 import com.health.yogiodigym.member.status.MemberStatus;
 import com.health.yogiodigym.member.auth.Role;
+import com.health.yogiodigym.my.dto.UpdateMemberDto;
+import com.health.yogiodigym.my.dto.UpdateOAuthMemberDto;
 import jakarta.persistence.*;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
@@ -67,4 +69,23 @@ public class Member implements Serializable {
     @CollectionTable(name = "authority", joinColumns = @JoinColumn(name = "member_id", referencedColumnName = "id"))
     @Column(name = "role")
     private Set<Role> roles;
+
+    public void updateMember(UpdateMemberDto updateMemberDto) {
+        this.name = updateMemberDto.getName();
+        this.pwd = updateMemberDto.getPwd();
+        this.weight = updateMemberDto.getWeight();
+        this.height = updateMemberDto.getHeight();
+        this.addr = updateMemberDto.getAddr();
+        this.longitude = updateMemberDto.getLongitude();
+        this.latitude = updateMemberDto.getLatitude();
+    }
+
+    public void updateOAuthMember(UpdateOAuthMemberDto updateOAuthMemberDto) {
+        this.name = updateOAuthMemberDto.getName();
+        this.weight = updateOAuthMemberDto.getWeight();
+        this.height = updateOAuthMemberDto.getHeight();
+        this.addr = updateOAuthMemberDto.getAddr();
+        this.longitude = updateOAuthMemberDto.getLongitude();
+        this.latitude = updateOAuthMemberDto.getLatitude();
+    }
 }

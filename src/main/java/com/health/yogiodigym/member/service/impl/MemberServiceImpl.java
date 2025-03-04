@@ -8,6 +8,7 @@ import com.health.yogiodigym.member.entity.Member;
 import com.health.yogiodigym.member.entity.MemberOAuth2User;
 import com.health.yogiodigym.member.repository.MemberRepository;
 import com.health.yogiodigym.member.service.MemberService;
+import com.health.yogiodigym.member.service.NCPStorageService;
 import com.health.yogiodigym.my.dto.UpdateMemberDto;
 import com.health.yogiodigym.my.dto.UpdateOAuthMemberDto;
 import com.health.yogiodigym.my.entity.MemberToMaster;
@@ -26,9 +27,11 @@ import org.springframework.security.web.context.HttpSessionSecurityContextReposi
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.Set;
 
 import static com.health.yogiodigym.member.auth.Role.ROLE_USER;
@@ -46,6 +49,7 @@ public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final MemberDetailsService memberDetailsService;
+    private final NCPStorageService ncpStorageService;
     private final SecurityContextRepository securityContextRepository = new HttpSessionSecurityContextRepository();
 
     @Override
@@ -58,7 +62,14 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public void enrollMaster(Set<String> certificates) {
+    public void enrollMaster(MultipartFile[] certificate) {
+        Set<String> certificates = new HashSet<>();
+        for (MultipartFile file : certificate) {
+            if (!file.isEmpty()) {
+                certificates.add(ncpStorageService.uploadImage(file, NCPStorageServiceImpl.DirectoryPath.CERTIFICATE));
+            }
+        }
+
         MemberOAuth2User principal = (MemberOAuth2User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         MemberToMaster addEnrollMaster = MemberToMaster.builder()
@@ -75,50 +86,18 @@ public class MemberServiceImpl implements MemberService {
     public void updateMember(UpdateMemberDto updateMemberDto) {
         MemberOAuth2User principal = (MemberOAuth2User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Member currentMember = principal.getMember();
+        currentMember.updateMember(updateMemberDto);
 
-        Member updateMember = Member.builder()
-                .id(currentMember.getId())
-                .name(updateMemberDto.getName())
-                .email(currentMember.getEmail())
-                .pwd(passwordEncoder.encode(updateMemberDto.getPwd()))
-                .gender(currentMember.getGender())
-                .weight(updateMemberDto.getWeight())
-                .height(updateMemberDto.getHeight())
-                .addr(updateMemberDto.getAddr())
-                .latitude(updateMemberDto.getLatitude())
-                .longitude(updateMemberDto.getLongitude())
-                .joinDate(currentMember.getJoinDate())
-                .profile(currentMember.getProfile())
-                .status(currentMember.getStatus())
-                .roles(currentMember.getRoles())
-                .build();
-
-        memberRepository.save(updateMember);
+        memberRepository.save(currentMember);
     }
 
     @Override
     public void updateOAuthMember(UpdateOAuthMemberDto updateOAuthMemberDto) {
         MemberOAuth2User principal = (MemberOAuth2User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Member currentMember = principal.getMember();
+        currentMember.updateOAuthMember(updateOAuthMemberDto);
 
-        Member updateMember = Member.builder()
-                .id(currentMember.getId())
-                .name(updateOAuthMemberDto.getName())
-                .email(currentMember.getEmail())
-                .pwd(currentMember.getPwd())
-                .gender(currentMember.getGender())
-                .weight(updateOAuthMemberDto.getWeight())
-                .height(updateOAuthMemberDto.getHeight())
-                .addr(updateOAuthMemberDto.getAddr())
-                .latitude(updateOAuthMemberDto.getLatitude())
-                .longitude(updateOAuthMemberDto.getLongitude())
-                .joinDate(currentMember.getJoinDate())
-                .profile(currentMember.getProfile())
-                .status(currentMember.getStatus())
-                .roles(currentMember.getRoles())
-                .build();
-
-        memberRepository.save(updateMember);
+        memberRepository.save(currentMember);
     }
 
     private void insertMember(RegistMemberDto registMemberDto, String saveFileURL) {

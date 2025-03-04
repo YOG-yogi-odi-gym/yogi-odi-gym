@@ -602,11 +602,25 @@
 
         function showPwdModal(request) {
             document.body.querySelector("#wrong-pwd").style.display = 'none';
-            document.body.querySelector("#pwd").value = '';
+            let pwdField = document.body.querySelector("#pwd");
+            let pwdLabel = document.body.querySelector("#pwd-label");
+            let pwdModalLabel = document.body.querySelector("#pwd-check-label");
 
+
+            pwdField.value = '';
             if (request == '삭제') {
+                pwdModalLabel.textContent = '경고';
+                if(oAuthMember){
+                    pwdModalLabel.textContent = '경고';
+                    pwdLabel.style.display = 'none';
+                    pwdField.style.display = 'none';
+                }else{
+                    pwdLabel.style.display = 'block';
+                    pwdField.style.display = 'block';
+                }
                 document.body.querySelector("#withdrawal-warning").style.display = "block"
             } else if (request == '수정') {
+                pwdModalLabel.textContent = '비밀번호 확인';
                 document.body.querySelector("#withdrawal-warning").style.display = "none"
             }
             pwdModal.show();
@@ -769,7 +783,7 @@
             </div>
             <div class="modal-body">
                 <div class="mb-3">
-                    <label for="pwd" class="form-label">비밀번호</label>
+                    <label for="pwd" class="form-label" id="pwd-label">비밀번호</label>
                     <input type="password" id="pwd" name="pwd" class="form-control" placeholder="password"
                            style="background-color: #F1F1F1"
                            required>

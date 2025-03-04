@@ -1,4 +1,4 @@
-package com.health.yogiodigym.member.service;
+package com.health.yogiodigym.member.service.impl;
 
 import com.health.yogiodigym.member.UserInfo.GoogleUserInfo;
 import com.health.yogiodigym.member.UserInfo.KakaoUserInfo;

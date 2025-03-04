@@ -18,7 +18,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByEmail(String email);
 
     @Modifying
-    @Query("DELETE FROM Member m WHERE m.dropDate < :dropDate AND m.status = :status")
     int deleteByDropDateBeforeAndStatus(@Param("dropDate") LocalDate dropDate, @Param("status") MemberStatus status);
 
     @Modifying
