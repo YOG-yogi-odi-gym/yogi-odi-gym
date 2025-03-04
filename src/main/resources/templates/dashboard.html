@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <title>DASHBOARD</title>
     <style>
         body {
@@ -35,12 +34,23 @@
             justify-content: flex-start;
         }
         .content {
+            display: flex;
+            flex-direction: column;
             width: 920px;
             height: 800px;
             margin: 25px 20px 25px 20px;
+            background-color: #F1F1F1;
+            border-radius: 10px;
+        }
+
+        .content-up, .content-down {
+            display: flex;
+        }
+        .exercise-graph, .calorie-graph, .my-lesson, .today-best {
+            width: 450px;
+            height: 390px;
             background-color: white;
             border-radius: 10px;
-
         }
     </style>
 
@@ -59,10 +69,26 @@
         </script>
 
         <div class="content">
+            <div class="content-up" style="margin-bottom: 20px">
+                <div class="exercise-graph" style="margin-right: 20px">
+
+                </div>
+                <div class="calorie-graph">
+
+                </div>
+            </div>
+            <div class="content-down">
+                <div class="my-lesson" style="margin-right: 20px">
+
+                </div>
+                <div class="today-best">
+
+                </div>
+            </div>
         </div>
     </div>
 </div>
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
