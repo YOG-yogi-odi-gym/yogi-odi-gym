@@ -1,3 +1,5 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <style th:fragment="custom-navbar">
     .custom-navbar {
         width: 1200px;
@@ -14,15 +16,22 @@
 <div class="custom-navbar" th:fragment="custom-navbar">
     <div>navbar</div>
     <div class="dropdown">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+        <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton"
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <img src="https://via.placeholder.com/40" alt="Profile" class="rounded-circle" width="30" height="30">
-            Profile
+            <img th:src="${#authentication.principal.member.profile}" alt="사진" style="width: 40px;height: 40px;border-radius: 50%;">
+            <span th:text="${#authentication.principal.member.name}"/>
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" href="#">My Profile</a>
-            <a class="dropdown-item" href="#">Settings</a>
-            <a class="dropdown-item" href="#">Logout</a>
+            <a class="dropdown-item" href="/info">내 정보</a>
+            <a class="dropdown-item" href="/my/lesson">내 강의</a>
+            <a class="dropdown-item" href="/my/board">내 게시글</a>
+            <a class="dropdown-item" href="#" onclick="document.getElementById('logoutForm').submit();">로그아웃</a>
+            <form id="logoutForm" th:action="@{/logout}" method="post" style="display: none;">
+                <input type="submit">
+            </form>
+            <div sec:authorize="hasRole('ROLE_ADMIN')">
+                <a class="dropdown-item" href="/admin">관리자 페이지</a>
+            </div>
         </div>
     </div>
 </div>
