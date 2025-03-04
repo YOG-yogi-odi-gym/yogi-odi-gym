@@ -1,6 +1,6 @@
 package com.health.yogiodigym.chat.config;
 
-import com.health.yogiodigym.chat.dto.MessageDto;
+import com.health.yogiodigym.chat.dto.MessageDto.MessageRequestDto;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -25,25 +25,20 @@ public class KafkaConsumerConfiguration {
     private final Environment env;
 
     @Bean
-    ConcurrentKafkaListenerContainerFactory<String, MessageDto> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, MessageDto> factory = new ConcurrentKafkaListenerContainerFactory<>();
+    ConcurrentKafkaListenerContainerFactory<String, MessageRequestDto> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, MessageRequestDto> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         return factory;
     }
 
     @Bean
-    public ConsumerFactory<String, MessageDto> consumerFactory() {
-
-        final String GROUP_ID = env.getProperty("spring.kafka.consumer.group-id");
-
-        log.info("GroupID: {}", GROUP_ID);
-
-        JsonDeserializer<MessageDto> deserializer = new JsonDeserializer<>();
+    public ConsumerFactory<String, MessageRequestDto> consumerFactory() {
+        JsonDeserializer<MessageRequestDto> deserializer = new JsonDeserializer<>();
         deserializer.addTrustedPackages("*");
 
         Map<String, Object> consumerConfigurations = new HashMap<>();
         consumerConfigurations.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, env.getProperty("spring.kafka.bootstrap-servers"));
-        consumerConfigurations.put(ConsumerConfig.GROUP_ID_CONFIG, GROUP_ID);
+        consumerConfigurations.put(ConsumerConfig.GROUP_ID_CONFIG, env.getProperty("spring.kafka.consumer.group-id"));
         consumerConfigurations.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         consumerConfigurations.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, deserializer);
         consumerConfigurations.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest");

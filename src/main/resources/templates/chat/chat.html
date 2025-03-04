@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Kafka 기반 실시간 채팅</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
+    <script defer src="/js/chat/chat.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/chat/chat.css" rel="stylesheet" />
+</head>
+<body>
+<div class="container chat-container">
+    <input id="login_user_email" th:type="hidden" th:value="${#authentication.principal.member.getEmail()}" />
+    <input id="login_user_id" th:type="hidden" th:value="${#authentication.principal.member.getId()}" />
+    <input id="login_user_name" th:type="hidden" th:value="${#authentication.principal.member.getName()}" />
+    <input id="room_id" th:type="hidden" th:value="${roomId}" />
+    <input id="total_page" th:type="hidden" th:value="${totalPage}" />
+
+    <div class="left">
+        <!-- 채팅방 선택 -->
+        <div id="chat_room" class="mb-3">
+            <h3>채팅방 목록</h3>
+            <div th:each="cr, state: ${chatRooms}" class="content">
+                <button th:onclick="moveChatRoom([[ ${cr.roomId} ]])" th:data-room-id="${cr.roomId}" class="text-bg-light p-3" th:value="${cr.roomId}">[[ ${cr.lessonTitle} ]]</button>
+            </div>
+        </div>
+
+        <div id="chat_participants" class="mb-3">
+            <h3>참여인원</h3>
+            <div th:id="chat_participants" th:each="cp, state:${chatParticipants}" class="content">
+                <div class="participant">
+                    <img th:src="${cp.profileUrl}" />
+                    <p th:data-member-id="${cp.memberId}">[[ ${cp.memberName } ]]</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="right">
+        <div class="chat-box" id="chatBox">
+            <span>읽은 메시지</span>
+            <div th:id="read_messages" th:each="rm, state:${readMessages}">
+                <div class="alert alert-secondary mt-2">[[ ${rm.messageId} ]]: [[ ${rm.message} ]]</div>
+            </div>
+
+            <span>안읽은 메시지</span>
+            <div th:id="unread_messages" th:each="urm, state:${unReadMessages}">
+                <div class="alert alert-secondary mt-2">[[ ${urm.messageId} ]]: [[ ${urm.message} ]]</div>
+            </div>
+        </div>
+
+        <div class="input-group mt-3">
+            <input type="text" id="message" class="form-control message-input" placeholder="메시지를 입력하세요">
+            <button class="btn btn-primary" onclick="sendMessage()">전송</button>
+        </div>
+    </div>
+</div>
+</body>
+</html>

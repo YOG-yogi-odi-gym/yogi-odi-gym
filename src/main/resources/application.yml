@@ -17,6 +17,11 @@ spring:
         use_sql_comments: true
     open-in-view: false
 
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
   kafka:
     bootstrap-servers: localhost:9092
     producer:
@@ -36,4 +41,6 @@ jasypt:
     bean: jasyptEncryptor
     password: ${JASYPT_KEY}
 
-
+kakao:
+  api:
+    scriptKey: ENC(rx4OdzFCwme5wNInUfdwd6gB9yQKjrUPUQQjYvoYckQQienCjDrV8NPhqKnoPHNA)

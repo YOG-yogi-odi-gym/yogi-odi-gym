@@ -21,7 +21,7 @@ public class MemberViewController {
             return "redirect:/dashboard";
         }
 
-        return "/member/login";
+        return "member/login";
     }
     @GetMapping("/regist")
     public String regist(Authentication authentication) {
@@ -31,7 +31,7 @@ public class MemberViewController {
             }
         }
 
-        return "/member/regist";
+        return "member/regist";
     }
 
 }
