@@ -4,6 +4,7 @@ import static com.health.yogiodigym.chat.config.ChatConstants.ENTER_CHAT_ROOM_ME
 import static com.health.yogiodigym.chat.config.ChatConstants.QUIT_CHAT_ROOM_MESSAGE_SUFFIX;
 
 import com.health.yogiodigym.chat.dto.MessageDto.MessageRequestDto;
+import com.health.yogiodigym.common.exception.LessonNotFoundException;
 import com.health.yogiodigym.lesson.entity.Lesson;
 import com.health.yogiodigym.lesson.entity.LessonEnrollment;
 import com.health.yogiodigym.lesson.repository.LessonEnrollmentRepository;
@@ -99,7 +100,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
                 .orElseThrow(() -> new ChatRoomNotFoundException(roomId));
 
         Lesson lesson = lessonRepository.findByChatRoom(chatRoom)
-                .orElseThrow(() -> new RuntimeException("레슨이 존재하지 않음"));  // TODO CustomException
+                .orElseThrow(LessonNotFoundException::new);
 
         return new ChatRoomResponseDto(lesson);
     }
