@@ -50,10 +50,9 @@
             background-color: white;
         }
 
-        .nav-item {
+        .side-nav-item {
             display: flex;
             align-items: center;
-            /* justify-content: center; */
             width: 180px;
             height: 40px;
             margin: 10px 0 0 15px;
@@ -61,16 +60,15 @@
             color: rgba(0, 0, 0, 0.87);
             border-radius: 5px;
             transition: background-color 0.3s;
-            text-decoration: none; /* 링크 스타일 제거 */
+            text-decoration: none;
         }
 
-        .nav-item i {
+        .side-nav-item i {
             font-size: 20px;
             margin: 0  15px 0 15px;
         }
 
-        /* a 태그 호버 효과 */
-        .nav-item:hover {
+        .side-nav-item:hover {
             background-color: #007bff;
         }
     </style>
@@ -78,34 +76,55 @@
 <body th:fragment="side">
 <div class="side">
     <div class="side-up" style="background-color: white;">
-        <a th:href="@{/dashboard}" id="side_dashboard" class="nav-item nav-dashboard">
+        <a th:href="@{/dashboard}" id="side_dashboard" class="side-nav-item side-nav-dashboard">
             <i class="bi bi-border-all"></i>
             <span>대시보드</span>
         </a>
-        <a th:href="@{/community}" class="nav-item nav-community">
+        <a th:href="@{/community}" class="side-nav-item side-nav-community">
             <i class="bi bi-people-fill"></i>
             <span>커뮤니티</span>
         </a>
-        <a th:href="@{/lesson}" id="side_lesson" class="nav-item nav-courses">
+        <a th:href="@{/lesson}" id="side_lesson" class="side-nav-item side-nav-courses">
             <i class="bi bi-search"></i>
             <span>강의 찾기</span>
         </a>
-        <a th:href="@{/my-courses}" class="nav-item nav-my-courses">
+        <a th:href="@{/my-courses}" class="side-nav-item side-nav-my-courses">
             <i class="bi bi-card-checklist"></i>
             <span>내 강의</span>
         </a>
-        <a th:href="@{/calendar/cal}" id="side_calendar" class="nav-item nav-calendar">
+        <a th:href="@{/calendar}" id="side_calendar" class="side-nav-item side-nav-calendar">
             <i class="bi bi-calendar-event"></i>
             <span>캘린더</span>
         </a>
-        <a th:href="@{/gyms}" id="side_gym" class="nav-item nav-gym">
+        <a th:href="@{/gyms}" id="side_gym" class="side-nav-item side-nav-gym">
             <i class="bi bi-house-door"></i>
             <span>헬스장 찾기</span>
         </a>
     </div>
 
+<!--    <p th:text="${currentUrl}"></p>-->
+
+<!--    <script th:inline="javascript">-->
+<!--        /* Thymeleaf 변수를 JavaScript로 직접 전달 */-->
+<!--        let currentUrl = /*[[${currentUrl}]]*/ "";-->
+<!--        console.log(currentUrl);-->
+
+<!--        document.addEventListener("DOMContentLoaded", function() {-->
+<!--            if (currentUrl === "/dashboard") {-->
+<!--                let lessonElement = document.getElementById("side_dashboard");-->
+<!--                if (lessonElement) {-->
+<!--                    lessonElement.style.color = "blue";-->
+<!--                    lessonElement.style.background = "skyblue";-->
+<!--                }-->
+<!--            }-->
+<!--        });-->
+<!--    </script>-->
+
+
+
     <div class="side-down">
     </div>
 </div>
+
 </body>
 </html>
