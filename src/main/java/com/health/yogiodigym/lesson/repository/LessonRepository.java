@@ -1,6 +1,8 @@
 package com.health.yogiodigym.lesson.repository;
 
+import com.health.yogiodigym.chat.entity.ChatRoom;
 import com.health.yogiodigym.lesson.entity.Lesson;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -84,4 +86,6 @@ public interface LessonRepository extends JpaRepository<Lesson, Long> {
             @Param("days") Integer days,
             @Param("categories") List<Long> categories,
             Pageable pageable);
+
+    Optional<Lesson> findByChatRoom(ChatRoom chatRoom);
 }

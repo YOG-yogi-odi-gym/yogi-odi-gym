@@ -91,7 +91,7 @@ class ChatMessageRepositoryTest {
         chatMessageRepository.saveAll(messages);
 
         // when
-        List<ChatMessage> unreadMessages = chatMessageRepository.findByMemberAndChatRoomAndIdGreaterThan(sender, chatRoom, 1L);
+        List<ChatMessage> unreadMessages = chatMessageRepository.findByChatRoomAndIdGreaterThan(chatRoom, 1L);
 
         // then
         assertThat(unreadMessages.size()).isEqualTo(2);
