@@ -34,12 +34,23 @@
             justify-content: flex-start;
         }
         .content {
+            display: flex;
+            flex-direction: column;
             width: 920px;
             height: 800px;
             margin: 25px 20px 25px 20px;
+            background-color: #F1F1F1;
+            border-radius: 10px;
+        }
+
+        .content-up, .content-down {
+            display: flex;
+        }
+        .exercise-graph, .calorie-graph, .my-lesson, .today-best {
+            width: 450px;
+            height: 390px;
             background-color: white;
             border-radius: 10px;
-
         }
     </style>
 
@@ -58,6 +69,22 @@
         </script>
 
         <div class="content">
+            <div class="content-up" style="margin-bottom: 20px">
+                <div class="exercise-graph" style="margin-right: 20px">
+
+                </div>
+                <div class="calorie-graph">
+
+                </div>
+            </div>
+            <div class="content-down">
+                <div class="my-lesson" style="margin-right: 20px">
+
+                </div>
+                <div class="today-best">
+
+                </div>
+            </div>
         </div>
     </div>
 </div>
