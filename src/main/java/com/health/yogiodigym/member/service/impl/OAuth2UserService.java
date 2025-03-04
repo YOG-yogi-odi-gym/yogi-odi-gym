@@ -1,4 +1,4 @@
-package com.health.yogiodigym.member.service;
+package com.health.yogiodigym.member.service.impl;
 
 import com.health.yogiodigym.member.UserInfo.GoogleUserInfo;
 import com.health.yogiodigym.member.UserInfo.KakaoUserInfo;
@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.EnumSet;
 import java.util.Map;
 
-import static com.health.yogiodigym.member.auth.MemberStatus.INCOMPLETE;
+import static com.health.yogiodigym.member.status.MemberStatus.INCOMPLETE;
 import static com.health.yogiodigym.member.auth.Role.ROLE_USER;
 
 @Slf4j

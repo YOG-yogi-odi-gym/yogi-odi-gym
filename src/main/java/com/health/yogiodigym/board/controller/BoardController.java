@@ -1,5 +1,6 @@
 package com.health.yogiodigym.board.controller;
 
+import com.health.yogiodigym.admin.service.service.AdminBoardService;
 import com.health.yogiodigym.board.dto.BoardDto.*;
 import com.health.yogiodigym.board.service.BoardService;
 import com.health.yogiodigym.common.response.HttpResponse;
@@ -20,8 +21,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import java.util.List;
 import java.util.Map;
 
-import static com.health.yogiodigym.common.message.SuccessMessage.SEARCH_BOARD_SUCCESS;
-import static com.health.yogiodigym.common.message.SuccessMessage.SEARCH_GYMS_SUCCESS;
+import static com.health.yogiodigym.common.message.SuccessMessage.*;
 
 @RestController
 @RequestMapping("/api/board")
@@ -29,6 +29,7 @@ import static com.health.yogiodigym.common.message.SuccessMessage.SEARCH_GYMS_SU
 public class BoardController {
 
     private final BoardService boardService;
+    private final AdminBoardService adminBoardService;
 
     @GetMapping("/search")
     public ResponseEntity<?> searchBoard(@RequestParam(required = false) String boardKeyword,
@@ -56,5 +57,13 @@ public class BoardController {
     public RedirectView editBoard(@ModelAttribute BoardDetailDto dto) {
         boardService.editBoard(dto);
         return new RedirectView("/board/" + dto.getId());
+    }
+
+    @PostMapping("/delete")
+    public ResponseEntity<?> adminDeleteBoard(@RequestBody List<Long> ids) {
+
+        adminBoardService.deleteAllById(ids);
+        return ResponseEntity.ok().body(new HttpResponse(HttpStatus.OK, ADMIN_BOARD_DELETE_SUCCESS.getMessage(), null));
+
     }
 }

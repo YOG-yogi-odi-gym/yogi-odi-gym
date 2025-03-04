@@ -31,7 +31,6 @@ $(document).ready(function () {
                                 <td><input type="checkbox" class="memberCheckbox" value="${member.id}"></td>
                                 <td>${member.name}</td>
                                 <td>${member.email}</td>
-                                <td></td>
                                 <td>${member.status}</td>
                             </tr>`;
                     tableBody.append(row);

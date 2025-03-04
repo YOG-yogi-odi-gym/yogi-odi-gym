@@ -114,26 +114,39 @@
         }
 
         function deleteBoard() {
-            if (!confirm("정말 이 강의를 삭제하시겠습니까?")) {
+            const boardId = [[${board.id}]];
+            if (!confirm("정말 이 게시글을 삭제하시겠습니까?")) {
                 return;
             }
+            let csrf = getCsrfToken();
 
-            fetch("/api/admin/board/delete", {
+            fetch("/api/board/delete", {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json; charset=utf-8",
+                    [csrf.header]: csrf.token
                 },
-                body: JSON.stringify([lessonId])  // 강의 ID 배열로 전송
+                body: JSON.stringify([boardId])  // ⬅ 배열 형태로 변경
             })
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
                 .then(data => {
-                    alert("강의가 삭제되었습니다.");
-                    location.href = "/lesson";  // 강의 목록 페이지로 이동
+                    if (data.status === 200) {
+                        alert("게시글을 삭제했습니다.");
+                        location.href = "/board";
+                    } else {
+                        alert("게시글 삭제에 실패했습니다.");
+                        console.error("서버 응답 데이터:", data);
+                    }
                 })
                 .catch(error => {
-                    console.error("Error:", error);
-                    alert("강의 삭제에 실패했습니다.");
-                });
+                    console.error("삭제 요청 중 오류 발생:", error);
+                    alert("삭제 중 오류가 발생했습니다.");
+                })
         }
     </script>
 </head>
@@ -196,7 +209,7 @@
                 <div th:if="${member.id == board.memberId}">
                     <button class="btn btn-warning" th:onclick="|location.href='/board/' + ${board.id} + '/edit'|">수정
                     </button>
-                    <button id="deleteBtn" style="display: none;" onclick="deleteBoard()">삭제</button>
+                    <button class="btn btn-warning" id="deleteBtn" onclick="deleteBoard()">삭제</button>
                 </div>
             </div>
         </div>

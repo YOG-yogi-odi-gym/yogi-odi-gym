@@ -20,6 +20,7 @@
         const memberId = [[${member.id}]];
         const lessonId = [[${lesson.id}]];
         const roomId = `[[${lesson.roomId}]]`;
+        let csrfToken = "[[${_csrf.token}]]"
 
         function enrollLesson() {
             fetch(`/api/lesson/enroll`, {
@@ -58,26 +59,38 @@
         }
 
         function deleteLesson() {
+            const lessonId = [[${lesson.id}]];
             if (!confirm("정말 이 강의를 삭제하시겠습니까?")) {
                 return;
             }
 
-            fetch("/api/admin/lesson/delete", {
+            fetch("/api/lesson/delete", {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json; charset=utf-8",
+                    'X-CSRF-TOKEN': csrfToken
                 },
-                body: JSON.stringify([lessonId])  // 강의 ID 배열로 전송
+                body: JSON.stringify([lessonId])  // ⬅ 배열 형태로 변경
             })
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
                 .then(data => {
-                    alert("강의가 삭제되었습니다.");
-                    location.href = "/lesson";  // 강의 목록 페이지로 이동
+                    if (data.status === 200) {
+                        alert("강의를 삭제했습니다.");
+                        location.href = "/lesson";
+                    } else {
+                        alert("강의 삭제에 실패했습니다.");
+                        console.error("서버 응답 데이터:", data);
+                    }
                 })
                 .catch(error => {
-                    console.error("Error:", error);
-                    alert("강의 삭제에 실패했습니다.");
-                });
+                    console.error("삭제 요청 중 오류 발생:", error);
+                    alert("삭제 중 오류가 발생했습니다.");
+                })
         }
 
         function openModal() {
@@ -291,12 +304,6 @@
             </div>
         </div>
     </div>
-</div>
-
-<div id="mapModal">
-    <h3 id="modalContent"></h3>
-    <div id="kakaoMap"></div>
-    <button onclick="closeModal()">Close</button>
 </div>
 
 <div id="mapModal" class="modal">

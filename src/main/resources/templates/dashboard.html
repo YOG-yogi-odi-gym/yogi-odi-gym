@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <title>test</title>
+    <title>DASHBOARD</title>
     <style>
         body {
             margin: 0;
@@ -43,20 +43,26 @@
 
         }
     </style>
+
+
+
 </head>
 <body>
 <div class="container-fluid">
     <div th:replace="~{fragments/navbar :: custom-navbar}"></div>
     <div class="main">
         <div th:replace="~{fragments/side :: side}"></div>
+
+        <script>
+            document.getElementById("side_dashboard").style.color = "blue";
+            document.getElementById("side_dashboard").style.background = "skyblue"
+        </script>
+
         <div class="content">
         </div>
     </div>
 </div>
-
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>
-
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
