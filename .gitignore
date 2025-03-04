@@ -36,3 +36,6 @@ application-local.yml
 
 ### VS Code ###
 .vscode/
+
+### profile image ###
+/src/main/resources/static/images/profile/*

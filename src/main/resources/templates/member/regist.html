@@ -17,32 +17,33 @@
         const csrfToken = $("meta[name='_csrf']").attr("content");
         const csrfHeader = $("meta[name='_csrf_header']").attr("content");
 
-        async function registSubmit() {
-            const pwd = document.querySelector("#pwd");
-            const pwd2 = document.querySelector("#pwd2");
+        $(document).ready(function () {
+            document.getElementById("profile").addEventListener("change", function (event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const preview = document.getElementById("preview");
+                        preview.src = e.target.result;
+                        preview.style.display = "block";
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+
+        async function registSubmit(authenticated) {
             const registForm = document.querySelector("#registForm");
             const formData = new FormData(registForm);
-
-            if (pwd && pwd2 && pwd.value !== pwd2.value) {
-                alert("비밀번호와 비밀번호 확인이 일치하지 않습니다!");
-                return;
-            }
-
-
-            const requiredFields = ["name", "email", "gender", "height", "weight", "addr", "latitude", "longitude"];
-            if(pwd !== null){
-                requiredFields.push("pwd");
-            }
-
-            for (const field of requiredFields) {
-                if (!formData.get(field)) {
-                    alert("빈칸 없이 입력해주세요!");
-                    return;
-                }
+            let url;
+            if(authenticated === 'true'){
+                url = "/api/member/oAuthRegist";
+            }else{
+                url = "/api/member/regist";
             }
 
             await $.ajax({
-                url: "/api/member/regist",
+                url: url,
                 type: "POST",
                 data: formData,
                 processData: false,
@@ -53,14 +54,33 @@
                 },
                 success: function (res) {
                     console.log(res);
-                    alert(res.message);
-                    if(res.status != 400){
-                        window.location.href = "/dashboard"
-                    }
+                    window.location.href = "/dashboard"
                 },
-                error: function (request, error) {
-                    alert(request.responseText);
-                    alert(error);
+                error: function (res) {
+                    let resJSON = res.responseJSON;
+
+                    if(res.status == 400){
+                        alert(resJSON.message)
+                        let errors = resJSON.data;
+
+                        const errorMap = errors.reduce((acc, error) => {
+                            acc[error.field] = error.defaultMessage;
+                            return acc;
+                        }, {})
+
+                        console.log(errorMap['name']);
+                        console.log(errorMap['email']);
+                        console.log(errorMap['pwd']);
+                        console.log(errorMap['pwd2']);
+                        console.log(errorMap['passwordMatching']);
+                        console.log(errorMap['gender']);
+                        console.log(errorMap['weight']);
+                        console.log(errorMap['height']);
+                        console.log(errorMap['latitude']);
+
+                    }else if(res.status == 409){
+                        alert(resJSON.message)
+                    }
                 }
             });
         }
@@ -129,15 +149,19 @@
         <input type="button" onclick="searchAddress('addr')" value="주소찾기">
     </div>
 
-    <div sec:authorize="isAnonymous()">
-        <!-- 프로필 이미지 -->
-        <div class="form-group">
-            <label for="profile">프로필 사진</label>
-            <input type="file" id="profile" name="profile" class="form-control">
-        </div>
+
+    <!-- 프로필 이미지 -->
+    <div class="form-group">
+        <img th:src="${#authorization.expression('isAuthenticated()') ? #authentication.principal.member.profile : '/images/source/anonymous.png'}"
+             alt="프로필 이미지" style="max-width: 150px; max-height: 150px;" id="preview">
+        <label for="profile">프로필 사진</label>
+        <input type="file" id="profile" name="profile" class="form-control" accept="image/*">
     </div>
 
-    <button type="button" onclick="registSubmit()"
+    <button type="button"
+            onclick="registSubmit(this.getAttribute('data-authenticated'))"
+            th:data-authenticated="${#authorization.expression('isAuthenticated()') ? 'true' : 'false'}"
+
             class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 focus:outline-none">회원가입
     </button>
     <a href="/member/login">로그인창</a>
