@@ -12,19 +12,11 @@ import org.springframework.web.socket.server.support.HttpSessionHandshakeInterce
 @Component
 public class WebSocketHandshakeInterceptor extends HttpSessionHandshakeInterceptor {
 
-    private static final String USERNAME = "username";
-
     @Override
     public boolean beforeHandshake(ServerHttpRequest request,
                                    ServerHttpResponse response,
                                    WebSocketHandler wsHandler,
                                    Map<String, Object> attributes) throws Exception {
-
-        attributes.put(USERNAME, request.getPrincipal().getName());
-
-        log.info("Interceptor: {}", request.getPrincipal().getName());
-
-        // TODO 요청자가 채팅방에 속해있는지 확인
 
         return super.beforeHandshake(request, response, wsHandler, attributes);
     }
