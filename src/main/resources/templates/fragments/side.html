@@ -75,8 +75,8 @@
         }
     </style>
 </head>
-<body th:fragment="side">
-<div class="side">
+<body>
+<div class="side" th:fragment="side">
     <div class="side-up" style="background-color: white;">
         <a th:href="@{/dashboard}" id="side_dashboard" class="nav-item nav-dashboard">
             <i class="bi bi-border-all"></i>
@@ -103,9 +103,7 @@
             <span>헬스장 찾기</span>
         </a>
     </div>
-
-    <div class="side-down">
-    </div>
+    <div class="side-down"></div>
 </div>
 </body>
 </html>
