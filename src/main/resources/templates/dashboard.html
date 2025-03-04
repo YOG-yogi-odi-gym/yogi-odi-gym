@@ -59,35 +59,6 @@
         </script>
 
         <div class="content">
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="profile-container">
-                        <h2 class="text-2xl font-semibold text-gray-800">관리자 정보</h2>
-                        <div class="user-info">
-                            <img th:src="${#authentication.principal.member.profile}" alt="Profile">
-                            <h3 th:text="${#authentication.principal.member.name}"></h3>
-                            <p th:text="${#authentication.name}"></p>
-                        </div>
-                        <form th:action="@{/logout}" method="post">
-                            <button type="submit" class="logout-button">로그아웃</button>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- Main Content Section -->
-                <div class="col-md-8">
-                    <div class="alert alert-info" role="alert" sec:authorize="isAuthenticated()">
-                        님, 환영합니다!
-                    </div>
-                    <div sec:authorize="isAuthenticated()">
-                        <a href="/admin" class="admin-button">관리자 페이지로 이동</a>
-                    </div>
-
-                    <div sec:authorize="!isAuthenticated()">
-                        <p class="text-center">로그인 해주세요!</p>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </div>
