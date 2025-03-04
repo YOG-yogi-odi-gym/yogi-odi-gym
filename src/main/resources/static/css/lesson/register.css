@@ -66,33 +66,32 @@
 }
 
 .card-body {
-    font-size: 12px;
+    font-size: 13px;
     padding: 5px 16px 16px 16px;
     background: white;
     border: none;
 }
 
 .card-footer {
+    display: flex;
+    justify-content: center;
     background: white;
     border: none;
 }
 
 .form-group {
+    display: flex;
+    align-items: center;
     margin-bottom: 0;
     padding-bottom: 10px;
 }
 
 .form-control {
-    font-size: 12px;
+    font-size: 13px;
 }
 
 button {
     font-size: 13px;
-}
-
-table {
-    width: 100%;
-    table-layout: fixed;
 }
 
 th, td {
@@ -104,17 +103,81 @@ th, td {
     text-overflow: ellipsis;
 }
 
-th:nth-child(1), td:nth-child(1),
-th:nth-child(4), td:nth-child(4) {
-    width: 100px;
-}
 
-th:nth-child(2), td:nth-child(2),
-th:nth-child(3), td:nth-child(3) {
-    width: calc((100% - 200px) / 2);
+.btn{
+    font-size: 13px;
 }
 
 .small-btn {
     padding: 4px 10px;
-    font-size: 14px;
+    font-size: 13px;
+}
+
+.location-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.time-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.date-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.checkbox-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.checkbox-container input,
+.checkbox-container label {
+    font-size: 12px;
+    display: inline-block;
+}
+
+#search-label {
+    display: inline-block;
+}
+
+.checkbox-container div {
+    padding-right: 10px;
+}
+
+.day-label {
+    padding-right: 10px;
+}
+
+.search-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-right: 12px;
+}
+
+.day-container {
+    display: flex;
+}
+
+.btn-primary{
+    background: #27AE60;
+}
+
+.btn-search{
+    width: 92px;
+}
+
+.card-footer button {
+    margin-right: 15px;
+}
+
+.card-footer button:last-child {
+    margin-right: 0;
 }
