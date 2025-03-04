@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-<head>
+<head th:fragment="side">
     <meta charset="UTF-8">
     <title>test</title>
 
@@ -16,7 +16,7 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: black;
+            background-color: #F1F1F1;
         }
 
         .side {
@@ -75,7 +75,7 @@
         }
     </style>
 </head>
-<body>
+<body th:fragment="side">
 <div class="side">
     <div class="side-up" style="background-color: white;">
         <a th:href="@{/dashboard}" id="side_dashboard" class="nav-item nav-dashboard">

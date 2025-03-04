@@ -18,6 +18,7 @@
             background-color: #f1f1f1;
         }
         .container-fluid {
+            max-width: 1200px;
             width: 1200px;
             height: 900px;
             display: flex;
@@ -28,10 +29,10 @@
             background-color: #f1f1f1;
         }
         .main {
-            width: 100%;
+            width: 1200px;
             height: 850px;
             display: flex;
-            flex-direction: flex-start;
+            justify-content: flex-start;
         }
         .content {
             width: 920px;
@@ -41,88 +42,14 @@
             border-radius: 10px;
 
         }
-
-
-
-
-        .profile-container {
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            text-align: center;
-        }
-        .profile-container img {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-        .logout-button {
-            background-color: #007bff;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            text-align: center;
-            margin-top: 20px;
-            cursor: pointer;
-        }
-        .logout-button:hover {
-            background-color: #0056b3;
-        }
-        .admin-button {
-            background-color: #28a745;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            text-align: center;
-            margin-top: 20px;
-            cursor: pointer;
-            width: 100%;
-        }
-        .admin-button:hover {
-            background-color: #218838;
-        }
-        .alert {
-            margin-bottom: 20px;
-        }
     </style>
 </head>
 <body>
 <div class="container-fluid">
-    <div th:replace="~{fragment/navbar :: navbar}"></div>
+    <div th:replace="~{fragment/navbar :: custom-navbar}"></div>
     <div class="main">
         <div th:replace="~{fragment/side :: side}"></div>
         <div class="content">
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="profile-container">
-                        <h2 class="text-2xl font-semibold text-gray-800">관리자 정보</h2>
-                        <div class="user-info">
-                            <img th:src="${#authentication.principal.member.profile}" alt="Profile">
-                            <h3 th:text="${#authentication.principal.member.name}"></h3>
-                            <p th:text="${#authentication.name}"></p>
-                        </div>
-                        <form th:action="@{/logout}" method="post">
-                            <button type="submit" class="logout-button">로그아웃</button>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- Main Content Section -->
-                <div class="col-md-8">
-                    <div class="alert alert-info" role="alert" sec:authorize="isAuthenticated()">
-                        님, 환영합니다!
-                    </div>
-                    <div sec:authorize="isAuthenticated()">
-                        <a href="/admin" class="admin-button">관리자 페이지로 이동</a>
-                    </div>
-
-                    <div sec:authorize="!isAuthenticated()">
-                        <p class="text-center">로그인 해주세요!</p>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </div>
