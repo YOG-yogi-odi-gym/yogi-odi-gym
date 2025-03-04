@@ -12,7 +12,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.List;
 
-import static com.health.yogiodigym.member.auth.MemberStatus.INCOMPLETE;
+import static com.health.yogiodigym.member.status.MemberStatus.INCOMPLETE;
 
 public class IncompleteUserFilter extends OncePerRequestFilter {
 

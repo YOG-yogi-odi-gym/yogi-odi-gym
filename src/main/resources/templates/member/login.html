@@ -5,41 +5,113 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" th:href="@{/css/google_btn.css}">
-    <title>test</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <title>Document</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #F1F1F1;
+        }
+
+        .container {
+            width: 1200px;
+            height: 900px;
+            background-color: #F1F1F1;
+            border-radius: 10px;
+        }
+
+        .btn-lg {
+            color: #f8f9fa;
+            font-size: 15px;
+            font-weight: bolder;
+        }
+
+
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const errorMessage = urlParams.get("error");
+            if(errorMessage != null){
+                const modalDiv = new bootstrap.Modal(document.querySelector("#modalDiv"));
+                document.querySelector("#modalLabel").textContent = "로그인 오류";
+                document.querySelector("#modalMessage").textContent = errorMessage;
+                modalDiv.show();
+                console.log(errorMessage)
+            }
+
+            const form = document.getElementById('loginForm');
+            form.addEventListener('keydown', function (event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    loginFormSubmit();
+                }
+            });
+        });
+
+        function loginFormSubmit() {
+            document.getElementById('loginForm').submit();
+        }
+    </script>
 </head>
 <body>
-<h1>Hello!! SpringBoot!!</h1>
-<form th:action="@{/login}" method="post">
-    <label>Email: <input type="text" name="username"/></label>
-    <label>Password: <input type="password" name="password"/></label>
-    <button type="submit">Login</button>
-</form>
+<div class="container">
+    <div class="card mx-auto border-0"
+         style="max-width: 1200px; height: 900px;">
+        <div class="card-body">
+            <div class="card mx-auto border-0"
+                 style="max-width: 280px; height: 850px">
+                <div class="card-body">
+                    <h2 class="card-title text-center" style="margin: 100px 0 100px 0; font-weight: bolder">Yogi Odi Gym</h2>
+                    <form th:action="@{/login}" method="post" id="loginForm">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">이메일</label>
+                            <input type="text" class="form-control" id="username" name="username" placeholder="example@mail.com" style="background-color: #F1F1F1">
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">비밀번호</label>
+                            <input type="password" class="form-control" id="password" name="password" placeholder="password" style="background-color: #F1F1F1">
+                        </div>
+                    </form>
 
-    <button class="gsi-material-button" onclick="window.location.href='/oauth2/authorization/google'">
-        <div class="gsi-material-button-state"></div>
-        <div class="gsi-material-button-content-wrapper">
-            <div class="gsi-material-button-icon">
-                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" xmlns:xlink="http://www.w3.org/1999/xlink" style="display: block;">
-                    <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"></path>
-                    <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"></path>
-                    <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"></path>
-                    <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"></path>
-                    <path fill="none" d="M0 0h48v48H0z"></path>
-                </svg>
+                    <div class="mb-3" style="display: flex; justify-content: center; align-items: center; gap: 30px; padding: 20px 0">
+                        <a th:href="@{/oauth2/authorization/kakao}">
+                            <img src="/images/source/kakao_logo.png" alt="카카오 로그인" style="margin: 0" width="46px"
+                                 height="46px">
+                        </a>
+                        <a th:href="@{/oauth2/authorization/naver}">
+                            <img src="/images/source/naver_logo.png" alt="네이버 로그인" style="margin: 0" width="46px"
+                                 height="46px">
+                        </a>
+                        <a th:href="@{/oauth2/authorization/google}">
+                            <img src="/images/source/google_logo.png" alt="구글 로그인" style="margin: 0" width="46px"
+                                 height="46px">
+                        </a>
+                    </div>
+
+                    <button type="button" class="btn btn-lg w-100 mb-3" onclick="loginFormSubmit()" style="background-color: #27AE60; border-radius: 30px">
+                        로그인
+                    </button>
+
+                    <a th:href="@{/member/regist}" class="btn btn-lg w-100 mb-3" style="background-color: #27AE60; border-radius: 30px">
+                        회원가입
+                    </a>
+                </div>
             </div>
-            <span class="gsi-material-button-contents">Google 로그인</span>
-            <span style="display: none;">Sign in with Google</span>
         </div>
-    </button><br>
-    <a th:href="@{/oauth2/authorization/kakao}">
-        <img src="/images/source/kakao_login_btn.png" alt="카카오 로그인" class="w-16 h-16 object-cover">
-    </a><br>
-    <a th:href="@{/oauth2/authorization/naver}">
-        <img src="/images/source/naver_login_btn.png" alt="네이버 로그인" width="183" height="45">
-    </a><br>
+    </div>
+</div>
 
-    <button><a th:href="@{/member/regist}">Join</a></button>
-
+<div th:replace="fragments/modal :: modalFragment"></div>
 </body>
 </html>

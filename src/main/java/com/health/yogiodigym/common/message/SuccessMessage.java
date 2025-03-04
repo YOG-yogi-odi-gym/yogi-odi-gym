@@ -41,11 +41,18 @@ public enum SuccessMessage {
     ADMIN_MEMBER_STATUS_CHANGE_SUCCESS("회원 비활성화 성공하였습니다."),
     ADMIN_LESSON_SEARCH_SUCCESS("강의목록 검색에 성공하였습니다."),
     ADMIN_LESSON_DELETE_SUCCESS("강의 삭제에 성공하였습니다."),
+    WITHDRAWAL_SUCCESS("회원탈퇴 처리되었습니다"),
+    PROFILE_UPDATE_SUCCESS("프로필 이미지 저장에 성공하였습니다."),
+    MEMBER_UPDATE_SUCCESS("회원정보 수정에 성공하였습니다."),
+    ENROLL_MASTER_SUCCESS("강사 신청에 성공하였습니다."),
     ADMIN_BOARD_SEARCH_SUCCESS("게시판 검색에 성공하였습니다."),
     ADMIN_BOARD_DELETE_SUCCESS("게시판 삭제에 성공하였습니다."),
     ADMIN_CATEGORY_DELETE_SUCCESS("카테고리 삭제에 성공하였습니다."),
     ADMIN_CATEGORY_INSERT_SUCCESS("카테고리 추가에 성공하였습니다."),
     ADMIN_CATEGORY_UPDATE_SUCCESS("카테고리 수정에 성공하였습니다."),
+    PASSWORD_MATCH_SUCCESS("비밀번호 인증에 성공하였습니다."),
+    GET_READ_MESSAGES_SUCCESS("읽은 메시지 조회에 성공하였습니다."),
+    UPDATE_LAST_READ_MESSAGE_SUCCESS("마지막에 읽은 메시지 업데이트에 성공하였습니다."),
     ADMIN_AUTHORITY_ADD_SUCCESS("권한 추가에 성공하였습니다."),
     ADMIN_AUTHORITY_REJECT_SUCCESS("권한 반려에 성공하였습니다.");
 

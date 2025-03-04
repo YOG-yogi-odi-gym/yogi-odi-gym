@@ -1,8 +1,9 @@
 package com.health.yogiodigym.admin.dto;
 
-import com.health.yogiodigym.member.entity.MemberToMaster;
+import com.health.yogiodigym.my.entity.MemberToMaster;
 import lombok.*;
 
+import java.util.Set;
 
 public class MemberToMasterDto {
 
@@ -17,7 +18,7 @@ public class MemberToMasterDto {
         private Long memberId;
         private String memberName;
         private String memberEmail;
-        private String file;
+        private Set<String> certificate;
 
         public static MemberToMasterResponseDto from(MemberToMaster memberToMaster) {
 
@@ -26,7 +27,7 @@ public class MemberToMasterDto {
                     .memberId(memberToMaster.getMember().getId())
                     .memberName(memberToMaster.getMember().getName())
                     .memberEmail(memberToMaster.getMember().getEmail())
-                    .file(memberToMaster.getFile())
+                    .certificate(memberToMaster.getCertificate())
                     .build();
         }
     }

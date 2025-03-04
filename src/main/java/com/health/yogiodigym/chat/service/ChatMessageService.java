@@ -13,7 +13,9 @@ public interface ChatMessageService {
 
     void updateReadStatus(Member member, String roomId, Long lastMessageId);
 
-    List<MessageResponseDto> getReadMessages(Member member, String roomId, Pageable pageable);
+    List<MessageResponseDto> getReadMessages(Member member, String roomId, Long lastMessageId, Pageable pageable);
+
+    Long getLastMessageId(Member member, String roomId);
 
     int getTotalPage(Member member, String roomId);
 }

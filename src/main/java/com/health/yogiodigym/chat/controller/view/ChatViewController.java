@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-public class ChatController {
+public class ChatViewController {
 
     private final ChatRoomService chatRoomService;
     private final ChatMessageService chatMessageService;
@@ -31,11 +31,14 @@ public class ChatController {
         log.info("채팅페이지 입장, roomId: {}", roomId);
 
         Member member = loginUser.getMember();
+        Long lastMessageId = chatMessageService.getLastMessageId(member, roomId);
+        model.addAttribute("lastMessageId", lastMessageId);
         model.addAttribute("roomId", roomId);
         model.addAttribute("totalPage", chatMessageService.getTotalPage(member, roomId));
         model.addAttribute("chatParticipants", chatParticipantService.getChatParticipants(member, roomId));
         model.addAttribute("chatRooms", chatRoomService.getChatRooms(member));
-        model.addAttribute("readMessages", chatMessageService.getReadMessages(member, roomId, PageRequest.of(0, 30)));
+        model.addAttribute("chatRoomDetail", chatRoomService.getChatRoomDetail(roomId));
+        model.addAttribute("readMessages", chatMessageService.getReadMessages(member, roomId, lastMessageId, PageRequest.of(0, 30)));
         model.addAttribute("unReadMessages", chatMessageService.getUnReadMessages(member, roomId));
 
         return "chat/chat";

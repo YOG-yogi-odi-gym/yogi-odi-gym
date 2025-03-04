@@ -1,4 +1,4 @@
-package com.health.yogiodigym.member.service;
+package com.health.yogiodigym.member.service.impl;
 
 import com.health.yogiodigym.common.exception.EmailNotFoundException;
 import com.health.yogiodigym.member.entity.MemberOAuth2User;

@@ -87,3 +87,16 @@ jasypt:
   encryptor:
     bean: jasyptEncryptor
     password: ${JASYPT_KEY}
+
+cloud:
+  ncp:
+    storage:
+      endpoint: https://kr.object.ncloudstorage.com
+      region: kr-standard
+      access-key: ENC(jymdZ7bw/7B1p3XiHvrTjbIfRTHAS1X9zg327Va/5Vc2GVEskGIUOQ==)
+      secret-key: ENC(KKLFAF9a67ERD3xojAXA5Dn+IKSjJT3ZjimsyRvGPwtPrOnKOp8f6wYsi7K4bSYyOpnbHAYphnQ=)
+      bucket: yog-img-storage
+
+kakao:
+  api:
+    scriptKey: ENC(rx4OdzFCwme5wNInUfdwd6gB9yQKjrUPUQQjYvoYckQQienCjDrV8NPhqKnoPHNA)
