@@ -23,4 +23,5 @@ public interface LessonService {
     List<CategoryDto> getCategoriesByCode(String code);
 
     Page<LessonSearchDto> searchMyLessons(Long id, String lessonKeyword, String searchColumn, Integer days, List<Long> categories, Pageable pageable);
+
 }

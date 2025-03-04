@@ -1,8 +1,10 @@
 package com.health.yogiodigym.lesson.controller;
 
+import com.health.yogiodigym.admin.service.service.AdminLessonService;
 import com.health.yogiodigym.chat.service.ChatRoomService;
 import com.health.yogiodigym.common.response.HttpResponse;
 import com.health.yogiodigym.lesson.dto.LessonDto.*;
+import com.health.yogiodigym.lesson.repository.LessonRepository;
 import com.health.yogiodigym.lesson.service.LessonEnrollmentService;
 import com.health.yogiodigym.lesson.service.LessonService;
 import com.health.yogiodigym.member.entity.Member;
@@ -32,6 +34,7 @@ public class LessonController {
     private final LessonService lessonService;
     private final ChatRoomService chatRoomService;
     private final LessonEnrollmentService lessonEnrollmentService;
+    private final AdminLessonService adminLessonService;
 
     @GetMapping("/search")
     public ResponseEntity<?> searchLessons(@RequestParam(required = false) String lessonKeyword,
@@ -90,4 +93,11 @@ public class LessonController {
         return new RedirectView("/lesson/" + lessonDto.getId());
     }
 
+    @PostMapping("/delete")
+    public ResponseEntity<?> adminDeleteLesson(@RequestBody List<Long> ids) {
+
+        adminLessonService.deleteAllById(ids);
+        return ResponseEntity.ok().body(new HttpResponse(HttpStatus.OK,ADMIN_LESSON_DELETE_SUCCESS.getMessage(), null));
+
+    }
 }
