@@ -23,6 +23,8 @@ public enum SuccessMessage {
     ADMIN_CATEGORY_DELETE_SUCCESS("카테고리 삭제에 성공하였습니다."),
     ADMIN_CATEGORY_INSERT_SUCCESS("카테고리 추가에 성공하였습니다."),
     ADMIN_CATEGORY_UPDATE_SUCCESS("카테고리 수정에 성공하였습니다."),
+    GET_READ_MESSAGES_SUCCESS("읽은 메시지 조회에 성공하였습니다."),
+    UPDATE_LAST_READ_MESSAGE_SUCCESS("마지막에 읽은 메시지 업데이트에 성공하였습니다."),
     ADMIN_AUTHORITY_ADD_SUCCESS("권한 추가에 성공하였습니다."),
     ADMIN_AUTHORITY_REJECT_SUCCESS("권한 반려에 성공하였습니다.");
 
