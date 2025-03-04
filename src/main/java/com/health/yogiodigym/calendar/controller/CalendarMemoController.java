@@ -65,7 +65,7 @@ public class CalendarMemoController {
     }
 
     @DeleteMapping("/date/{id}")
-    public ResponseEntity<?> DeleteMemoByDate(@PathVariable("id") Long id) {
+    public ResponseEntity<?> deleteMemoByDate(@PathVariable("id") Long id) {
 
         calendarMemoServiceimpl.deleteMemoByDate(id);
 
