@@ -33,12 +33,9 @@ public class SecurityConfig {
         http
                 .cors(withDefaults())
                 .csrf(withDefaults())
-                .csrf(csrf -> csrf
-                        //.ignoringRequestMatchers("/api/**"))
-                        .ignoringRequestMatchers("/api/**","/memo/**","/exercise/**","/food/**"))
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/images/source/**", "/css/**", "/js/**", "/", "/member/regist", "/api/member/regist").permitAll()
-                        .requestMatchers("/images/license/**", "/templates/admin/**", "/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/images/license/**", "/api/admin/**", "/admin/**").hasRole("ADMIN")
                         .requestMatchers("/member/login", "/login").not().authenticated()
                         .requestMatchers("/logout", "/dashboard", "/images/license/**").authenticated()
                         .anyRequest().authenticated()
