@@ -17,10 +17,9 @@ public interface ChatMessageRepository extends JpaRepository<ChatMessage, Long> 
     @Query("DELETE FROM ChatMessage cm WHERE cm.chatRoom = :chatRoom")
     void deleteAllByChatRoomInBatch(@Param("chatRoom") ChatRoom chatRoom);
 
-    List<ChatMessage> findByMemberAndChatRoomAndIdGreaterThan(Member member, ChatRoom chatRoom, Long lastReadMessageId);
+    List<ChatMessage> findByChatRoomAndIdGreaterThan(ChatRoom chatRoom, Long lastReadMessageId);
 
-    Page<ChatMessage> findByMemberAndChatRoomAndIdLessThanEqualOrderByIdDesc(
-                            Member member,
+    Page<ChatMessage> findByChatRoomAndIdLessThanEqualOrderByIdDesc(
                             ChatRoom chatRoom,
                             Long lastReadMessageId,
                             Pageable pageable);
