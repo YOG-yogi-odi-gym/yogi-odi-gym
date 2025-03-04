@@ -1,16 +1,3 @@
-body {
-    background-color: #F1F1F1;
-}
-
-.custom-container {
-    max-width: 1200px;
-    height: 900px;
-    gap: 20px;
-    display: flex;
-    align-items: flex-start;
-    margin-top: 20px;
-}
-
 #kakaoMap {
     width: 100%;
     height: 400px;
@@ -125,46 +112,6 @@ th:nth-child(4), td:nth-child(4) {
 th:nth-child(2), td:nth-child(2),
 th:nth-child(3), td:nth-child(3) {
     width: calc((100% - 200px) / 2);
-}
-
-.side-card{
-    width: 230px;
-    height: 800px;
-    background: #F1F1F1;
-}
-
-.side-card .card-header{
-    width: 230px;
-    height: 320px;
-    border-radius: 10px;
-    background: #FFFFFF;
-}
-
-.side-card .card-body{
-    padding-bottom: 10px;
-    padding-top: 10px;
-    background: #F1F1F1;
-}
-
-.side-card .card-footer{
-    width: 230px;
-    height: 100px;
-    border-radius: 10px;
-    background: #FFFFFF;
-}
-
-.main-card{
-    width: 920px;
-    height: 800px;
-    border-radius: 10px;
-}
-
-.main-card .card-header{
-    border-radius: 10px 10px 0 0;
-}
-
-.main-card .card-footer{
-    border-radius: 0 0 10px 10px;
 }
 
 .small-btn {

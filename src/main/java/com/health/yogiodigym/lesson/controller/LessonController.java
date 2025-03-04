@@ -9,7 +9,9 @@ import com.health.yogiodigym.member.entity.Member;
 import com.health.yogiodigym.member.entity.MemberOAuth2User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +22,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import java.util.List;
 import java.util.Map;
 
-import static com.health.yogiodigym.common.message.SuccessMessage.SEARCH_GYMS_SUCCESS;
+import static com.health.yogiodigym.common.message.SuccessMessage.*;
 
 @RestController
 @RequestMapping("/api/lesson")
@@ -36,11 +38,14 @@ public class LessonController {
                                            @RequestParam(required = false) String searchColumn,
                                            @RequestParam(required = false) Integer days,
                                            @RequestParam(required = false) List<Long> categories,
-                                           @PageableDefault(page = 0, size = 10) Pageable pageable) {
+                                           @RequestParam(defaultValue = "0") int page,
+                                           @RequestParam(defaultValue = "10") int size) {
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC,"id"));
 
         Page<LessonSearchDto> lessons = lessonService.searchLessons(lessonKeyword, searchColumn, days, categories, pageable);
 
-        return ResponseEntity.ok().body(new HttpResponse(HttpStatus.OK, SEARCH_GYMS_SUCCESS.getMessage(), lessons));
+        return ResponseEntity.ok().body(new HttpResponse(HttpStatus.OK, SEARCH_LESSON_SUCCESS.getMessage(), lessons));
     }
 
     @PostMapping("/register")
