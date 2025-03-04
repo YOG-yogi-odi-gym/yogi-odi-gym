@@ -6,6 +6,11 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum ErrorMessage {
+    FOOD_NOT_FOUND("식단이 존재하지 않습니다."),
+    EXERCISE_NOT_FOUND("운동 기록이 존재하지 않습니다."),
+    DATA_FOOD_NOT_FOUND("음식 데이터가 존재하지 않습니다."),
+    DATA_EXERCISE_NOT_FOUND("운동 데이터가 존재하지 않습니다."),
+    MEMO_NOT_FOUND("메모가 존재하지 않습니다."),
     SERVER_ERROR("서버 내부 오류"),
     LESSON_CANCEL_ERROR("수강 내역이 없습니다."),
     LESSON_ENROLLMENT_ERROR("이미 수강 중인 강의입니다."),
