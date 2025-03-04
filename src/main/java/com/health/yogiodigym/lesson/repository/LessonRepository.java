@@ -1,15 +1,15 @@
 package com.health.yogiodigym.lesson.repository;
 
+import com.health.yogiodigym.chat.entity.ChatRoom;
 import com.health.yogiodigym.lesson.entity.Lesson;
+import com.health.yogiodigym.member.entity.Member;
+import java.util.List;
+import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-
-import com.health.yogiodigym.member.entity.Member;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-
-import java.util.List;
 
 public interface LessonRepository extends JpaRepository<Lesson, Long> {
 
@@ -46,4 +46,6 @@ public interface LessonRepository extends JpaRepository<Lesson, Long> {
             @Param("days") Integer days,
             @Param("categories") List<Long> categories,
             Pageable pageable);
+
+    Optional<Lesson> findByChatRoom(ChatRoom chatRoom);
 }
