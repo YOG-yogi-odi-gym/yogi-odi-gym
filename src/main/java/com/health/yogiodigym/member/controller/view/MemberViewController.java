@@ -23,6 +23,7 @@ public class MemberViewController {
 
         return "member/login";
     }
+
     @GetMapping("/regist")
     public String regist(Authentication authentication) {
         if (authentication != null && (authentication.getPrincipal() instanceof MemberOAuth2User principal)) {
@@ -33,5 +34,4 @@ public class MemberViewController {
 
         return "member/regist";
     }
-
 }
