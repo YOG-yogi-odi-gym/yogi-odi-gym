@@ -2,9 +2,20 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Lesson Detail</title>
-    <script type="text/javascript" th:src="@{'//dapi.kakao.com/v2/maps/sdk.js?appkey=' + ${@environment.getProperty('kakao.api.scriptKey')}}"></script>
+    <title>강의 상세보기</title>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <script type="text/javascript"
+            th:src="@{'//dapi.kakao.com/v2/maps/sdk.js?appkey=' + ${@environment.getProperty('kakao.api.scriptKey')}}"></script>
     <script type="text/javascript" th:src="@{'/js/bitmaskToDays.js'}"></script>
+    <link th:href="@{https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css}" rel="stylesheet">
+    <script th:src="@{https://code.jquery.com/jquery-3.5.1.slim.min.js}"></script>
+    <script th:src="@{https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js}"></script>
+    <script th:src="@{https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/lesson/register.css}">
+    <link rel="stylesheet" th:href="@{/css/lesson/lessonSearch.css}">
+    <link rel="stylesheet" th:href="@{/css/mainTool.css}">
+
     <script>
         const memberId = [[${member.id}]];
         const lessonId = [[${lesson.id}]];
@@ -15,7 +26,7 @@
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ memberId, lessonId }),
+                body: JSON.stringify({memberId, lessonId}),
             })
                 .then(response => response.json())
                 .then(data => {
@@ -79,7 +90,7 @@
                 : `/api/lesson/enroll`;
 
             let method = isEnrolled ? "DELETE" : "POST";
-            let body = isEnrolled ? null : JSON.stringify({ memberId, lessonId });
+            let body = isEnrolled ? null : JSON.stringify({memberId, lessonId});
 
             let currentCount = parseInt(tdCurrent.textContent.split(" / ")[0]);
             let maxCount = parseInt(tdCurrent.textContent.split(" / ")[1]);
@@ -96,7 +107,7 @@
 
             fetch(url, {
                 method: method,
-                headers: { "Content-Type": "application/json" },
+                headers: {"Content-Type": "application/json"},
                 body: body
             })
                 .then(response => response.json())
@@ -116,7 +127,7 @@
                 });
         }
 
-        window.onload = function() {
+        window.onload = function () {
             const lessonMasterId = [[${lesson.masterId}]];
             const lessonMax = [[${lesson.max}]];
             const lessonCurrent = [[${lesson.current}]];
@@ -187,45 +198,105 @@
             padding: 20px;
             border: 1px solid black;
         }
-        #kakaoMap{
+
+        #kakaoMap {
             width: 500px;
             height: 400px;
         }
     </style>
 </head>
 <body>
-    <h2 th:text="${lesson.title}"></h2>
+<div class="container custom-container">
+    <div th:replace="~{navi/header :: header}"></div>
 
-    <p><strong>카테고리:</strong> <span th:text="${lesson.categoryName}"></span></p>
-    <p><strong>강의 요일:</strong> <span id="lessonDays"></span></p>
-    <p><strong>강의 기간:</strong> <span th:text="|${lesson.startDay} ~ ${lesson.endDay}|"></span></p>
-    <p><strong>강의 시간:</strong> <span th:text="|${lesson.startTime} ~ ${lesson.endTime}|"></span></p>
-    <p><strong>위치:</strong> <span th:text="${lesson.location}"></span></p>
-    <p><strong>상세 위치:</strong> <span th:text="${lesson.detailedLocation}"></span></p>
-    <button onclick="openModal()"
-            th:data-title="${lesson.title}"
-            th:data-latitude="${lesson.latitude}"
-            th:data-longitude="${lesson.longitude}">지도 보기</button>
-    <p><strong>수강 인원:</strong> <span th:text="|${lesson.current} / ${lesson.max}|"></span></p>
-    <p><strong>강사:</strong> <span th:text="${lesson.masterName}"></span></p>
-    <strong>강의 소개:</strong>
-    <p th:utext="${#strings.replace(lesson.description, '\n', '<br>')}"></p>
+    <div class="main-container">
+        <div th:replace="~{navi/sidebar :: sidebar}"></div>
 
-    <div id="buttonContainer">
-        <button onclick="history.back()">뒤로 가기</button>
-        <button onclick="location.href='/lesson'">강의 목록</button>
-        <button id="chatRoomBtn" style="display: none;" onclick="enterChatRoom()">채팅방 입장</button>
-        <button id="cancelEnrollBtn" style="display: none;" onclick="cancelEnrollment()">수강 취소</button>
-        <button id="enrollBtn" style="display: none;" onclick="enrollLesson()">수강 신청</button>
-        <button id="updateBtn" style="display: none;" onclick="updateLesson()">수정</button>
+        <div class="card main-card">
+            <div class="card-header">
+                <h2 th:text="${lesson.title}"></h2>
 
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered table-striped">
+                    <tbody>
+                    <tr>
+                        <th class="text-center">카테고리</th>
+                        <td th:text="${lesson.categoryName}"></td>
+                        <th class="text-center">위치</th>
+                        <td th:text="${lesson.location}"></td>
+                    </tr>
+                    <tr>
+                        <th class="text-center">강의 요일</th>
+                        <td id="lessonDays"></td>
+                        <th class="text-center">상세 위치</th>
+                        <td>
+                            <span th:text="${lesson.detailedLocation}"></span>
+                            <button class="btn btn-sm btn-primary" onclick="openModal()"
+                                    th:data-title="${lesson.title}"
+                                    th:data-latitude="${lesson.latitude}"
+                                    th:data-longitude="${lesson.longitude}">
+                                지도 보기
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="text-center">강의 기간</th>
+                        <td th:text="|${lesson.startDay} ~ ${lesson.endDay}|"></td>
+                        <th class="text-center">강의 시간</th>
+                        <td th:text="|${lesson.startTime} ~ ${lesson.endTime}|"></td>
+                    </tr>
+                    <tr>
+                        <th class="text-center">수강 인원</th>
+                        <td th:text="|${lesson.current} / ${lesson.max}|"></td>
+                        <th class="text-center">강사</th>
+                        <td th:text="${lesson.masterName}"></td>
+                    </tr>
+                    <tr>
+                        <th class="text-center">강의 소개</th>
+                        <td colspan="5">
+                            <pre th:text="${lesson.description}" style="font-family: inherit; white-space: pre-wrap; word-break: break-word;"></pre>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card-footer text-center" id="buttonContainer">
+                <button onclick="history.back()">뒤로 가기</button>
+                <button onclick="location.href='/lesson'">강의 목록</button>
+                <button id="chatRoomBtn" style="display: none;" onclick="enterChatRoom()">채팅방 입장</button>
+                <button id="cancelEnrollBtn" style="display: none;" onclick="cancelEnrollment()">수강 취소</button>
+                <button id="enrollBtn" style="display: none;" onclick="enrollLesson()">수강 신청</button>
+                <button id="updateBtn" style="display: none;" onclick="updateLesson()">수정</button>
+            </div>
+        </div>
     </div>
+</div>
 
-    <div id="mapModal">
-        <h3 id="modalContent"></h3>
-        <div id="kakaoMap" ></div>
-        <button onclick="closeModal()">Close</button>
+<div id="mapModal">
+    <h3 id="modalContent"></h3>
+    <div id="kakaoMap"></div>
+    <button onclick="closeModal()">Close</button>
+</div>
+
+<div id="mapModal" class="modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="modal-title" class="modal-title"></h4>
+                <button type="button" class="close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                    <div class="col-md-6">
+                        <div id="kakaoMap"></div>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeModal()">Close</button>
+            </div>
+        </div>
     </div>
-
+</div>
 </body>
 </html>

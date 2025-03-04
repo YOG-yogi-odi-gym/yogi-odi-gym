@@ -54,6 +54,25 @@ public class LessonServiceImpl implements LessonService {
     }
 
     @Override
+    public Page<LessonSearchDto> searchMyLessons(Long id, String lessonKeyword, String searchColumn, Integer days, List<Long> categories, Pageable pageable) {
+        boolean hasKeyword = lessonKeyword != null && !lessonKeyword.isEmpty();
+        boolean hasDays = days != null;
+        boolean hasCategories = categories != null && !categories.isEmpty();
+
+        Page<Lesson> lessons;
+
+        if (!hasKeyword && !hasDays && !hasCategories) {
+            lessons = lessonRepository.findByMasterId(id, pageable);
+        } else if (hasCategories) {
+            lessons = lessonRepository.searchMyLessonsByCategories(id, lessonKeyword, searchColumn, days, categories, pageable);
+        } else {
+            lessons = lessonRepository.searchMyLessons(id, lessonKeyword, searchColumn, days, pageable);
+        }
+
+        return lessons.map(LessonSearchDto::new);
+    }
+
+    @Override
     public LessonDetailDto findLessonById(Long lessonId) {
         Lesson lesson = lessonRepository.findById(lessonId)
                 .orElseThrow(() -> new LessonNotFoundException(lessonId));
@@ -122,6 +141,7 @@ public class LessonServiceImpl implements LessonService {
     @Transactional(readOnly = true)
     public List<CategoryDto> getCategoriesByCode(String code) {
         List<Category> categories = categoryRepository.findByCode(code);
+
         return categories.stream()
                 .map(CategoryDto::new)
                 .collect(Collectors.toList());

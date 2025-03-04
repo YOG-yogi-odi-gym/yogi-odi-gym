@@ -66,6 +66,7 @@
 }
 
 .card-body {
+    height: 647px;
     font-size: 12px;
     padding: 5px 16px 16px 16px;
     background: white;
@@ -104,17 +105,47 @@ th, td {
     text-overflow: ellipsis;
 }
 
-th:nth-child(1), td:nth-child(1),
-th:nth-child(4), td:nth-child(4) {
-    width: 100px;
+th:nth-child(1), td:nth-child(1) {
+    width: 50px;
 }
 
-th:nth-child(2), td:nth-child(2),
+th:nth-child(2), td:nth-child(2){
+    width: calc(((100% - 170px) / 3) * 2);
+}
+
 th:nth-child(3), td:nth-child(3) {
-    width: calc((100% - 200px) / 2);
+    width: calc((100% - 170px) / 3);
+}
+
+th:nth-child(4), td:nth-child(4) {
+    width: 120px;
 }
 
 .small-btn {
     padding: 4px 10px;
     font-size: 14px;
+}
+
+.checkbox-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.checkbox-container input,
+.checkbox-container label {
+    font-size: 12px;
+    display: inline-block;
+}
+
+#search-label {
+    display: inline-block;
+    align-items: center;
+    padding-left: 10px;
+    padding-bottom: 10px;
+    width: 130px;
+}
+
+.checkbox-container div {
+    padding-right: 10px;
 }

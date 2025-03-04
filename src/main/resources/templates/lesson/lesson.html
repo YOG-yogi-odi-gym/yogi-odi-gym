@@ -2,21 +2,33 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>test</title>
-    <script type="text/javascript" th:src="@{'//dapi.kakao.com/v2/maps/sdk.js?appkey=' + ${@environment.getProperty('kakao.api.scriptKey')}}"></script>
+    <title>강의</title>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <script type="text/javascript"
+            th:src="@{'//dapi.kakao.com/v2/maps/sdk.js?appkey=' + ${@environment.getProperty('kakao.api.scriptKey')}}"></script>
+    <link th:href="@{https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css}" rel="stylesheet">
+    <script th:src="@{https://code.jquery.com/jquery-3.5.1.slim.min.js}"></script>
+    <script th:src="@{https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js}"></script>
+    <script th:src="@{https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/gyms.css}">
+    <link rel="stylesheet" th:href="@{/css/lesson/lessonSearch.css}">
+    <link rel="stylesheet" th:href="@{/css/mainTool.css}">
+
     <script>
         window.onload = function () {
             lessonSearch();
         }
 
-        let currentPage=0
-        const pageSize=10
+        let currentPage = 0
+        const pageSize = 10
 
         let memberLat = [[${member.getLatitude}]]
         let memberLon = [[${member.getLongitude}]]
         let memberId = [[${member.id}]]
+        let csrfToken = "[[${_csrf.token}]]"
 
-        function lessonSearch(page = 0){
+        function lessonSearch(page = 0) {
             currentPage = page;
 
             let lessonKeyword = document.getElementById("lessonKeyword").value
@@ -33,7 +45,7 @@
                 searchColumn: searchColumn,
                 page: page,
                 size: pageSize
-            });
+            })
 
             if (categoryList.length > 0) {
                 queryParams.append("categories", categoryList.join(","));
@@ -43,14 +55,20 @@
                 queryParams.append("days", daysBitmask);
             }
 
-            fetch(`/api/lesson/search?${queryParams.toString()}`)
+            fetch(`/api/lesson/search?${queryParams.toString()}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken
+                }
+            })
                 .then(response => response.json())
                 .then(data => {
                     const lessons = data.data.content;
                     const totalPages = data.data.totalPages;
 
                     let resultSearch = document.getElementById("resultSearch")
-                    resultSearch.innerHTML=""
+                    resultSearch.innerHTML = ""
 
                     let lessonNo = page * 10 + 1;
 
@@ -67,11 +85,11 @@
                         let tdBtn = document.createElement("td")
 
                         let detailLink = document.createElement("a")
-                        detailLink.href=`/lesson/${lesson.id}`
+                        detailLink.href = `/lesson/${lesson.id}`
                         detailLink.textContent = `[${lesson.categoryName}] ${lesson.title}`
                         tdTitle.appendChild(detailLink)
 
-                        tdNo.textContent = lessonNo++
+                        tdNo.textContent = lesson.id
                         tdMaster.textContent = lesson.masterName
                         tdLessonDays.textContent = bitmaskToDays(lesson.days);
                         tdLessonTime.textContent = `${lesson.startTime} ~ ${lesson.endTime}`
@@ -82,19 +100,40 @@
                         tdDistance.textContent = `${distance.toFixed(2)} Km`
 
                         if (lesson.masterId === memberId) {
-                            // 현재 사용자가 강의 생성자일 경우 버튼 없음
                             tdBtn.textContent = "내 강의";
+                            tdBtn.style.textAlign = "center";
+                            tdBtn.style.fontWeight = "bold";
+                            tdBtn.style.display = "flex";
+                            tdBtn.style.alignItems = "center";
+                            tdBtn.style.justifyContent = "center";
                         } else {
                             let lessonBtn = document.createElement("button");
+                            lessonBtn.style.padding = "0px";
+                            lessonBtn.style.fontSize = "12px";
+                            lessonBtn.style.height = "25px";
+                            lessonBtn.style.minWidth = "50px";
 
                             if (lesson.current >= lesson.max) {
                                 lessonBtn.textContent = "마감";
+                                lessonBtn.className = "btn btn-primary btn-enroll";
                                 lessonBtn.disabled = true;
                             } else {
-                                fetch(`/api/lesson/enrolled?lessonId=${lesson.id}&memberId=${memberId}`)
+                                fetch(`/api/lesson/enrolled?lessonId=${lesson.id}&memberId=${memberId}`, {
+                                    method: 'GET',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': csrfToken
+                                    }
+                                })
                                     .then(response => response.json())
                                     .then(data => {
-                                        lessonBtn.textContent = data.data.enrolled ? "취소" : "신청";
+                                        if (data.data.enrolled) {
+                                            lessonBtn.textContent = "취소";
+                                            lessonBtn.className = "btn btn-danger btn-enroll";
+                                        } else {
+                                            lessonBtn.textContent = "신청";
+                                            lessonBtn.className = "btn btn-primary btn-enroll";
+                                        }
                                         lessonBtn.onclick = () => toggleEnrollment(lesson.id, data.data.enrolled, lessonBtn, tdCurrent);
                                     });
                             }
@@ -128,7 +167,7 @@
                     pagination.appendChild(prevBtn)
 
 
-                    for (let i = startPage; i< endPage; i++){
+                    for (let i = startPage; i < endPage; i++) {
                         let pageBtn = document.createElement("button")
                         pageBtn.textContent = i + 1
                         pageBtn.onclick = () => lessonSearch(i)
@@ -147,7 +186,7 @@
                 })
         }
 
-        function openModal(lesson){
+        function openModal(lesson) {
             let modal = document.getElementById("gymModal")
             modal.style.display = "block"
 
@@ -161,7 +200,7 @@
                 <strong>경도:</strong> ${lesson.longitude} <br>
             `
 
-            kakao.maps.load(function() {
+            kakao.maps.load(function () {
                 let mapOption = {
                     center: new kakao.maps.LatLng(lesson.latitude, lesson.longitude),
                     level: 3
@@ -178,7 +217,7 @@
 
         }
 
-        function closeModal(){
+        function closeModal() {
             document.getElementById("gymModal").style.display = "none"
         }
 
@@ -197,9 +236,9 @@
         }
 
         function bitmaskToDays(bitmask) {
-            if (bitmask === 31){
+            if (bitmask === 31) {
                 return "평일"
-            } else if (bitmask === 96){
+            } else if (bitmask === 96) {
                 return "주말"
             }
 
@@ -220,7 +259,7 @@
                 : `/api/lesson/enroll`;
 
             let method = isEnrolled ? "DELETE" : "POST";
-            let body = isEnrolled ? null : JSON.stringify({ memberId: memberId, lessonId: lessonId });
+            let body = isEnrolled ? null : JSON.stringify({memberId: memberId, lessonId: lessonId});
 
             let currentCount = parseInt(tdCurrent.textContent.split(" / ")[0]);
             let maxCount = parseInt(tdCurrent.textContent.split(" / ")[1]);
@@ -230,14 +269,22 @@
 
             if (newCount >= maxCount) {
                 button.textContent = "마감";
+                button.className = "btn btn-primary btn-enroll";
                 button.disabled = true;
+            } else if (!isEnrolled) {
+                button.textContent = "취소";
+                button.className = "btn btn-danger btn-enroll";
             } else {
-                button.textContent = isEnrolled ? "신청" : "취소";
+                button.textContent = "신청";
+                button.className = "btn btn-primary btn-enroll";
             }
 
             fetch(url, {
                 method: method,
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                    'X-CSRF-TOKEN': csrfToken
+                },
                 body: body
             })
                 .then(response => response.json())
@@ -260,7 +307,7 @@
         function limitCheckboxSelection(checkbox) {
             let checkboxes = document.querySelectorAll("input[name='categories']");
 
-            checkboxes.forEach(function(item) {
+            checkboxes.forEach(function (item) {
                 if (item !== checkbox) {
                     item.checked = false;
                 }
@@ -268,72 +315,93 @@
         }
     </script>
 
-    <style>
-        #gymModal {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            padding: 20px;
-            border: 1px solid black;
-        }
-        #kakaoMap{
-            width: 500px;
-            height: 400px;
-        }
-    </style>
 </head>
 <body>
-<h2>Lesson Search</h2>
-<select id="searchColumn">
-    <option value="name">이름</option>
-    <option value="oldAddress">주소</option>
-</select>
+<div class="container custom-container">
+    <div th:replace="~{navi/header :: header}"></div>
 
-<input type="text" id="lessonKeyword" placeholder="Enter name" >
-<button onclick="lessonSearch()">Search</button>
+    <div class="main-container">
+        <div th:replace="~{navi/sidebar :: sidebar}"></div>
 
-<div th:each="category : ${categories}">
-    <input type="checkbox" th:name="categories" th:id="'category-'+${category.id}" th:value="${category.id}" onclick="limitCheckboxSelection(this)">
-    <label th:for="'category-' + ${category.id}" th:text="${category.name}"></label>
-</div>
+        <div class="card main-card">
+            <div class="card-header">
+                <div class="form-group row">
+                    <div class="col-sm-2">
+                        <select id="searchColumn" class="form-control">
+                            <option value="name">이름</option>
+                            <option value="oldAddress">주소</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-8">
+                        <input type="text" id="lessonKeyword" class="form-control" placeholder="Enter name">
+                    </div>
+                    <button onclick="lessonSearch()" class="btn btn-primary small-btn">Search</button>
+                </div>
 
-<label>요일 선택:</label>
-<input type="checkbox" name="days" value="1"> 월
-<input type="checkbox" name="days" value="2"> 화
-<input type="checkbox" name="days" value="4"> 수
-<input type="checkbox" name="days" value="8"> 목
-<input type="checkbox" name="days" value="16"> 금
-<input type="checkbox" name="days" value="32"> 토
-<input type="checkbox" name="days" value="64"> 일
-<br>
-<button onclick="location.href='/lesson/register'">강의 등록</button>
-<br>
-<table border="1">
-    <thead>
-    <tr>
-        <th>번호</th>
-        <th>강의명</th>
-        <th>강사</th>
-        <th>강의일</th>
-        <th>시간</th>
-        <th>수강인원</th>
-        <th>위치</th>
-        <th>거리</th>
-        <th>수강신청</th>
-    </tr>
-    </thead>
-    <tbody id="resultSearch"></tbody>
-</table>
+                <div class="checkbox-container">
+                    <label id="search-label">카테고리 선택</label>
+                    <div th:each="category : ${categories}">
+                        <input type="checkbox" th:name="categories" th:id="'category-'+${category.id}"
+                               th:value="${category.id}"
+                               onclick="limitCheckboxSelection(this)">
+                        <label th:for="'category-' + ${category.id}" th:text="${category.name}"></label>
+                    </div>
+                </div>
 
-<div id="pagination"></div>
+                <div class="search-container">
+                    <div class="day-container">
+                        <label id="search-label">요일 선택</label>
+                        <label class="day-label">
+                            <input type="checkbox" name="days" value="1"> 월
+                        </label>
+                        <label class="day-label">
+                            <input type="checkbox" name="days" value="2"> 화
+                        </label>
+                        <label class="day-label">
+                            <input type="checkbox" name="days" value="4"> 수
+                        </label>
+                        <label class="day-label">
+                            <input type="checkbox" name="days" value="8"> 목
+                        </label>
+                        <label class="day-label">
+                            <input type="checkbox" name="days" value="16"> 금
+                        </label>
+                        <label class="day-label">
+                            <input type="checkbox" name="days" value="32"> 토
+                        </label>
+                        <label class="day-label">
+                            <input type="checkbox" name="days" value="64"> 일
+                        </label>
+                    </div>
 
-<div id="gymModal">
-    <p id="modalContent"></p>
-    <div id="kakaoMap" ></div>
-    <button onclick="closeModal()">Close</button>
+                    <button onclick="location.href='/lesson/register'"
+                            class="btn btn-success small-btn btn-lesson-register">강의 등록
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped mt-4">
+                    <thead>
+                    <tr>
+                        <th>번호</th>
+                        <th>강의명</th>
+                        <th>강사</th>
+                        <th>강의일</th>
+                        <th>시간</th>
+                        <th>수강인원</th>
+                        <th>위치</th>
+                        <th>거리</th>
+                        <th>수강신청</th>
+                    </tr>
+                    </thead>
+                    <tbody id="resultSearch"></tbody>
+                </table>
+            </div>
+            <div class="card-footer">
+                <div id="pagination" class="mt-3"></div>
+            </div>
+        </div>
+    </div>
 </div>
 
 </body>

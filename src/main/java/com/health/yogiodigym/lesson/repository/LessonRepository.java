@@ -14,6 +14,7 @@ import org.springframework.data.repository.query.Param;
 public interface LessonRepository extends JpaRepository<Lesson, Long> {
 
     List<Lesson> findAllByMaster(Member member);
+  
     @Query("SELECT l FROM Lesson l WHERE l.title LIKE %:lessonKeyword% OR l.master.name LIKE %:lessonKeyword%")
     List<Lesson> adminSearchLessons(@Param("lessonKeyword") String lessonKeyword);
 
@@ -32,7 +33,7 @@ public interface LessonRepository extends JpaRepository<Lesson, Long> {
             "(:column = 'name' AND l.title LIKE CONCAT('%', :keyword, '%')) OR " +
             "(:column = 'location' AND l.location LIKE CONCAT('%', :keyword, '%'))) " +
             "AND (:days IS NULL OR (l.days & :days) > 0) " +
-            "AND (:categories IS NULL OR l.category_id IN :categories)",
+            "AND (:categories IS NULL OR l.category_id IN :categories) ",
             countQuery = "SELECT count(*) FROM lesson l WHERE " +
                     "(:keyword IS NULL OR :keyword = '' OR " +
                     "(:column = 'name' AND l.title LIKE CONCAT('%', :keyword, '%')) OR " +

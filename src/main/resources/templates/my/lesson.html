@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>내 강의</title>
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+  <script type="text/javascript"
+          th:src="@{'//dapi.kakao.com/v2/maps/sdk.js?appkey=' + ${@environment.getProperty('kakao.api.scriptKey')}}"></script>
+  <link th:href="@{https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css}" rel="stylesheet">
+  <script th:src="@{https://code.jquery.com/jquery-3.5.1.slim.min.js}"></script>
+  <script th:src="@{https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js}"></script>
+  <script th:src="@{https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js}"></script>
+  <link rel="stylesheet" th:href="@{/css/gyms.css}">
+  <link rel="stylesheet" th:href="@{/css/lesson/lessonSearch.css}">
+  <link rel="stylesheet" th:href="@{/css/mainTool.css}">
+
+  <script>
+    window.onload = function () {
+      lessonSearch();
+    }
+
+    let currentPage = 0
+    const pageSize = 10
+
+    let memberLat = [[${member.getLatitude}]]
+    let memberLon = [[${member.getLongitude}]]
+    let memberId = [[${member.id}]]
+    let csrfToken = "[[${_csrf.token}]]"
+
+    function lessonSearch(page = 0) {
+      currentPage = page;
+
+      let lessonKeyword = document.getElementById("lessonKeyword").value
+      let searchColumn = document.getElementById("searchColumn").value
+
+      let selectedCategories = document.querySelectorAll("input[name='categories']:checked");
+      let categoryList = Array.from(selectedCategories).map(checkbox => checkbox.value);
+
+      let selectedDays = document.querySelectorAll("input[name='days']:checked");
+      let daysBitmask = Array.from(selectedDays).reduce((acc, checkbox) => acc + parseInt(checkbox.value), 0);
+
+      let queryParams = new URLSearchParams({
+        lessonKeyword: lessonKeyword,
+        searchColumn: searchColumn,
+        page: page,
+        size: pageSize
+      })
+
+      if (categoryList.length > 0) {
+        queryParams.append("categories", categoryList.join(","));
+      }
+
+      if (daysBitmask > 0) {
+        queryParams.append("days", daysBitmask);
+      }
+
+      fetch(`/api/my/lesson?${queryParams.toString()}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': csrfToken
+        }
+      })
+              .then(response => response.json())
+              .then(data => {
+                const lessons = data.data.content;
+                const totalPages = data.data.totalPages;
+
+                let resultSearch = document.getElementById("resultSearch")
+                resultSearch.innerHTML = ""
+
+                let lessonNo = page * 10 + 1;
+
+                lessons.forEach(lesson => {
+                  let trRow = document.createElement("tr")
+                  let tdNo = document.createElement("td")
+                  let tdTitle = document.createElement("td")
+                  let tdMaster = document.createElement("td")
+                  let tdLessonDays = document.createElement("td")
+                  let tdLessonTime = document.createElement("td")
+                  let tdCurrent = document.createElement("td")
+                  let tdOldAddress = document.createElement("td")
+                  let tdDistance = document.createElement("td")
+                  let tdBtn = document.createElement("td")
+
+                  let detailLink = document.createElement("a")
+                  detailLink.href = `/lesson/${lesson.id}`
+                  detailLink.textContent = `[${lesson.categoryName}] ${lesson.title}`
+                  tdTitle.appendChild(detailLink)
+
+                  tdNo.textContent = lesson.id
+                  tdMaster.textContent = lesson.masterName
+                  tdLessonDays.textContent = bitmaskToDays(lesson.days);
+                  tdLessonTime.textContent = `${lesson.startTime} ~ ${lesson.endTime}`
+                  tdCurrent.textContent = `${lesson.current} / ${lesson.max}`
+                  tdOldAddress.textContent = lesson.location
+
+                  let distance = calculateDistance(memberLat, memberLon, lesson.latitude, lesson.longitude)
+                  tdDistance.textContent = `${distance.toFixed(2)} Km`
+
+                  if (lesson.masterId === memberId) {
+                    tdBtn.textContent = "내 강의";
+                    tdBtn.style.textAlign = "center";
+                    tdBtn.style.fontWeight = "bold";
+                    tdBtn.style.display = "flex";
+                    tdBtn.style.alignItems = "center";
+                    tdBtn.style.justifyContent = "center";
+                  } else {
+                    let lessonBtn = document.createElement("button");
+                    lessonBtn.style.padding = "0px";
+                    lessonBtn.style.fontSize = "12px";
+                    lessonBtn.style.height = "25px";
+                    lessonBtn.style.minWidth = "50px";
+
+                    if (lesson.current >= lesson.max) {
+                      lessonBtn.textContent = "마감";
+                      lessonBtn.className = "btn btn-primary btn-enroll";
+                      lessonBtn.disabled = true;
+                    } else {
+                      fetch(`/api/lesson/enrolled?lessonId=${lesson.id}&memberId=${memberId}`, {
+                        method: 'GET',
+                        headers: {
+                          'Content-Type': 'application/json',
+                          'X-CSRF-TOKEN': csrfToken
+                        }
+                      })
+                              .then(response => response.json())
+                              .then(data => {
+                                if (data.data.enrolled) {
+                                  lessonBtn.textContent = "취소";
+                                  lessonBtn.className = "btn btn-danger btn-enroll";
+                                } else {
+                                  lessonBtn.textContent = "신청";
+                                  lessonBtn.className = "btn btn-primary btn-enroll";
+                                }
+                                lessonBtn.onclick = () => toggleEnrollment(lesson.id, data.data.enrolled, lessonBtn, tdCurrent);
+                              });
+                    }
+
+                    tdBtn.appendChild(lessonBtn);
+                  }
+
+                  trRow.appendChild(tdNo)
+                  trRow.appendChild(tdTitle)
+                  trRow.appendChild(tdMaster)
+                  trRow.appendChild(tdLessonDays)
+                  trRow.appendChild(tdLessonTime)
+                  trRow.appendChild(tdCurrent)
+                  trRow.appendChild(tdOldAddress)
+                  trRow.appendChild(tdDistance)
+                  trRow.appendChild(tdBtn)
+
+                  resultSearch.appendChild(trRow)
+                })
+
+                let pagination = document.getElementById("pagination")
+                pagination.innerHTML = ""
+
+                let startPage = Math.floor(currentPage / 10) * 10
+                let endPage = Math.min(totalPages, startPage + 10)
+
+                let prevBtn = document.createElement("button")
+                prevBtn.textContent = "이전"
+                prevBtn.onclick = () => lessonSearch(Math.max(0, startPage - 10))
+                prevBtn.disabled = startPage === 0
+                pagination.appendChild(prevBtn)
+
+
+                for (let i = startPage; i < endPage; i++) {
+                  let pageBtn = document.createElement("button")
+                  pageBtn.textContent = i + 1
+                  pageBtn.onclick = () => lessonSearch(i)
+                  if (i === currentPage) {
+                    pageBtn.style.fontWeight = "bold"
+                  }
+                  pagination.appendChild(pageBtn)
+                }
+
+                let nextBtn = document.createElement("button")
+                nextBtn.textContent = "다음"
+                nextBtn.onclick = () => lessonSearch(Math.min(totalPages - 1, startPage + 10))
+                nextBtn.disabled = endPage >= totalPages
+                pagination.appendChild(nextBtn)
+
+              })
+    }
+
+    function openModal(lesson) {
+      let modal = document.getElementById("gymModal")
+      modal.style.display = "block"
+
+      let kakaoMap = document.getElementById("kakaoMap")
+      kakaoMap.innerHTML = "";
+
+      document.getElementById("modalContent").innerHTML = `
+                <strong>이름:</strong> ${lesson.name} <br>
+                <strong>주소:</strong> ${lesson.oldAddress} <br>
+                <strong>위도:</strong> ${lesson.latitude} <br>
+                <strong>경도:</strong> ${lesson.longitude} <br>
+            `
+
+      kakao.maps.load(function () {
+        let mapOption = {
+          center: new kakao.maps.LatLng(lesson.latitude, lesson.longitude),
+          level: 3
+        }
+
+        let map = new kakao.maps.Map(kakaoMap, mapOption)
+
+        let marker = new kakao.maps.Marker({
+          position: new kakao.maps.LatLng(lesson.latitude, lesson.longitude)
+        });
+
+        marker.setMap(map)
+      })
+
+    }
+
+    function closeModal() {
+      document.getElementById("gymModal").style.display = "none"
+    }
+
+    function calculateDistance(memberLat, memberLon, lat, lon) {
+      const R = 6371;
+      const dLat = (lat - memberLat) * Math.PI / 180;
+      const dLon = (lon - memberLon) * Math.PI / 180;
+
+      const a =
+              Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+              Math.cos(memberLat * Math.PI / 180) * Math.cos(lat * Math.PI / 180) *
+              Math.sin(dLon / 2) * Math.sin(dLon / 2);
+
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      return R * c;
+    }
+
+    function bitmaskToDays(bitmask) {
+      if (bitmask === 31) {
+        return "평일"
+      } else if (bitmask === 96) {
+        return "주말"
+      }
+
+      const days = ["월", "화", "수", "목", "금", "토", "일"]
+      let result = []
+
+      for (let i = 0; i < days.length; i++) {
+        if (bitmask & (1 << i)) {
+          result.push(days[i])
+        }
+      }
+      return result.join(", ")
+    }
+
+    function toggleEnrollment(lessonId, isEnrolled, button, tdCurrent) {
+      let url = isEnrolled
+              ? `/api/lesson/cancel/${memberId}/${lessonId}`
+              : `/api/lesson/enroll`;
+
+      let method = isEnrolled ? "DELETE" : "POST";
+      let body = isEnrolled ? null : JSON.stringify({memberId: memberId, lessonId: lessonId});
+
+      let currentCount = parseInt(tdCurrent.textContent.split(" / ")[0]);
+      let maxCount = parseInt(tdCurrent.textContent.split(" / ")[1]);
+      let newCount = isEnrolled ? currentCount - 1 : currentCount + 1;
+
+      tdCurrent.textContent = `${newCount} / ${maxCount}`;
+
+      if (newCount >= maxCount) {
+        button.textContent = "마감";
+        button.className = "btn btn-primary btn-enroll";
+        button.disabled = true;
+      } else if (!isEnrolled) {
+        button.textContent = "취소";
+        button.className = "btn btn-danger btn-enroll";
+      } else {
+        button.textContent = "신청";
+        button.className = "btn btn-primary btn-enroll";
+      }
+
+      fetch(url, {
+        method: method,
+        headers: {
+          "Content-Type": "application/json",
+          'X-CSRF-TOKEN': csrfToken
+        },
+        body: body
+      })
+              .then(response => response.json())
+              .then(data => {
+                if (data.data.success) {
+                  button.onclick = () => toggleEnrollment(lessonId, !isEnrolled, button, tdCurrent);
+                } else {
+                  tdCurrent.textContent = `${currentCount} / ${maxCount}`;
+                  button.textContent = isEnrolled ? "취소" : "신청";
+                  button.disabled = false;
+                }
+              })
+              .catch(() => {
+                tdCurrent.textContent = `${currentCount} / ${maxCount}`;
+                button.textContent = isEnrolled ? "취소" : "신청";
+                button.disabled = false;
+              });
+    }
+
+    function limitCheckboxSelection(checkbox) {
+      let checkboxes = document.querySelectorAll("input[name='categories']");
+
+      checkboxes.forEach(function (item) {
+        if (item !== checkbox) {
+          item.checked = false;
+        }
+      });
+    }
+  </script>
+
+</head>
+<body>
+<div class="container custom-container">
+  <div th:replace="~{navi/header :: header}"></div>
+
+  <div class="main-container">
+    <div th:replace="~{navi/sidebar :: sidebar}"></div>
+
+    <div class="card main-card">
+      <div class="card-header">
+        <div class="form-group row">
+          <div class="col-sm-2">
+            <select id="searchColumn" class="form-control">
+              <option value="name">이름</option>
+              <option value="oldAddress">주소</option>
+            </select>
+          </div>
+          <div class="col-sm-8">
+            <input type="text" id="lessonKeyword" class="form-control" placeholder="Enter name">
+          </div>
+          <button onclick="lessonSearch()" class="btn btn-primary small-btn">Search</button>
+        </div>
+
+        <div class="checkbox-container">
+          <label id="search-label">카테고리 선택</label>
+          <div th:each="category : ${categories}">
+            <input type="checkbox" th:name="categories" th:id="'category-'+${category.id}"
+                   th:value="${category.id}"
+                   onclick="limitCheckboxSelection(this)">
+            <label th:for="'category-' + ${category.id}" th:text="${category.name}"></label>
+          </div>
+        </div>
+
+      </div>
+      <div class="card-body">
+        <table class="table table-striped mt-4">
+          <thead>
+          <tr>
+            <th>번호</th>
+            <th>강의명</th>
+            <th>강사</th>
+            <th>강의일</th>
+            <th>시간</th>
+            <th>수강인원</th>
+            <th>위치</th>
+            <th>거리</th>
+            <th>수강신청</th>
+          </tr>
+          </thead>
+          <tbody id="resultSearch"></tbody>
+        </table>
+      </div>
+      <div class="card-footer">
+        <div id="pagination" class="mt-3"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
