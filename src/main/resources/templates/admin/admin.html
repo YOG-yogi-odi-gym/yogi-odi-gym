@@ -112,7 +112,8 @@
                     </tr>
                     </thead>
                     <tbody id="applyTableBody">
-                    <tr th:each="memberToMaster : ${memberToMasters}" style="cursor: default;" th:data-apply_file="${memberToMaster.certificate}">
+                    <tr th:each="memberToMaster : ${memberToMasters}" style="cursor: default;"
+                        th:data-apply_file="${#strings.replace(#strings.replace(memberToMaster.certificate, '[', ''), ']', '')}">
                         <td class="applyName" th:text="${memberToMaster.memberName}"></td>
                         <td class="applyEmail" th:text="${memberToMaster.memberEmail}"></td>
                         <td>
@@ -169,7 +170,7 @@
         </div>
 
         <div class="modal fade" id="applyDetailModal" tabindex="-1" role="dialog" aria-labelledby="applyDetailModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
+            <div class="modal-dialog" role="document" style="max-width: 80%">
                 <div class="modal-content" style="border-radius: 10px;">
                     <div class="modal-header">
                         <h5 class="modal-title" id="applyDetailModalLabel">강사 신청</h5>
@@ -190,8 +191,7 @@
                             </div>
                             <hr>
                             <div class="form-group">
-                                <label for="applyFile">자격증</label><br>
-                                <a href="#" id="applyFile" target="_blank">첨부 파일</a><br>
+                                <label>자격증</label><br>
                                 <div id="applyImgContainer"></div>
                             </div>
                         </form>

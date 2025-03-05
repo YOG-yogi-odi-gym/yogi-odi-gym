@@ -152,25 +152,35 @@ $(document).ready(function () {
         let applyMemberId = $(this).find(".applyMemberId").val();
         let applyName = $(this).find(".applyName").text();
         let applyEmail = $(this).find(".applyEmail").text();
-        let applyFile = $(this).data("apply_file");
+        let applyFiles = $(this).data("apply_file");
 
         $("#applyId").val(applyId)
         $("#applyMemberId").val(applyMemberId)
         $("#applyName").text(applyName)
         $("#applyEmail").text(applyEmail)
 
+        console.log(applyFiles);
+
         $("#applyImgContainer").empty();
 
-        if (applyFile) {
-            let imageUrl = `/license/${applyFile}`;
-            let img = $("<img>").attr("src", imageUrl).attr("alt", "자격증 이미지").css({
-                "max-width": "100%",
-                "max-height": "300px",
-                "margin-bottom": "10px"
-            });
-            $("#applyImgContainer").append(img);
+        if (applyFiles) {
+            try {
+                let filesArray = applyFiles.split(',');
+                filesArray.forEach(function (file) {
+                    let img = $("<img>").attr("src", file).attr("alt", "자격증 이미지").css({
+                        "width": "200px",
+                        "height": "282px",
+                        "margin-bottom": "10px"
+                    });
+                    $("#applyImgContainer").append(img);
+                });
+            } catch (e) {
+                console.error("JSON 파싱 오류:", e);
+                $("#applyImgContainer").append("<p>자격증 이미지 로딩 오류.</p>");
+            }
+        } else {
+            $("#applyImgContainer").append("<p>제출된 자격증이 없습니다.</p>")
         }
-
         $("#applyDetailModal").modal("show");
     })
 
