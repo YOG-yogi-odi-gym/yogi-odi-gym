@@ -5,6 +5,7 @@ import com.health.yogiodigym.board.entity.Comment;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Getter
 @Setter
@@ -64,11 +65,13 @@ public class BoardDto {
             this.edit = board.isEdit();
         }
 
-        public BoardDetailDto(Board board, int commentCount) {
-            this(board);
-            this.commentCount = commentCount;
+        public String getFormattedCreateDateTime() {
+            if (this.createDateTime == null) {
+                return "등록일 없음";  // null 처리
+            }
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            return this.createDateTime.format(formatter);
         }
-
     }
 
     @Getter
