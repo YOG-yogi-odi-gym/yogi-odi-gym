@@ -2,7 +2,7 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <style th:fragment="custom-navbar">
     .custom-navbar {
-        width: 1200px;
+        width: 100%;
         height: 50px;
         display: flex;
         justify-content: space-between;
@@ -14,11 +14,13 @@
     }
 </style>
 <div class="custom-navbar" th:fragment="custom-navbar">
-    <div>navbar</div>
+    <a href="/dashboard" class="navbar-brand">
+        <img src="/images/source/YOG_copy.png" alt="대시보드" style="width: 100px; height: 40px; margin-right: 10px;">
+    </a>
     <div class="dropdown">
         <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton"
                 data-bs-toggle="dropdown" aria-expanded="false">
-            <img th:src="${#authentication.principal.member.profile}" alt="사진" style="width: 40px;height: 40px;border-radius: 50%;">
+            <img th:src="${#authentication.principal.member.profile != null ? #authentication.principal.member.profile : '/images/source/anonymous.png'}" alt="사진" style="width: 35px;height: 35px;border-radius: 50%;">
             <span th:text="${#authentication.principal.member.name}"/>
         </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
