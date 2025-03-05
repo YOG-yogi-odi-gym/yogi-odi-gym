@@ -116,10 +116,9 @@
                         th:data-apply_file="${#strings.replace(#strings.replace(memberToMaster.certificate, '[', ''), ']', '')}">
                         <td class="applyName" th:text="${memberToMaster.memberName}"></td>
                         <td class="applyEmail" th:text="${memberToMaster.memberEmail}"></td>
-                        <td>
-                            <input type="hidden" class="applyId" th:value="${memberToMaster.id}">
-                            <input type="hidden" class="applyMemberId" th:value="${memberToMaster.memberId}">
-                        </td>
+                        <td class="applyTime" th:text="${memberToMaster.enrollDate}"></td>
+                        <input type="hidden" class="applyId" th:value="${memberToMaster.id}">
+                        <input type="hidden" class="applyMemberId" th:value="${memberToMaster.memberId}">
                     </tr>
                     </tbody>
                 </table>
@@ -170,7 +169,7 @@
         </div>
 
         <div class="modal fade" id="applyDetailModal" tabindex="-1" role="dialog" aria-labelledby="applyDetailModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document" style="max-width: 80%">
+            <div class="modal-dialog" role="document" style="max-width: 50%">
                 <div class="modal-content" style="border-radius: 10px;">
                     <div class="modal-header">
                         <h5 class="modal-title" id="applyDetailModalLabel">강사 신청</h5>
