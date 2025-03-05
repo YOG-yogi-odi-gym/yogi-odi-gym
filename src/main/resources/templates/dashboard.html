@@ -8,10 +8,12 @@
     <title>DASHBOARD</title>
     <style>
         body {
+            width: 100%;
             margin: 0;
             padding: 0;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            justify-content: flex-start !important;
             align-items: center;
             height: 100vh;
             background-color: #f1f1f1;
@@ -39,7 +41,7 @@
             width: 920px;
             height: 800px;
             margin: 25px 20px 25px 20px;
-            background-color: #F1F1F1;
+            background-color: #f1f1f1;
             border-radius: 10px;
         }
 
@@ -47,10 +49,13 @@
             display: flex;
         }
         .exercise-graph, .calorie-graph, .my-lesson, .today-best {
+            display: flex;
+            flex-direction: column;
             width: 450px;
             height: 390px;
             background-color: white;
             border-radius: 10px;
+            padding: 10px;
         }
     </style>
 
@@ -62,26 +67,24 @@
     <div th:replace="~{fragments/navbar :: custom-navbar}"></div>
     <div class="main">
         <div th:replace="~{fragments/side :: side}"></div>
-
-        <script>
-            document.getElementById("side_dashboard").style.color = "blue";
-            document.getElementById("side_dashboard").style.background = "skyblue"
-        </script>
-
         <div class="content">
             <div class="content-up" style="margin-bottom: 20px">
                 <div class="exercise-graph" style="margin-right: 20px">
+                    <h4>운동량</h4>
 
                 </div>
                 <div class="calorie-graph">
+                    <h4>섭취 칼로리</h4>
 
                 </div>
             </div>
             <div class="content-down">
                 <div class="my-lesson" style="margin-right: 20px">
+                    <h4>내 강의</h4>
 
                 </div>
                 <div class="today-best">
+                    <h4>Today's BEST</h4>
 
                 </div>
             </div>
