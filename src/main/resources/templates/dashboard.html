@@ -1,12 +1,20 @@
 <!doctype html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" th:href="@{css/dashboard.css}">
     <title>DASHBOARD</title>
+
+    <script th:inline="javascript">
+        const myExerciseTimeAverages = /*[[${myExerciseTimeAverages}]]*/ [];
+        const exerciseTimeAverages = /*[[${exerciseTimeAverages}]]*/ [];
+        const myCalories = /*[[${myCalories}]]*/ [];
+        const calorieAverages = /*[[${calorieAverages}]]*/ [];
+    </script>
+
 </head>
 <body>
 <div class="container-fluid">
@@ -17,10 +25,11 @@
             <div class="content-up" style="margin-bottom: 20px">
                 <div class="exercise-graph" style="margin-right: 20px">
                     <h4>운동량</h4>
-
+                    <canvas id="exerciseChart"></canvas>
                 </div>
                 <div class="calorie-graph">
-                    <h4>섭취 칼로리</h4>
+                    <h4>칼로리</h4>
+                    <canvas id="calorieChart"></canvas>
                 </div>
             </div>
             <div class="content-down">
