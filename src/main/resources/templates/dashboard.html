@@ -21,12 +21,19 @@
                 </div>
                 <div class="calorie-graph">
                     <h4>섭취 칼로리</h4>
-
                 </div>
             </div>
             <div class="content-down">
                 <div class="my-lesson" style="margin-right: 20px">
                     <h4>내 강의</h4>
+                    <ul class="my-lesson-list">
+                        <li th:each="chatRoom : ${chatRooms}">
+                            <a th:href="@{'/chat?roomId=' + ${chatRoom.roomId}}">
+                                <span th:text="${chatRoom.lessonTitle}"></span>
+                                <span th:text="${chatRoom.notReadMessageCnt}"></span>
+                            </a>
+                        </li>
+                    </ul>
 
                 </div>
                 <div class="today-best">
@@ -35,7 +42,7 @@
                         <li th:each="popular : ${popularBoards}">
                             <a th:href="@{'/board/' + ${popular.id}}">
                                 <span th:text="${popular.title}"></span>
-                                <span th:text="' [' + ${popular.commentCount} + ']'" style="color: red"></span>
+                                <span th:text="' [' + ${popular.commentCount} + ']'"></span>
                             </a>
                         </li>
                     </ul>
