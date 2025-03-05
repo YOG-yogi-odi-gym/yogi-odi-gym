@@ -1,0 +1,126 @@
+body {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start !important;
+    align-items: center;
+    height: 100vh;
+    background-color: #f1f1f1;
+}
+
+.container-fluid {
+    max-width: 1200px;
+    width: 1200px;
+    height: 900px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    border-radius: 10px;
+    background-color: #f1f1f1;
+}
+
+.main {
+    width: 1200px;
+    height: 850px;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    width: 920px;
+    height: 800px;
+    margin: 25px 20px 25px 20px;
+    background-color: #f1f1f1;
+    border-radius: 10px;
+}
+
+.content-up, .content-down {
+    display: flex;
+}
+
+.exercise-graph, .calorie-graph, .my-lesson, .today-best {
+    display: flex;
+    flex-direction: column;
+    width: 450px;
+    height: 390px;
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.today-best, .my-lesson {
+    border: none;
+}
+
+.today-best h4, .my-lesson h4 {
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 1.2em;
+    font-weight: 600;
+    border-bottom: 3px solid #eeeeee;
+    padding-bottom: 10px;
+}
+
+.today-best-list, .my-lesson-list {
+    list-style: none;
+    padding: 0;
+    max-height: 280px;
+    overflow-y: auto;
+}
+
+.today-best-list li, .my-lesson li {
+    padding: 15px;
+    border-bottom: 2px solid #eeeeee;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.today-best-list li:last-child, .my-lesson li:last-child {
+    border-bottom: none;
+}
+
+.today-best-list li:hover, .my-lesson li:hover {
+    background-color: #f5f5f5;
+    transform: translateY(-2px);
+}
+
+.today-best-list li a, .my-lesson li a {
+    text-decoration: none;
+    color: #333;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.today-best-list li a span:last-child {
+    color: red;
+    font-weight: 600;
+    font-size: 0.9em;
+    border-radius: 5px;
+}
+
+.my-lesson li a span:last-child {
+    background-color: #e57373;
+    color: white;
+    font-weight: 500;
+    font-size: 0.85em;
+    border-radius: 15px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 24px;
+    min-height: 24px;
+    padding: 3px 8px;
+    line-height: 1;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.my-lesson-list li:hover span:last-child {
+    background-color: #f44336;
+    transform: translateY(-2px);
+}

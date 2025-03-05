@@ -2,6 +2,11 @@ package com.health.yogiodigym.member.controller.view;
 
 import com.health.yogiodigym.member.entity.MemberOAuth2User;
 import com.health.yogiodigym.member.service.GraphAverageService;
+import com.health.yogiodigym.board.dto.BoardDto.BoardDetailDto;
+import com.health.yogiodigym.board.service.BoardService;
+import com.health.yogiodigym.chat.dto.ChatRoomDto.ChatRoomResponseDto;
+import com.health.yogiodigym.chat.service.ChatRoomService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -17,6 +22,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class MainViewController {
 
     private final GraphAverageService graphAverageService;
+    private final ChatRoomService chatRoomService;
+    private final BoardService boardService;
 
     @GetMapping("/")
     public String main(Authentication authentication) {
@@ -35,7 +42,14 @@ public class MainViewController {
         model.addAttribute("myCalories", graphAverageService.getMyPreviousDateCalorie(loginUser.getMember()));
         model.addAttribute("myExerciseTimeAverages", graphAverageService.getMyPreviousDateExerciseTime(loginUser.getMember()));
 
+        List<ChatRoomResponseDto> chatRooms = chatRoomService.getChatRooms(loginUser.getMember());
+        model.addAttribute("chatRooms", chatRooms);
+        log.info("채팅방 목록: {}", chatRooms);
+
+        List<BoardDetailDto> boards = boardService.getBoardsTop10();
+        model.addAttribute("popularBoards", boards);
+        log.info("실시간 인기 게시글: {}", boards);
+
         return "dashboard";
     }
-
 }
