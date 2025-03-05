@@ -75,99 +75,195 @@
 <input type="hidden" id="selectedExerciseEnergy" />
 <input type="hidden" id="selectedExerciseId" />
 
+
 <script>
-    let exerciseSelect = new TomSelect("#exerciseSelect", {
-        valueField: "id",
-        labelField: "name",
-        searchField: "name",
-        maxItems: 1,
-        create: false,
-        load: function(query, callback) {
-            if (!query.length) {
-                callback([]);
-                return;
+    let exerciseSelectElement = document.getElementById("exerciseSelect");
+    let exerciseSelect;
+
+    function initializeChoices() {
+        exerciseSelect = new Choices(exerciseSelectElement, {
+            searchEnabled: true,
+            itemSelectText: "",
+        });
+    }
+
+    function fetchExercises(query = "") {
+        $.ajax({
+            url: "/api/exercise/all",
+            type: "GET",
+            data: { name: query, limit: 100 },
+            dataType: "json",
+            success: function (response) {
+                exerciseSelect.clearChoices();
+                let choices = response.data.map(exercise => ({ value: exercise.id, label: exercise.name }));
+                exerciseSelect.setChoices(choices, "value", "label", true);
+            },
+            error: function () {
+                console.error("Error fetching exercises");
             }
-            $.ajax({
-                url: "/api/exercise/all",
-                type: "GET",
-                data: { name: query, limit: 100 },
-                dataType: "json",
-                success: function (response) {
-                    callback(response.data);
-                },
-                error: function () {
-                    callback();
-                }
-            });
-        }
+        });
+    }
+
+    $(document).ready(function () {
+        initializeChoices();
+        fetchExercises();
     });
 
-    exerciseSelect.on('change', function () {
-            let selectedId = exerciseSelect.getValue();
-
-            $.ajax({
-                url: "/api/exercise/search",
-                type: "GET",
-                data: { name:  exerciseSelect.options[selectedId]?.name || "" },
-                dataType: "json",
-                success: function (response) {
-                    if (response.data.length > 0) {
-                        $("#selectedExerciseEnergy").val(response.data[0].energyConsumption);
-                        $("#selectedExerciseId").val(response.data[0].id);
-                    } else {
-                        $("#selectedExerciseEnergy").val('');
-                    }
-                },
-                error: function (error) {
-                    console.error("Error fetching energy consumption:", error);
-                }
-            });
-        });
-
+    exerciseSelectElement.addEventListener("search", function (event) {
+        fetchExercises(event.detail.value);
+    });
 
     function selectExercise() {
-
         const urlParams = new URLSearchParams(window.location.search);
         let exerciseId = urlParams.get("exerciseId");
 
-        let selectedId = $("#selectedExerciseId").val();
-        let selectedText = exerciseSelect.options[selectedId]?.name || "";
-        let energyConsumption = $("#selectedExerciseEnergy").val();
-
+        let selectedId = exerciseSelectElement.value;
+        let selectedText = exerciseSelect.getChoiceByValue(selectedId)?.label || "";
 
         if (!selectedId) {
             alert("운동을 선택하세요!");
             return;
         }
 
-        if (window.opener && !window.opener.closed) {
-            let exerciseIdElement = window.opener.document.getElementById(`exerciseId_${exerciseId}`);
-            let exerciseNameElement = window.opener.document.getElementById(`exerciseName_${exerciseId}`);
-            let energyConsumptionElement = window.opener.document.getElementById(`energyConsumption_${exerciseId}`);
-            let exerciseTimeElement = window.opener.document.getElementById(`exerciseTime_${exerciseId}`);
+        $.ajax({
+            url: "/api/exercise/search",
+            type: "GET",
+            data: { name: selectedText },
+            dataType: "json",
+            success: function (response) {
+                if (response.data.length > 0) {
+                    let energyConsumption = response.data[0].energyConsumption;
 
+                    if (window.opener && !window.opener.closed) {
+                        let exerciseIdElement = window.opener.document.getElementById(`exerciseId_${exerciseId}`);
+                        let exerciseNameElement = window.opener.document.getElementById(`exerciseName_${exerciseId}`);
+                        let energyConsumptionElement = window.opener.document.getElementById(`energyConsumption_${exerciseId}`);
+                        let exerciseTimeElement = window.opener.document.getElementById(`exerciseTime_${exerciseId}`);
 
-            if (exerciseIdElement) {
-                exerciseIdElement.value = selectedId;
+                        if (exerciseIdElement) {
+                            exerciseIdElement.value = selectedId;
+                        }
+
+                        if (exerciseNameElement) {
+                            exerciseNameElement.value = selectedText;
+                        }
+
+                        if (energyConsumptionElement) {
+                            energyConsumptionElement.value = energyConsumption;
+                        }
+
+                        if (exerciseTimeElement) {
+                            exerciseTimeElement.focus();
+                        }
+                    } else {
+                        alert("부모 창이 존재하지 않습니다.");
+                    }
+                    window.close();
+                }
+            },
+            error: function () {
+                console.error("Error fetching energy consumption");
             }
-
-            if (exerciseNameElement) {
-                exerciseNameElement.value = selectedText;
-            }
-
-            if (energyConsumptionElement) {
-                energyConsumptionElement.value = energyConsumption;
-            }
-
-            if (exerciseTimeElement) {
-                exerciseTimeElement.focus();
-            }
-        } else {
-            alert("부모 창이 존재하지 않습니다.");
-        }
-        window.close();
+        });
     }
 </script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+
+<!--<script>-->
+<!--    let exerciseSelect = new TomSelect("#exerciseSelect", {-->
+<!--        valueField: "id",-->
+<!--        labelField: "name",-->
+<!--        searchField: "name",-->
+<!--        maxItems: 1,-->
+<!--        create: false,-->
+<!--        load: function(query, callback) {-->
+<!--            if (!query.length) {-->
+<!--                callback([]);-->
+<!--                return;-->
+<!--            }-->
+<!--            $.ajax({-->
+<!--                url: "/api/exercise/all",-->
+<!--                type: "GET",-->
+<!--                data: { name: query, limit: 100 },-->
+<!--                dataType: "json",-->
+<!--                success: function (response) {-->
+<!--                    callback(response.data);-->
+<!--                },-->
+<!--                error: function () {-->
+<!--                    callback();-->
+<!--                }-->
+<!--            });-->
+<!--        }-->
+<!--    });-->
+
+<!--    exerciseSelect.on('change', function () {-->
+<!--            let selectedId = exerciseSelect.getValue();-->
+
+<!--            $.ajax({-->
+<!--                url: "/api/exercise/search",-->
+<!--                type: "GET",-->
+<!--                data: { name:  exerciseSelect.options[selectedId]?.name || "" },-->
+<!--                dataType: "json",-->
+<!--                success: function (response) {-->
+<!--                    if (response.data.length > 0) {-->
+<!--                        $("#selectedExerciseEnergy").val(response.data[0].energyConsumption);-->
+<!--                        $("#selectedExerciseId").val(response.data[0].id);-->
+<!--                    } else {-->
+<!--                        $("#selectedExerciseEnergy").val('');-->
+<!--                    }-->
+<!--                },-->
+<!--                error: function (error) {-->
+<!--                    console.error("Error fetching energy consumption:", error);-->
+<!--                }-->
+<!--            });-->
+<!--        });-->
+
+
+<!--    function selectExercise() {-->
+
+<!--        const urlParams = new URLSearchParams(window.location.search);-->
+<!--        let exerciseId = urlParams.get("exerciseId");-->
+
+<!--        let selectedId = $("#selectedExerciseId").val();-->
+<!--        let selectedText = exerciseSelect.options[selectedId]?.name || "";-->
+<!--        let energyConsumption = $("#selectedExerciseEnergy").val();-->
+
+
+<!--        if (!selectedId) {-->
+<!--            alert("운동을 선택하세요!");-->
+<!--            return;-->
+<!--        }-->
+
+<!--        if (window.opener && !window.opener.closed) {-->
+<!--            let exerciseIdElement = window.opener.document.getElementById(`exerciseId_${exerciseId}`);-->
+<!--            let exerciseNameElement = window.opener.document.getElementById(`exerciseName_${exerciseId}`);-->
+<!--            let energyConsumptionElement = window.opener.document.getElementById(`energyConsumption_${exerciseId}`);-->
+<!--            let exerciseTimeElement = window.opener.document.getElementById(`exerciseTime_${exerciseId}`);-->
+
+
+<!--            if (exerciseIdElement) {-->
+<!--                exerciseIdElement.value = selectedId;-->
+<!--            }-->
+
+<!--            if (exerciseNameElement) {-->
+<!--                exerciseNameElement.value = selectedText;-->
+<!--            }-->
+
+<!--            if (energyConsumptionElement) {-->
+<!--                energyConsumptionElement.value = energyConsumption;-->
+<!--            }-->
+
+<!--            if (exerciseTimeElement) {-->
+<!--                exerciseTimeElement.focus();-->
+<!--            }-->
+<!--        } else {-->
+<!--            alert("부모 창이 존재하지 않습니다.");-->
+<!--        }-->
+<!--        window.close();-->
+<!--    }-->
+<!--</script>-->
 
 </body>
 </html>
