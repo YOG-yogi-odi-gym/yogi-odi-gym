@@ -61,16 +61,45 @@
             border-radius: 8px;
             background: #f8f9fa;
             display: flex;
-            align-items: center;
+            flex-direction: column;
             gap: 10px;
+        }
+
+        .modal-list {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .modal-button {
+            display: flex;
             flex-wrap: wrap;
+            gap: 10px;
+            justify-content: right;
         }
-        .modal-container input {
+        .modal-list div {
+            display: flex;
+            flex-direction: column;
             flex: 1;
-            padding: 5px;
-            border: 1px solid #ced4da;
-            border-radius: 5px;
         }
+        .modal-list flex_row {
+            display: flex;
+            flex-direction: row;
+            gap: 10px;
+            flex: 1;
+        }
+
+        .modal-list input {
+            width: 100%;
+        }
+
+        .modal-list label {
+            font-size: 12px;
+            color: #555;
+            margin-bottom: 4px;
+        }
+
         .btn-group {
             margin-top: 10px;
         }
@@ -102,9 +131,19 @@
             justify-content: center;
             cursor: pointer;
         }
-        .add-btn:hover {
-            background-color: #0056b3;
+        .add-box:hover {
+            background-color: #98bafa;
         }
+
+        .fc .fc-button {
+            border: none;
+        }
+        .fc .fc-button-primary:not(.fc-MultiMonthYear-button-primary):focus {
+            background-color: cornflowerblue;
+            border: none;
+            box-shadow: none;
+        }
+
     </style>
 
     <link rel="stylesheet" th:href="@{/css/calendar/calendar.css}">
@@ -179,6 +218,7 @@
                                 click: function () {
                                     getLesson();
                                     selectedStatus = 1;
+
                                 }
                             },
                             FoodButton: {
@@ -223,7 +263,6 @@
 
                     console.log("Calendar initialized:", window.calendar)
                 }
-
 
 
                 function handleNavLinkDayClick(date, jsEvent) {
@@ -279,6 +318,9 @@
             <div class="modal-body" id="modalContent">
                 선택한 날짜의 정보를 불러오는 중입니다...
             </div>
+            <div id="addbtn">
+            </div>
+
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
