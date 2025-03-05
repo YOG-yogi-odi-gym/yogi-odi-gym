@@ -7,8 +7,10 @@ import com.health.yogiodigym.member.dto.RegistOAuthMemberDto;
 import com.health.yogiodigym.member.entity.Member;
 import com.health.yogiodigym.member.entity.MemberOAuth2User;
 import com.health.yogiodigym.member.repository.MemberRepository;
+import com.health.yogiodigym.member.service.EmailService;
 import com.health.yogiodigym.member.service.MemberService;
 import com.health.yogiodigym.member.service.NCPStorageService;
+import com.health.yogiodigym.member.service.RedisEmailcodeService;
 import com.health.yogiodigym.my.dto.UpdateMemberDto;
 import com.health.yogiodigym.my.dto.UpdateOAuthMemberDto;
 import com.health.yogiodigym.my.entity.MemberToMaster;
@@ -32,6 +34,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDate;
 import java.util.EnumSet;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import static com.health.yogiodigym.member.auth.Role.ROLE_USER;
@@ -50,6 +53,8 @@ public class MemberServiceImpl implements MemberService {
     private final PasswordEncoder passwordEncoder;
     private final MemberDetailsService memberDetailsService;
     private final NCPStorageService ncpStorageService;
+    private final RedisEmailcodeService redisEmailcodeService;
+    private final EmailService emailService;
     private final SecurityContextRepository securityContextRepository = new HttpSessionSecurityContextRepository();
 
     @Override
@@ -102,6 +107,19 @@ public class MemberServiceImpl implements MemberService {
         currentMember.updateOAuthMember(updateOAuthMemberDto);
 
         memberRepository.save(currentMember);
+    }
+
+    @Override
+    public boolean checkJoined(String email) {
+        return memberRepository.findByEmail(email).isPresent();
+    }
+
+    @Override
+    public void emailAuthentication(String email) {
+        String code = emailService.makeCode();
+
+        emailService.sendCodeToMail(email, code);
+        redisEmailcodeService.setCode(email, code);
     }
 
     private void insertMember(RegistMemberDto registMemberDto, String saveFileURL) {

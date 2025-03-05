@@ -31,4 +31,8 @@ public interface MemberService {
     void updateOAuthMember(UpdateOAuthMemberDto updateOAuthMemberDto);
 
     void enrollMaster(MultipartFile[] certificate);
+
+    void emailAuthentication(String email);
+
+    boolean checkJoined(String email);
 }

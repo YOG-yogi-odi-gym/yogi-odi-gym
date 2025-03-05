@@ -54,7 +54,9 @@ public enum SuccessMessage {
     GET_READ_MESSAGES_SUCCESS("읽은 메시지 조회에 성공하였습니다."),
     UPDATE_LAST_READ_MESSAGE_SUCCESS("마지막에 읽은 메시지 업데이트에 성공하였습니다."),
     ADMIN_AUTHORITY_ADD_SUCCESS("권한 추가에 성공하였습니다."),
-    ADMIN_AUTHORITY_REJECT_SUCCESS("권한 반려에 성공하였습니다.");
+    ADMIN_AUTHORITY_REJECT_SUCCESS("권한 반려에 성공하였습니다."),
+    SEND_MAILCODE_SUCCESS("인증메일 전송에 성공하였습니다."),
+    MAIL_VERIFY_SUCCESS("메일인증에 성공하셨습니다.");
 
     private final String message;
 }

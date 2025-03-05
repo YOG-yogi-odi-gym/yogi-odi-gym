@@ -1,5 +1,6 @@
 package com.health.yogiodigym.common.message;
 
+import com.health.yogiodigym.common.exception.CodeNotMatchException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -24,8 +25,11 @@ public enum ErrorMessage {
     CATEGORY_NOT_FOUND("카테고리가 존재하지 않습니다."),
     MEMBER_NOT_IN_CHAT_ROOM("채팅방 참여자가 아닙니다."),
     ALREADY_CHAT_PARTICIPANT("이미 채팅방에 참여중입니다."),
-    WRONG_PASSWORD("잘못된 비밀번호입니다."),
-    NO_DELETE_PERMISSION("삭제 권한이 없습니다.");
+    WRONG_PASSWORD_ERROR("잘못된 비밀번호입니다."),
+    NO_DELETE_PERMISSION("삭제 권한이 없습니다."),
+    SEND_MAIL_FAIL_ERROR("코드메일 전송에 실패했습니다."),
+    EMAILCODE_NOT_FOUND("인증코드를 찾지 못했습니다"),
+    CODE_NOT_MATCH_ERROR("인증코드가 일치하지 않습니다.");
 
     private final String message;
 }

@@ -1,4 +1,4 @@
-package com.health.yogiodigym.member.config;
+package com.health.yogiodigym.config;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
@@ -38,7 +37,8 @@ public class SecurityConfig {
                 .cors(withDefaults())
                 .csrf(withDefaults())
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/images/source/**", "/css/**", "/js/**", "/", "/member/regist", "/api/member/regist").permitAll()
+                        .requestMatchers("/images/source/**", "/css/**", "/js/**", "/", "/member/regist", "/member/find-pwd",
+                                "/api/member/regist", "/api/member/send-code" ,"api/member/mail-verify", "/api/member/find-pwd").permitAll()
                         .requestMatchers("/images/license/**", "/api/admin/**", "/admin/**").hasRole("ADMIN")
                         .requestMatchers("/member/login", "/login").not().authenticated()
                         .requestMatchers("/logout", "/dashboard").authenticated()

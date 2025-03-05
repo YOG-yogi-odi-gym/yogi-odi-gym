@@ -18,6 +18,9 @@ public class RegistMemberDto {
     @NotBlank(message = "이메일은 필수입력 값입니다.")
     private String email;
 
+    @AssertTrue(message = "이메일 인증을 완료해주세요.")
+    private boolean emailAuth;
+
     @NotBlank(message = "비밀번호는 필수입력 값입니다.")
     @Pattern(
             regexp = "^(?=.*[가-힣a-zA-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{6,20}$",
