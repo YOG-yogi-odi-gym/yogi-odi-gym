@@ -5,62 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" th:href="@{css/dashboard.css}">
     <title>DASHBOARD</title>
-    <style>
-        body {
-            width: 100%;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start !important;
-            align-items: center;
-            height: 100vh;
-            background-color: #f1f1f1;
-        }
-        .container-fluid {
-            max-width: 1200px;
-            width: 1200px;
-            height: 900px;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: center;
-            border-radius: 10px;
-            background-color: #f1f1f1;
-        }
-        .main {
-            width: 1200px;
-            height: 850px;
-            display: flex;
-            justify-content: flex-start;
-        }
-        .content {
-            display: flex;
-            flex-direction: column;
-            width: 920px;
-            height: 800px;
-            margin: 25px 20px 25px 20px;
-            background-color: #f1f1f1;
-            border-radius: 10px;
-        }
-
-        .content-up, .content-down {
-            display: flex;
-        }
-        .exercise-graph, .calorie-graph, .my-lesson, .today-best {
-            display: flex;
-            flex-direction: column;
-            width: 450px;
-            height: 390px;
-            background-color: white;
-            border-radius: 10px;
-            padding: 10px;
-        }
-    </style>
-
-
-
 </head>
 <body>
 <div class="container-fluid">
@@ -85,12 +31,20 @@
                 </div>
                 <div class="today-best">
                     <h4>Today's BEST</h4>
-
+                    <ul class="today-best-list">
+                        <li th:each="popular : ${popularBoards}">
+                            <a th:href="@{'/board/' + ${popular.id}}">
+                                <span th:text="${popular.title}"></span>
+                                <span th:text="' [' + ${popular.commentCount} + ']'" style="color: red"></span>
+                            </a>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<script th:src="@{/js/dashboard.js}"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>

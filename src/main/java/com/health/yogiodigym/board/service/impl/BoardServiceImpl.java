@@ -4,6 +4,7 @@ import com.health.yogiodigym.board.dto.BoardDto.BoardDetailDto;
 import com.health.yogiodigym.board.dto.BoardDto.BoardRequestDto;
 import com.health.yogiodigym.board.entity.Board;
 import com.health.yogiodigym.board.repository.BoardRepository;
+import com.health.yogiodigym.board.repository.CommentRepository;
 import com.health.yogiodigym.board.service.BoardService;
 import com.health.yogiodigym.common.exception.BoardNotFoundException;
 import com.health.yogiodigym.common.exception.CategoryNotFoundException;
@@ -12,6 +13,8 @@ import com.health.yogiodigym.lesson.repository.CategoryRepository;
 import com.health.yogiodigym.member.entity.Member;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,6 +28,7 @@ public class BoardServiceImpl implements BoardService {
 
     private final BoardRepository boardRepository;
     private final CategoryRepository categoryRepository;
+    private final CommentRepository commentRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -101,10 +105,14 @@ public class BoardServiceImpl implements BoardService {
 
     @Transactional(readOnly = true)
     public List<BoardDetailDto> getBoardsTop10() {
-        List<Board> boards = boardRepository.findTop10ByOrderByViewDescIdDesc();
+        List<Board> boards = boardRepository.findTop5ByOrderByViewDescIdDesc();
+
         return boards.stream()
-                .map(BoardDetailDto::new)
-                .toList();
+                .map(board -> {
+                    int commentCount = Math.toIntExact(commentRepository.countByBoardId(board.getId()));
+                    return new BoardDetailDto(board, commentCount);
+                })
+                .collect(Collectors.toList());
     }
 
     private boolean isKeywordEmpty(String keyword) {
