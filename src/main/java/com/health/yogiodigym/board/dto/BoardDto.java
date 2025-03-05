@@ -1,6 +1,7 @@
 package com.health.yogiodigym.board.dto;
 
 import com.health.yogiodigym.board.entity.Board;
+import com.health.yogiodigym.board.entity.Comment;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -49,6 +50,7 @@ public class BoardDto {
         private LocalDateTime createDateTime;
         private int view;
         private boolean edit;
+        private int commentCount;
 
         public BoardDetailDto(Board board) {
             this.id = board.getId();
