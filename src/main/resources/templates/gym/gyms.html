@@ -11,8 +11,6 @@
     <script th:src="@{https://code.jquery.com/jquery-3.5.1.slim.min.js}"></script>
     <script th:src="@{https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js}"></script>
     <script th:src="@{https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js}"></script>
-    <link rel="stylesheet" th:href="@{/css/gyms.css}">
-    <link rel="stylesheet" th:href="@{/css/mainTool.css}">
     <style>
         body {
             margin: 0;
@@ -230,9 +228,12 @@
             document.getElementById("side_gym").style.background = "skyblue"
         </script>
 
+        <link rel="stylesheet" th:href="@{/css/gyms.css}">
+        <link rel="stylesheet" th:href="@{/css/mainTool.css}">
+
         <div class="content card main-card">
             <div class="card-header">
-                <div class="form-group row">
+                <div class="form-group row d-flex align-items-center">
                     <div class="col-sm-2">
                         <select id="searchColumn" class="form-control">
                             <option value="name">이름</option>
@@ -242,7 +243,9 @@
                     <div class="col-sm-8">
                         <input type="text" id="gymKeyword" class="form-control" placeholder="Enter name">
                     </div>
-                    <button onclick="gymSearch()" class="btn btn-primary small-btn">Search</button>
+                    <div class="col-sm-2">
+                        <button onclick="gymSearch()" class="btn btn-primary small-btn w-100">Search</button>
+                    </div>
                 </div>
             </div>
             <div class="card-body">

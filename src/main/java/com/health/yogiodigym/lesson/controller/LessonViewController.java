@@ -62,10 +62,8 @@ public class LessonViewController {
                                    @AuthenticationPrincipal MemberOAuth2User loginUser) {
         Member loginMember = loginUser.getMember();
 
-        LessonDetailDto lessonDetailDto = lessonService.findLessonById(id);
-
         model.addAttribute("member", new MemberLatLonDto(loginMember));
-        model.addAttribute("lesson", lessonDetailDto);
+        model.addAttribute("lesson", lessonService.findLessonById(id));
         return "lesson/detail";
     }
 
