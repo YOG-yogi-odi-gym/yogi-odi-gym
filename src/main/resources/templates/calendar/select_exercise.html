@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+
+    <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<div class="container mt-4">
+
+    <label for="exerciseSelect">운동 선택:</label>
+    <select id="exerciseSelect" placeholder="운동을 선택하세요"></select>
+
+    <button class="btn btn-primary mt-3" onClick="selectExercise()">선택</button>
+</div>
+
+<input type="hidden" id="selectedExerciseEnergy" />
+<input type="hidden" id="selectedExerciseId" />
+
+<script>
+    let exerciseSelect = new TomSelect("#exerciseSelect", {
+        valueField: "id",
+        labelField: "name",
+        searchField: "name",
+        maxItems: 1,
+        create: false,
+        load: function(query, callback) {
+            if (!query.length) return callback();
+            $.ajax({
+                url: "/api/exercise/all",
+                type: "GET",
+                data: { name: query, limit: 100 },
+                dataType: "json",
+                success: function (response) {
+                    callback(response.data);
+                },
+                error: function () {
+                    callback();
+                }
+            });
+        }
+    });
+
+    exerciseSelect.on('change', function () {
+            let selectedId = exerciseSelect.getValue();
+            if (!selectedId) return;
+
+            $.ajax({
+                url: "/api/exercise/search",
+                type: "GET",
+                data: { name:  exerciseSelect.options[selectedId]?.name || "" },
+                dataType: "json",
+                success: function (response) {
+                    if (response.data.length > 0) {
+                        $("#selectedExerciseEnergy").val(response.data[0].energyConsumption);
+                        $("#selectedExerciseId").val(response.data[0].id);
+                    } else {
+                        $("#selectedExerciseEnergy").val('');
+                    }
+                },
+                error: function (error) {
+                    console.error("Error fetching energy consumption:", error);
+                }
+            });
+        });
+
+
+    function selectExercise() {
+
+        const urlParams = new URLSearchParams(window.location.search);
+        let exerciseId = urlParams.get("exerciseId");
+
+        let selectedId = $("#selectedExerciseId").val();
+        let selectedText = exerciseSelect.options[selectedId]?.name || "";
+        let energyConsumption = $("#selectedExerciseEnergy").val();
+
+
+        if (!selectedId) {
+            alert("운동을 선택하세요!");
+            return;
+        }
+
+        if (window.opener && !window.opener.closed) {
+            let exerciseIdElement = window.opener.document.getElementById(`exerciseId_${exerciseId}`);
+            let exerciseNameElement = window.opener.document.getElementById(`exerciseName_${exerciseId}`);
+            let energyConsumptionElement = window.opener.document.getElementById(`energyConsumption_${exerciseId}`);
+            let exerciseTimeElement = window.opener.document.getElementById(`exerciseTime_${exerciseId}`);
+
+
+            if (exerciseIdElement) {
+                exerciseIdElement.value = selectedId;
+            }
+
+            if (exerciseNameElement) {
+                exerciseNameElement.value = selectedText;
+            }
+
+            if (energyConsumptionElement) {
+                energyConsumptionElement.value = energyConsumption;
+            }
+
+            if (exerciseTimeElement) {
+                exerciseTimeElement.focus();
+            }
+        } else {
+            alert("부모 창이 존재하지 않습니다.");
+        }
+        window.close();
+    }
+</script>
+
+</body>
+</html>

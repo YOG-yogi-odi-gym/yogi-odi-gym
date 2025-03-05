@@ -26,6 +26,8 @@ public class LessonDto {
     private String endTime;
     private Integer current;
     private Integer max;
+    private Long chatRoomId;
+    private String roomId;
 
     public LessonDto(Lesson lesson) {
         this.id = lesson.getId();
@@ -41,6 +43,8 @@ public class LessonDto {
         this.endTime = lesson.getEndTime().toString();
         this.current = lesson.getCurrent();
         this.max = lesson.getMax();
+        this.chatRoomId = lesson.getChatRoom().getId();
+        this.roomId = lesson.getChatRoom().getRoomId();
     }
 
     @Getter
@@ -104,6 +108,8 @@ public class LessonDto {
         private String description;
         private Integer current;
         private Integer max;
+        private Long chatRoomId;
+        private String roomId;
 
         public LessonDetailDto(Lesson lesson) {
             this.id = lesson.getId();
@@ -124,6 +130,8 @@ public class LessonDto {
             this.description = lesson.getDescription();
             this.current = lesson.getCurrent();
             this.max = lesson.getMax();
+            this.chatRoomId = lesson.getChatRoom().getId();
+            this.roomId = lesson.getChatRoom().getRoomId();
         }
     }
 

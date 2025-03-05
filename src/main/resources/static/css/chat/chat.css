@@ -1,0 +1,79 @@
+.chat-container {
+    width: 920px;
+    height: 800px;
+}
+.row {
+    height: 100%;
+}
+.chat-room-info {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.chat-participant, .chat-room {
+    flex: 1;
+}
+
+.chat-message-info {
+    height: 100%;
+}
+.chat-content {
+    height: 100%;
+}
+.chat-box {
+    display: flex;
+    flex-direction: column;
+}
+#unReadMessagesContainer {
+    display: flex;
+    flex-direction: column;
+}
+.my-message {
+    text-align: right;
+    display: inline-block;
+    margin-left: auto;
+    max-width: 80%;
+    padding: 8px 16px;
+    background-color: #d1ecf1;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+.other-message {
+    text-align: left;
+    display: inline-block;
+    margin-right: auto;
+    max-width: 80%;
+    padding: 8px 16px;
+    background-color: #f8d7da;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+/* 프로필 사진 크기와 스타일 */
+.profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 10px;  /* 이미지와 이름 간 간격 */
+}
+
+/* 메시지의 헤더 (프로필 사진과 이름을 가로로 나열) */
+.message-header {
+    display: flex;
+    align-items: center; /* 수직 정렬 */
+    margin-bottom: 5px; /* 아래쪽에 약간의 간격 */
+}
+
+/* 시간 표시 스타일 */
+.message-time {
+    font-size: 12px;
+    color: gray;
+    margin-bottom: 5px;  /* 메시지와 간격 */
+}
+
+/* 메시지 내용 */
+p {
+    margin: 0;
+}
+
