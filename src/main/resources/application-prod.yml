@@ -22,5 +22,5 @@ spring:
 
   data:
     redis:
-      host: ENC(l+QJzI2EUlLrZ+WV1GFpG7BHatQfxXBd)
+      host: ENC(yeSzut0YPLeN+8V1yMhkSz3pLy3L/PGK)
       port: 6379
