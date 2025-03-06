@@ -2,7 +2,7 @@ package com.health.yogiodigym.calendar.controller;
 
 
 import com.health.yogiodigym.calendar.dto.CalendarFoodDto.*;
-import com.health.yogiodigym.calendar.service.impl.CalendarFoodServiceImpl;
+import com.health.yogiodigym.calendar.service.CalendarFoodService;
 import com.health.yogiodigym.common.response.HttpResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,12 +19,12 @@ import static com.health.yogiodigym.common.message.SuccessMessage.*;
 @RequiredArgsConstructor
 public class CalendarFoodController {
 
-    private final CalendarFoodServiceImpl calendarFoodServiceimpl;
+    private final CalendarFoodService calendarFoodService;
 
     @GetMapping
     public ResponseEntity<?> findByMemberId(@RequestParam("memberId") Long memberId) {
 
-        List<CalendarFoodSelectDto> calendarFood = calendarFoodServiceimpl.findByMemberId(memberId);
+        List<CalendarFoodSelectDto> calendarFood = calendarFoodService.findByMemberId(memberId);
 
         return ResponseEntity
                 .ok()
@@ -36,7 +36,7 @@ public class CalendarFoodController {
 
         LocalDate requestedDate = LocalDate.parse(selectedDate);
 
-        List<CalendarFoodSelectDto> calendarFood = calendarFoodServiceimpl.findByDateAndMemberId(requestedDate, memberId);
+        List<CalendarFoodSelectDto> calendarFood = calendarFoodService.findByDateAndMemberId(requestedDate, memberId);
 
         return ResponseEntity
                 .ok()
@@ -46,7 +46,7 @@ public class CalendarFoodController {
     @PostMapping("/date")
     public ResponseEntity<?> postExerciseByDate(@RequestBody CalendarFoodInsertDto dto) {
 
-        calendarFoodServiceimpl.postFoodByDate(dto);
+        calendarFoodService.postFoodByDate(dto);
 
         return ResponseEntity
                 .ok()
@@ -56,7 +56,7 @@ public class CalendarFoodController {
     @PutMapping("/date")
     public ResponseEntity<?> putExerciseByDate(@RequestBody CalendarFoodUpdateDto dto) {
 
-        calendarFoodServiceimpl.putFoodByDate(dto);
+        calendarFoodService.putFoodByDate(dto);
 
         return ResponseEntity
                 .ok()
@@ -65,7 +65,7 @@ public class CalendarFoodController {
 
     @DeleteMapping("/date/{id}")
     public ResponseEntity<?>  deleteFoodByDate(@PathVariable("id") Long id) {
-        calendarFoodServiceimpl.deleteFoodByDate(id);
+        calendarFoodService.deleteFoodByDate(id);
 
         return ResponseEntity
                 .ok()
