@@ -28,6 +28,10 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Query("UPDATE Member m SET m.profile = :profile WHERE m.id = :id")
     void setProfile(@Param("profile") String profile, @Param("id") Long id);
 
+    @Modifying
+    @Query("update Member m set m.pwd = :pwd where m.email = :email")
+    int updatePwdByEmail(String pwd, String email);
+
     @Query("SELECT m FROM Member m " +
             "ORDER BY CASE " +
             "WHEN m.status = 'ACTIVE' THEN 1 " +

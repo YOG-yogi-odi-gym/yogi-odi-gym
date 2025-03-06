@@ -1,14 +1,16 @@
 package com.health.yogiodigym.member.service;
 
+import com.health.yogiodigym.member.dto.PasswordChangeDto;
 import com.health.yogiodigym.member.dto.RegistMemberDto;
 import com.health.yogiodigym.member.dto.RegistOAuthMemberDto;
+import com.health.yogiodigym.member.entity.Member;
 import com.health.yogiodigym.my.dto.UpdateMemberDto;
 import com.health.yogiodigym.my.dto.UpdateOAuthMemberDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Set;
+import java.util.Optional;
 
 public interface MemberService {
 
@@ -34,5 +36,7 @@ public interface MemberService {
 
     void emailAuthentication(String email);
 
-    boolean checkJoined(String email);
+    Optional<Member> checkJoined(String email);
+
+    void pwdChange(PasswordChangeDto passwordChangeDto);
 }

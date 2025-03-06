@@ -38,7 +38,7 @@ public class SecurityConfig {
                 .csrf(withDefaults())
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/images/source/**", "/css/**", "/js/**", "/", "/member/regist", "/member/find-pwd",
-                                "/api/member/regist", "/api/member/send-code" ,"api/member/mail-verify", "/api/member/find-pwd").permitAll()
+                                "/api/member/regist", "/api/member/send-code" ,"api/member/mail-verify", "/api/member/find-pwd", "/api/member/pwd-change").permitAll()
                         .requestMatchers("/images/license/**", "/api/admin/**", "/admin/**").hasRole("ADMIN")
                         .requestMatchers("/member/login", "/login").not().authenticated()
                         .requestMatchers("/logout", "/dashboard").authenticated()

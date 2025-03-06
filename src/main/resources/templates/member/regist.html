@@ -210,7 +210,7 @@
             let emailValue = document.body.querySelector("#email").value;
             document.body.querySelector("#wrong-code").textContent = "";
 
-            let url = "/api/member/find-pwd"
+            let url = "/api/member/send-code"
             let headers = {
                 "Content-Type": "application/json",
                 [csrfHeader]: csrfToken

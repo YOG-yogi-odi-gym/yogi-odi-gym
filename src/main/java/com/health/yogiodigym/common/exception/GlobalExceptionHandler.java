@@ -8,7 +8,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import static com.health.yogiodigym.common.message.ErrorMessage.REGIST_MEMBER_ERROR;
+import static com.health.yogiodigym.common.message.ErrorMessage.VALID_ERROR;
 
 @Slf4j
 @RestControllerAdvice
@@ -25,6 +25,6 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> validExceptionHandler(MethodArgumentNotValidException e) {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new HttpResponse(HttpStatus.BAD_REQUEST,
-                REGIST_MEMBER_ERROR.getMessage(), e.getBindingResult().getAllErrors()));
+                VALID_ERROR.getMessage(), e.getBindingResult().getAllErrors()));
     }
 }

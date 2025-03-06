@@ -17,7 +17,7 @@ public enum ErrorMessage {
     LESSON_ENROLLMENT_ERROR("이미 수강 중인 강의입니다."),
     EXISTING_MEMBER_ERROR("이미 존재하는 회원입니다."),
     MEMBER_NOT_FOUND("회원이 존재하지 않습니다."),
-    REGIST_MEMBER_ERROR("잘못된 회원가입 정보입니다."),
+    VALID_ERROR("잘못된 입력 정보입니다."),
     LESSON_NOT_FOUND("강의가 존재하지 않습니다."),
     BOARD_NOT_FOUND("게시판이 존재하지 않습니다."),
     COMMENT_NOT_FOUND("댓글이 존재하지 않습니다."),
@@ -29,7 +29,8 @@ public enum ErrorMessage {
     NO_DELETE_PERMISSION("삭제 권한이 없습니다."),
     SEND_MAIL_FAIL_ERROR("코드메일 전송에 실패했습니다."),
     EMAILCODE_NOT_FOUND("인증코드를 찾지 못했습니다"),
-    CODE_NOT_MATCH_ERROR("인증코드가 일치하지 않습니다.");
+    CODE_NOT_MATCH_ERROR("인증코드가 일치하지 않습니다."),
+    SOCIAL_MEMBER_PWD_CHANGE_ERROR("소셜회원은 비밀번호 변경을 하실 수 없습니다.");
 
     private final String message;
 }

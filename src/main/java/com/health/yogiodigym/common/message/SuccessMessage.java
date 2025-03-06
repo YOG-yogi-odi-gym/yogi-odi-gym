@@ -56,7 +56,8 @@ public enum SuccessMessage {
     ADMIN_AUTHORITY_ADD_SUCCESS("권한 추가에 성공하였습니다."),
     ADMIN_AUTHORITY_REJECT_SUCCESS("권한 반려에 성공하였습니다."),
     SEND_MAILCODE_SUCCESS("인증메일 전송에 성공하였습니다."),
-    MAIL_VERIFY_SUCCESS("메일인증에 성공하셨습니다.");
+    MAIL_VERIFY_SUCCESS("메일인증에 성공하셨습니다."),
+    PASSWORD_CHANGE_SUCCESS("비밀번호 변경에 성공하였습니다.");
 
     private final String message;
 }

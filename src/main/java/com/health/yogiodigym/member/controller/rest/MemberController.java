@@ -2,10 +2,14 @@ package com.health.yogiodigym.member.controller.rest;
 
 import com.health.yogiodigym.common.exception.CodeNotMatchException;
 import com.health.yogiodigym.common.exception.EmailNotFoundException;
+import com.health.yogiodigym.common.exception.MemberExistException;
+import com.health.yogiodigym.common.exception.SocialMemberPwdChangeException;
 import com.health.yogiodigym.common.response.HttpResponse;
 import com.health.yogiodigym.member.dto.EmailVerifyDto;
+import com.health.yogiodigym.member.dto.PasswordChangeDto;
 import com.health.yogiodigym.member.dto.RegistMemberDto;
 import com.health.yogiodigym.member.dto.RegistOAuthMemberDto;
+import com.health.yogiodigym.member.entity.Member;
 import com.health.yogiodigym.member.entity.MemberOAuth2User;
 import com.health.yogiodigym.member.service.MemberService;
 import com.health.yogiodigym.member.service.NCPStorageService;
@@ -22,7 +26,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Map;
+import java.util.Optional;
 
 import static com.health.yogiodigym.common.message.SuccessMessage.*;
 
@@ -41,8 +45,8 @@ public class MemberController {
                                     @RequestParam(value = "profile", required = false) MultipartFile profile,
                                     HttpServletRequest request, HttpServletResponse response) {
 
-        log.info("일반회원가입DTO : " + registMemberDto.toString());
-        log.info("프로필 이미지 : " + profile.isEmpty());
+        log.info("regist input: {}", registMemberDto.toString());
+        log.info("regist inputFile : {}", profile.isEmpty());
 
         String saveFileURL = ncpStorageService.uploadImage(profile, NCPStorageServiceImpl.DirectoryPath.PROFILE);
 
@@ -55,15 +59,15 @@ public class MemberController {
 
     @PostMapping("/auth-regist")
     public ResponseEntity<?> authRegist(@AuthenticationPrincipal MemberOAuth2User principal,
-                                         @Valid @ModelAttribute RegistOAuthMemberDto registOAuthMemberDto,
-                                         @RequestParam(value = "profile", required = false) MultipartFile profile,
-                                         HttpServletRequest request, HttpServletResponse response) {
+                                        @Valid @ModelAttribute RegistOAuthMemberDto registOAuthMemberDto,
+                                        @RequestParam(value = "profile", required = false) MultipartFile profile,
+                                        HttpServletRequest request, HttpServletResponse response) {
 
-        log.info("소셜회원가입DTO : " + registOAuthMemberDto.toString());
-        log.info("프로필 이미지 : " + profile.isEmpty());
+        log.info("auth-regist input: {}", registOAuthMemberDto.toString());
+        log.info("auth-regist inputFile : {}", profile.isEmpty());
 
         String saveFileURL = ncpStorageService.uploadImage(profile, NCPStorageServiceImpl.DirectoryPath.PROFILE);
-        if(saveFileURL == null){
+        if (saveFileURL == null) {
             saveFileURL = principal.getMember().getProfile();
         }
 
@@ -75,8 +79,13 @@ public class MemberController {
     }
 
     @PostMapping("/send-code")
-    public ResponseEntity<?> sendCode(@RequestBody EmailVerifyDto emailVerifyDto) {
-        log.info("sendCode() input dto : email = {}, code = {}", emailVerifyDto.getEmail(), emailVerifyDto.getCode());
+    public ResponseEntity<?> sendCode(@Valid @RequestBody EmailVerifyDto emailVerifyDto) {
+        log.info("send-code input: {}", emailVerifyDto.toString());
+
+        Optional<Member> joinedMember = memberService.checkJoined(emailVerifyDto.getEmail());
+        if(joinedMember.isPresent()){
+            throw new MemberExistException();
+        }
 
         memberService.emailAuthentication(emailVerifyDto.getEmail());
 
@@ -84,11 +93,16 @@ public class MemberController {
     }
 
     @PostMapping("/find-pwd")
-    public ResponseEntity<?> findPwd(@RequestBody EmailVerifyDto emailVerifyDto){
-        log.info("findPwd() input dto : email = {}, code = {}", emailVerifyDto.getEmail(), emailVerifyDto.getCode());
+    public ResponseEntity<?> findPwd(@Valid @RequestBody EmailVerifyDto emailVerifyDto) {
+        log.info("find-pwd input: {}", emailVerifyDto.toString());
 
-        if(!memberService.checkJoined(emailVerifyDto.getEmail())){
+        Optional<Member> joinedMember = memberService.checkJoined(emailVerifyDto.getEmail());
+        if(joinedMember.isEmpty()){
             throw new EmailNotFoundException();
+        }
+
+        if(joinedMember.get().getPwd() == null || joinedMember.get().getPwd().isEmpty()){
+            throw new SocialMemberPwdChangeException();
         }
 
         memberService.emailAuthentication(emailVerifyDto.getEmail());
@@ -97,8 +111,8 @@ public class MemberController {
     }
 
     @PostMapping("/mail-verify")
-    public ResponseEntity<?> mailVerify(@RequestBody EmailVerifyDto emailVerifyDto) {
-        log.info("mailVerify() input dto : email = {}, code = {}", emailVerifyDto.getEmail(), emailVerifyDto.getCode());
+    public ResponseEntity<?> mailVerify(@Valid @RequestBody EmailVerifyDto emailVerifyDto) {
+        log.info("mail-verify input: {}", emailVerifyDto.toString());
 
         String code = emailVerifyDto.getCode();
         String email = emailVerifyDto.getEmail();
@@ -106,10 +120,23 @@ public class MemberController {
 
         log.info("redisCode = {}", redisCode);
 
-        if(!code.equals(redisCode)) {
+        if (!code.equals(redisCode)) {
             throw new CodeNotMatchException();
         }
 
         return ResponseEntity.ok().body(new HttpResponse(HttpStatus.OK, MAIL_VERIFY_SUCCESS.getMessage(), null));
+    }
+
+    @PutMapping("/pwd-change")
+    public ResponseEntity<?> pwdChange(@Valid @RequestBody PasswordChangeDto passwordChangeDto) {
+        log.info("pwd-change input: {}", passwordChangeDto.toString());
+
+        if (memberService.checkJoined(passwordChangeDto.getEmail()).isEmpty()) {
+            throw new EmailNotFoundException();
+        }
+
+        memberService.pwdChange(passwordChangeDto);
+
+        return ResponseEntity.ok().body(new HttpResponse(HttpStatus.OK, PASSWORD_CHANGE_SUCCESS.getMessage(), null));
     }
 }

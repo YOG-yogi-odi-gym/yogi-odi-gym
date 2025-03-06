@@ -68,6 +68,7 @@
 
         let timeInSeconds = 300;
         let timerInterval;
+        let emailValue;
 
         $(document).ready(function () {
             emailcodeModal = new bootstrap.Modal(document.body.querySelector("#emailcode-modal"));
@@ -98,7 +99,7 @@
         }
 
         function showEmailcodeModal() {
-            let emailValue = document.body.querySelector("#email").value;
+            emailValue = document.body.querySelector("#email").value;
             document.body.querySelector("#wrong-code").textContent = "";
 
             let url = "/api/member/find-pwd"
@@ -127,13 +128,14 @@
                 })
                 .catch(error => {
                     document.querySelector("#modalMessage").textContent = error.message;
+                    document.querySelector("#modalLabel").textContent = "인증 오류";
                     modalDiv.show();
                     console.error("Error:", error.message);
                 });
         }
 
         function checkMailcode() {
-            let emailValue = document.body.querySelector("#email").value;
+            emailValue = document.body.querySelector("#email").value;
             let code = document.body.querySelector("#emailcode").value;
             const errorView = document.body.querySelector("#wrong-code");
 
@@ -151,7 +153,7 @@
                 .then(response => {
                     if (response.status !== 200) {
                         return response.json().then(errorData => {
-                            throw new Error(errorData.message || '이메일 전송 실패');
+                            throw new Error(errorData.message || '인증 실패');
                         });
                     }
                     return response.json();
@@ -165,13 +167,76 @@
                     codeCheckBtn.classList.add("btn-secondary");
 
                     document.body.querySelector("#pwd-change-div").style.display = 'block';
+                    document.body.querySelector("#email").setAttribute("disabled", "true");
 
                     document.querySelector("#modalMessage").textContent = data.message;
+                    document.querySelector("#modalLabel").textContent = "인증 성공";
                     modalDiv.show();
                     console.log("Success:", data);
                 })
                 .catch(error => {
                     errorView.textContent = error.message;
+                    console.error("Error:", error.message);
+                });
+        }
+
+        function pwdChange() {
+            let pwd = document.body.querySelector("#pwd").value;
+            let pwd2 = document.body.querySelector("#pwd2").value;
+
+            let url = "/api/member/pwd-change"
+            let headers = {
+                "Content-Type": "application/json",
+                [csrfHeader]: csrfToken
+            };
+
+            fetch(url, {
+                method: "PUT",
+                headers: headers,
+                body: JSON.stringify({email: emailValue, pwd: pwd, pwd2: pwd2})
+            })
+                .then(response => {
+                    if (response.status !== 200) {
+                        return response.json().then(errorData => {
+                            const errorMessage = errorData.message || '유효성 검사 오류';
+                            const errors = errorData.data;
+                            throw { message: errorMessage, errors: errors };
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    document.body.querySelector("#pwd-change-div").style.display = 'block';
+
+                    alert(data.message);
+                    window.location.href = '/member/login';
+                })
+                .catch(error => {
+                    document.querySelector("#modalMessage").textContent = error.message;
+                    document.querySelector("#modalLabel").textContent = "비밀번호 변경 실패";
+
+                    console.error("Error:", error);
+                    let errors = error.errors;
+
+                    const errorMap = errors.reduce((acc, error) => {
+                        acc[error.field] = error.defaultMessage;
+                        return acc;
+                    }, {})
+
+                    const errorArray = [
+                        errorMap['email'],
+                        errorMap['pwd'],
+                        errorMap['pwd2'],
+                        errorMap['passwordMatching'],
+                    ];
+
+                    const errorArrayFiltered = errorArray.filter(Boolean);
+
+                    if (errorArrayFiltered.length > 0) {
+                        document.querySelector("#modalMessage").textContent = errorArrayFiltered[0];
+                        modalDiv.show();
+                    }
+
                     console.error("Error:", error.message);
                 });
         }
@@ -197,10 +262,6 @@
             } else {
                 timeInSeconds--;
             }
-        }
-
-        function pwdChange() {
-
         }
     </script>
     <title>Document</title>

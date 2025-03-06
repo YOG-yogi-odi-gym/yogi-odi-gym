@@ -1,7 +1,9 @@
 package com.health.yogiodigym.member.service.impl;
 
+import com.health.yogiodigym.common.exception.EmailNotFoundException;
 import com.health.yogiodigym.common.exception.MemberExistException;
 import com.health.yogiodigym.common.exception.WrongPasswordException;
+import com.health.yogiodigym.member.dto.PasswordChangeDto;
 import com.health.yogiodigym.member.dto.RegistMemberDto;
 import com.health.yogiodigym.member.dto.RegistOAuthMemberDto;
 import com.health.yogiodigym.member.entity.Member;
@@ -70,7 +72,7 @@ public class MemberServiceImpl implements MemberService {
     public void enrollMaster(MultipartFile[] certificate) {
         Set<String> certificates = new HashSet<>();
         for (MultipartFile file : certificate) {
-            addCertificateURL(file,certificates);
+            addCertificateURL(file, certificates);
         }
 
         MemberOAuth2User principal = (MemberOAuth2User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -86,7 +88,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     private void addCertificateURL(MultipartFile file, Set<String> certificates) {
-        if(!file.isEmpty()) {
+        if (!file.isEmpty()) {
             certificates.add(ncpStorageService.uploadImage(file, NCPStorageServiceImpl.DirectoryPath.CERTIFICATE));
         }
     }
@@ -95,6 +97,8 @@ public class MemberServiceImpl implements MemberService {
     public void updateMember(UpdateMemberDto updateMemberDto) {
         MemberOAuth2User principal = (MemberOAuth2User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Member currentMember = principal.getMember();
+        updateMemberDto.setPwd(passwordEncoder.encode(updateMemberDto.getPwd()));
+
         currentMember.updateMember(updateMemberDto);
 
         memberRepository.save(currentMember);
@@ -110,8 +114,18 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public boolean checkJoined(String email) {
-        return memberRepository.findByEmail(email).isPresent();
+    public Optional<Member> checkJoined(String email) {
+        return memberRepository.findByEmail(email);
+    }
+
+    @Override
+    public void pwdChange(PasswordChangeDto passwordChangeDto) {
+        String newPwd = passwordEncoder.encode(passwordChangeDto.getPwd());
+        String newEmail = passwordChangeDto.getEmail();
+
+        if (0 == memberRepository.updatePwdByEmail(newPwd, newEmail)) {
+            throw new EmailNotFoundException();
+        }
     }
 
     @Override
@@ -196,7 +210,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void checkPassword(String pwd, String principalPwd) {
-        if(!passwordEncoder.matches(pwd, principalPwd)){
+        if (!passwordEncoder.matches(pwd, principalPwd)) {
             throw new WrongPasswordException();
         }
     }
