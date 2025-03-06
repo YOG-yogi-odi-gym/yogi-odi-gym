@@ -1,6 +1,8 @@
 package com.health.yogiodigym.board.dto;
 
 import com.health.yogiodigym.board.entity.Comment;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -15,6 +17,8 @@ public class CommentDto {
     private Long memberId;
     private String memberName;
     private Long boardId;
+    @NotBlank(message = "댓글 내용을 입력해주세요.")
+    @Size(max = 500, message = "댓글 내용은 500자를 초과할 수 없습니다.")
     private String content;
     private LocalDateTime createDateTime;
     private boolean edit;

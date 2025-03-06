@@ -13,14 +13,17 @@
     <script th:src="@{https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js}"></script>
     <style>
         body {
+            width: 100%;
             margin: 0;
             padding: 0;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            justify-content: flex-start !important;
             align-items: center;
             height: 100vh;
             background-color: #f1f1f1;
         }
+
         .container-fluid {
             max-width: 1200px;
             width: 1200px;
@@ -32,12 +35,14 @@
             border-radius: 10px;
             background-color: #f1f1f1;
         }
+
         .main {
             width: 1200px;
             height: 850px;
             display: flex;
             justify-content: flex-start;
         }
+
         .content {
             display: flex;
             flex-direction: column;
@@ -47,17 +52,18 @@
             background-color: #F1F1F1;
             border-radius: 10px;
         }
-        .main-card{
+
+        .main-card {
             width: 920px;
             height: 800px;
             border-radius: 10px;
         }
 
-        .main-card .card-header{
+        .main-card .card-header {
             border-radius: 10px 10px 0 0;
         }
 
-        .main-card .card-footer{
+        .main-card .card-footer {
             border-radius: 0 0 10px 10px;
         }
     </style>
@@ -74,6 +80,12 @@
         let memberLon = [[${member.getLongitude}]]
         let memberId = [[${member.id}]]
         let csrfToken = "[[${_csrf.token}]]"
+
+        function handleEnter(event) {
+            if (event.keyCode === 13) {  // Enter 키 감지
+                lessonSearch();
+            }
+        }
 
         function lessonSearch(page = 0) {
             currentPage = page;
@@ -395,7 +407,8 @@
                         </select>
                     </div>
                     <div class="col-sm-8">
-                        <input type="text" id="lessonKeyword" class="form-control" placeholder="Enter name">
+                        <input type="text" id="lessonKeyword" class="form-control" placeholder="Enter name"
+                               onkeyup="handleEnter(event)">
                     </div>
                     <div class="col-sm-2">
                         <button onclick="lessonSearch()" class="btn btn-primary small-btn w-100">Search</button>
