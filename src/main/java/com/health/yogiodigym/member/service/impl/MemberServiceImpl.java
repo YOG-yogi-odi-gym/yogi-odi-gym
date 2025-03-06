@@ -95,6 +95,8 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void updateMember(UpdateMemberDto updateMemberDto) {
+        updateMemberDto.setPwd(passwordEncoder.encode(updateMemberDto.getPwd()));
+
         MemberOAuth2User principal = (MemberOAuth2User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Member currentMember = principal.getMember();
         updateMemberDto.setPwd(passwordEncoder.encode(updateMemberDto.getPwd()));

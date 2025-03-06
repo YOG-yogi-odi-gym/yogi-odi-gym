@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 import static com.health.yogiodigym.common.message.SuccessMessage.*;
@@ -27,6 +26,7 @@ public class DataExerciseController {
                 .ok()
                 .body(new HttpResponse(HttpStatus.OK,GET_DATA_EXERCISE_SUCCESS.getMessage(), dataExercises));
     }
+
 
     @GetMapping("/search")
     public ResponseEntity<?> findByNameContainingIgnoreCase(String name) {

@@ -1,6 +1,7 @@
 package com.health.yogiodigym.calendar.controller;
 
 import com.health.yogiodigym.calendar.dto.CalendarLessonDto;
+import com.health.yogiodigym.calendar.service.CalendarLessonService;
 import com.health.yogiodigym.calendar.service.impl.CalendarLessonServiceImpl;
 import com.health.yogiodigym.common.response.HttpResponse;
 import lombok.RequiredArgsConstructor;
@@ -18,12 +19,12 @@ import static com.health.yogiodigym.common.message.SuccessMessage.*;
 @RequiredArgsConstructor
 public class CalendarLessonController {
 
-    private final CalendarLessonServiceImpl calendarLessonServiceimpl;
+    private final CalendarLessonService calendarLessonService;
 
     @GetMapping
     public ResponseEntity<?> getLessonsByMember(@RequestParam("memberId") Long memberId) {
 
-        List<CalendarLessonDto> calendarLesson = calendarLessonServiceimpl.getLessonsByMemberId(memberId);
+        List<CalendarLessonDto> calendarLesson = calendarLessonService.getLessonsByMemberId(memberId);
 
         return ResponseEntity
                 .ok()
@@ -37,7 +38,7 @@ public class CalendarLessonController {
 
         LocalDate requestedDate = LocalDate.parse(selectedDate);
 
-        List<CalendarLessonDto> calendarLesson = calendarLessonServiceimpl.getLessonsByMemberAndDate(memberId,requestedDate);
+        List<CalendarLessonDto> calendarLesson = calendarLessonService.getLessonsByMemberAndDate(memberId,requestedDate);
 
         return ResponseEntity
                 .ok()

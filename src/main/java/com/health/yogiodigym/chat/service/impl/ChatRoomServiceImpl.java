@@ -4,6 +4,7 @@ import static com.health.yogiodigym.chat.config.ChatConstants.ENTER_CHAT_ROOM_ME
 import static com.health.yogiodigym.chat.config.ChatConstants.QUIT_CHAT_ROOM_MESSAGE_SUFFIX;
 
 import com.health.yogiodigym.chat.dto.MessageDto.MessageRequestDto;
+import com.health.yogiodigym.chat.entity.ChatMessage;
 import com.health.yogiodigym.common.exception.LessonNotFoundException;
 import com.health.yogiodigym.lesson.entity.Lesson;
 import com.health.yogiodigym.lesson.entity.LessonEnrollment;
@@ -108,10 +109,18 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     @Override
     @Transactional(readOnly = true)
     public List<ChatRoomResponseDto> getChatRooms(Member member) {
-        return lessonEnrollmentRepository.findAllByMember(member)
-                .stream()
-                .map(LessonEnrollment::getLesson)
-                .map(ChatRoomResponseDto::new)
+        List<LessonEnrollment> lessonEnrollments = lessonEnrollmentRepository.findAllByMember(member);
+        return lessonEnrollments.stream()
+                .map(l -> {
+                    Lesson lesson = l.getLesson();
+                    ChatRoom chatRoom = lesson.getChatRoom();
+                    ChatParticipant chatParticipant = chatParticipantRepository.findByMemberAndChatRoom(member, chatRoom)
+                            .orElseThrow(() -> new MemberNotInChatRoomException(member.getId()));
+                    Long lastReadMessageId = chatParticipant.getLastReadMessageId();
+                    List<ChatMessage> chatMessages = chatMessageRepository.findByChatRoomAndIdGreaterThan(chatRoom, lastReadMessageId);
+
+                    return new ChatRoomResponseDto(lesson, chatMessages.size());
+                })
                 .toList();
     }
 

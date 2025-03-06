@@ -54,13 +54,19 @@ public class NCPStorageServiceImpl implements NCPStorageService {
     public void deleteImageByUrl(String fileUrl) {
         String fileKey = extractFileKey(fileUrl);
 
-        s3Client.deleteObject(DeleteObjectRequest.builder()
-                .bucket(bucketName)
-                .key(fileKey)
-                .build());
+        if(fileKey != null) {
+            s3Client.deleteObject(DeleteObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(fileKey)
+                    .build());
+        }
     }
 
     private String extractFileKey(String fileUrl) {
+        if (fileUrl == null || !fileUrl.startsWith(endpoint + "/" + bucketName + "/")) {
+            return null;
+        }
+
         return fileUrl.replace(endpoint + "/" + bucketName + "/", "");
     }
 

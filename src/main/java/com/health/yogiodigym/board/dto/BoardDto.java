@@ -1,11 +1,10 @@
 package com.health.yogiodigym.board.dto;
 
 import com.health.yogiodigym.board.entity.Board;
-import com.health.yogiodigym.lesson.entity.Category;
-import com.health.yogiodigym.member.entity.Member;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Getter
 @Setter
@@ -36,6 +35,7 @@ public class BoardDto {
     @Getter
     @Setter
     @Builder
+    @ToString
     @AllArgsConstructor
     @NoArgsConstructor
     public static class BoardDetailDto{
@@ -49,6 +49,7 @@ public class BoardDto {
         private LocalDateTime createDateTime;
         private int view;
         private boolean edit;
+        private int commentCount;
 
         public BoardDetailDto(Board board) {
             this.id = board.getId();
@@ -61,6 +62,19 @@ public class BoardDto {
             this.createDateTime = board.getCreateDateTime();
             this.view = board.getView();
             this.edit = board.isEdit();
+        }
+
+        public BoardDetailDto(Board board, int commentCount) {
+            this(board);
+            this.commentCount = commentCount;
+        }
+
+        public String getFormattedCreateDateTime() {
+            if (this.createDateTime == null) {
+                return "등록일 없음";  // null 처리
+            }
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            return this.createDateTime.format(formatter);
         }
     }
 

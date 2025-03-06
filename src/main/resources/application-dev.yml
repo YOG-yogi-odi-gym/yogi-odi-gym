@@ -10,7 +10,7 @@ spring:
     password: ENC(td4ZLVKdNy5JsVcp5yvuXsL0vGidbphp)
 
   kafka:
-    bootstrap-servers: ENC(9AgQ/wHvAH8WyvMkCm1naP13SuWK79W3JCoThydePko=)
+    bootstrap-servers: ENC(+uHKgquXImb9MFP26fsH9ul1wjsnysbYVCjsKvEDxJY=)
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonDeserializer
@@ -22,5 +22,5 @@ spring:
 
   data:
     redis:
-      host: ENC(l+QJzI2EUlLrZ+WV1GFpG7BHatQfxXBd)
+      host: ENC(yeSzut0YPLeN+8V1yMhkSz3pLy3L/PGK)
       port: 6379
