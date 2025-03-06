@@ -1,7 +1,11 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
 <style th:fragment="custom-navbar">
     .custom-navbar {
+        font-family: 'Poppins', 'Noto Sans KR', sans-serif;
         width: 100%;
         height: 50px;
         display: flex;
@@ -11,6 +15,42 @@
         border-radius: 10px;
         background-color: white;
         padding: 0 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .dropdown-toggle {
+        display: flex;
+        align-items: center;
+        background: none;
+        border: none;
+        font-size: 16px;
+        font-weight: 600;
+        color: #333;
+        padding: 5px 10px;
+        transition: all 0.3s ease;
+    }
+    .profile-name {
+        font-size: 16px;
+        font-weight: bold;
+        color: #444;
+        margin-left: 8px;
+    }
+    .profile-image {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        border: 2px solid #ddd;
+    }
+    .dropdown-menu {
+        border-radius: 8px;
+        border: none;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    .dropdown-item {
+        font-size: 14px;
+        font-weight: 500;
+        color: #333;
+        padding: 10px 15px;
+        transition: all 0.2s ease;
     }
 </style>
 <div class="custom-navbar" th:fragment="custom-navbar">
@@ -20,8 +60,9 @@
     <div class="dropdown">
         <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton"
                 data-bs-toggle="dropdown" aria-expanded="false">
-            <img th:src="${#authentication.principal.member.profile != null ? #authentication.principal.member.profile : '/images/source/anonymous.png'}" alt="사진" style="width: 35px;height: 35px;border-radius: 50%;">
-            <span th:text="${#authentication.principal.member.name}"/>
+            <img th:src="${#authentication.principal.member.profile != null ? #authentication.principal.member.profile : '/images/source/anonymous.png'}"
+                 alt="사진" style="width: 35px;height: 35px;border-radius: 50%;" class="profile-image">
+            <span class="profile-name" th:text="${#authentication.principal.member.name}"/>
         </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <li><a class="dropdown-item" href="/my/info">내 정보</a></li>

@@ -26,8 +26,8 @@ $(document).ready(function () {
                 }
 
                 members.forEach(member => {
-                    let row = `
-                            <tr>
+                    let row =
+                            `<tr>
                                 <td><input type="checkbox" class="memberCheckbox" value="${member.id}"></td>
                                 <td>${member.name}</td>
                                 <td>${member.email}</td>
