@@ -1,7 +1,6 @@
 package com.health.yogiodigym.board.dto;
 
 import com.health.yogiodigym.board.entity.Board;
-import com.health.yogiodigym.board.entity.Comment;
 import lombok.*;
 
 import java.time.LocalDateTime;
