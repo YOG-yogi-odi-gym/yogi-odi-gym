@@ -58,3 +58,7 @@ cloud:
 kakao:
   api:
     scriptKey: ENC(rx4OdzFCwme5wNInUfdwd6gB9yQKjrUPUQQjYvoYckQQienCjDrV8NPhqKnoPHNA)
+
+app:
+  name: © 2025 요기오디짐
+  version: v1.3.0
