@@ -109,6 +109,8 @@
                     if (boards.content.length === 0) {
                         let noResultRow = document.createElement("tr");
                         let noResultCell = document.createElement("td");
+                        let pagination = document.getElementById("pagination")
+                        pagination.innerHTML = ""
                         noResultCell.colSpan = 5;
                         noResultCell.style.textAlign = "center";
                         noResultCell.textContent = `"${boardKeyword}" 의 검색 결과가 없습니다.`;

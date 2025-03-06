@@ -107,6 +107,8 @@
                     if (gyms.content.length === 0) {
                         let noResultRow = document.createElement("tr");
                         let noResultCell = document.createElement("td");
+                        let pagination = document.getElementById("pagination")
+                        pagination.innerHTML = ""
                         noResultCell.colSpan = 4;
                         noResultCell.style.textAlign = "center";
                         noResultCell.textContent = `"${gymKeyword}" 의 검색 결과가 없습니다.`;
