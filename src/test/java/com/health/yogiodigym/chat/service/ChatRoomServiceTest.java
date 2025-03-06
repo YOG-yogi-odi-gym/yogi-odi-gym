@@ -13,6 +13,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.health.yogiodigym.chat.dto.MessageDto.MessageRequestDto;
+import com.health.yogiodigym.chat.dto.MessageDto.MessageResponseDto;
 import com.health.yogiodigym.lesson.entity.Lesson;
 import com.health.yogiodigym.lesson.entity.LessonEnrollment;
 import com.health.yogiodigym.lesson.repository.LessonEnrollmentRepository;
@@ -95,7 +96,7 @@ class ChatRoomServiceTest {
 
             // then
             verify(chatParticipantRepository, times(1)).save(any(ChatParticipant.class));
-            verify(kafkaProducerService, times(1)).sendMessage(any(MessageRequestDto.class));
+            verify(kafkaProducerService, times(1)).sendMessage(any(MessageResponseDto.class));
         }
 
         @Test
@@ -350,9 +351,9 @@ class ChatRoomServiceTest {
             // then
             verify(chatParticipantRepository, times(1)).delete(mockChatParticipant);
 
-            ArgumentCaptor<MessageRequestDto> messageArgumentCaptor = ArgumentCaptor.forClass(MessageRequestDto.class);
+            ArgumentCaptor<MessageResponseDto> messageArgumentCaptor = ArgumentCaptor.forClass(MessageResponseDto.class);
             verify(kafkaProducerService, times(1)).sendMessage(messageArgumentCaptor.capture());
-            MessageRequestDto message = messageArgumentCaptor.getValue();
+            MessageResponseDto message = messageArgumentCaptor.getValue();
             assertThat(message.getSenderId()).isEqualTo(mockMember.getId());
             assertThat(message.getRoomId()).isEqualTo(roomId);
             assertThat(message.getMessage()).isEqualTo(mockMember.getName() + QUIT_CHAT_ROOM_MESSAGE_SUFFIX);

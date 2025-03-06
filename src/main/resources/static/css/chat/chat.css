@@ -2,7 +2,7 @@
     width: 920px;
     height: 800px;
 }
-.row {
+.chat-container .row {
     height: 100%;
 }
 .chat-room-info {
@@ -49,31 +49,24 @@
     border-radius: 10px;
     margin-bottom: 10px;
 }
-/* 프로필 사진 크기와 스타일 */
 .profile-pic {
     width: 40px;
     height: 40px;
     border-radius: 50%;
     object-fit: cover;
-    margin-right: 10px;  /* 이미지와 이름 간 간격 */
+    margin-right: 10px;
 }
-
-/* 메시지의 헤더 (프로필 사진과 이름을 가로로 나열) */
 .message-header {
     display: flex;
-    align-items: center; /* 수직 정렬 */
-    margin-bottom: 5px; /* 아래쪽에 약간의 간격 */
+    align-items: center;
+    margin-bottom: 5px;
 }
-
-/* 시간 표시 스타일 */
 .message-time {
     font-size: 12px;
     color: gray;
-    margin-bottom: 5px;  /* 메시지와 간격 */
+    margin-bottom: 5px;
 }
-
-/* 메시지 내용 */
-p {
+.chat-container p {
     margin: 0;
 }
 
