@@ -11,10 +11,6 @@
     <script type="text/javascript" th:src="@{'/js/lesson/lessonRegister.js'}"></script>
     <script type="text/javascript" th:src="@{'/js/lesson/latLonApi.js'}"></script>
     <script type="text/javascript" th:src="@{'/js/lesson/lessonValidateDate.js'}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script th:src="@{https://code.jquery.com/jquery-3.5.1.slim.min.js}"></script>
-    <script th:src="@{https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js}"></script>
-    <script th:src="@{https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js}"></script>
     <style>
         body {
             width: 100%;
@@ -89,7 +85,7 @@
             <div class="card-header">
                 <h2>강의 등록</h2>
             </div>
-            <form th:action="@{/api/lesson/register}" method="post">
+            <form th:action="@{/api/lesson/register}" method="post" onsubmit="return validateForm()">
                 <div class="card-body">
                     <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
                     <label for="title">강의명</label>
@@ -101,7 +97,7 @@
                         <label id="search-label">카테고리</label>
                         <div th:each="category : ${categories}">
                             <input type="radio" name="categoryId" th:id="'category-'+${category.id}"
-                                   th:value="${category.id}">
+                                   th:value="${category.id}" required>
                             <label th:for="'category-' + ${category.id}" th:text="${category.name}"></label>
                         </div>
                     </div>
@@ -170,7 +166,7 @@
 
                     <label>강의 소개</label>
                     <div class="form-group">
-                        <textarea id="description" name="description" class="form-control" rows="4"></textarea>
+                        <textarea id="description" name="description" class="form-control" rows="4" required></textarea>
                     </div>
                 </div>
 
@@ -182,5 +178,9 @@
         </div>
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{https://code.jquery.com/jquery-3.5.1.slim.min.js}"></script>
+<script th:src="@{https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js}"></script>
+
 </body>
 </html>

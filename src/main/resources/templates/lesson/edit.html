@@ -11,10 +11,6 @@
     <script type="text/javascript" th:src="@{'/js/lesson/lessonRegister.js'}"></script>
     <script type="text/javascript" th:src="@{'/js/lesson/latLonApi.js'}"></script>
     <script type="text/javascript" th:src="@{'/js/lesson/lessonValidateDate.js'}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script th:src="@{https://code.jquery.com/jquery-3.5.1.slim.min.js}"></script>
-    <script th:src="@{https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js}"></script>
-    <script th:src="@{https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js}"></script>
     <style>
         body {
             width: 100%;
@@ -89,7 +85,7 @@
             <div class="card-header">
                 <h2>강의 수정</h2>
             </div>
-            <form th:action="@{/api/lesson/edit}" method="post">
+            <form th:action="@{/api/lesson/edit}" method="post" onsubmit="return validateForm()">
                 <input type="hidden" name="id" th:value="${lesson.id}">
                 <input type="hidden" name="latitude" th:value="${lesson.latitude}">
                 <input type="hidden" name="longitude" th:value="${lesson.longitude}">
@@ -108,7 +104,8 @@
                                    name="categoryId"
                                    th:value="${category.id}"
                                    th:id="'category_' + ${category.id}"
-                                   th:checked="${category.id == lesson.categoryId}">
+                                   th:checked="${category.id == lesson.categoryId}"
+                                   required>
                             <label th:for="'category_' + ${category.id}" th:text="${category.name}"></label>
                         </div>
                     </div>
@@ -189,5 +186,9 @@
         </div>
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{https://code.jquery.com/jquery-3.5.1.slim.min.js}"></script>
+<script th:src="@{https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js}"></script>
+
 </body>
 </html>

@@ -12,3 +12,20 @@ document.addEventListener("DOMContentLoaded", function () {
     document.querySelector("input[name='startDay']").addEventListener("change", validateEndDate)
     document.querySelector("input[name='endDay']").addEventListener("change", validateEndDate)
 })
+
+function validateForm() {
+    let bitDays = document.querySelectorAll('input[name="bitDays"]:checked');
+    if (bitDays.length === 0) {
+        alert("강의 요일을 하나 이상 선택해야 합니다.");
+        return false;
+    }
+
+    let latitude = document.getElementById("latitude").value;
+    let longitude = document.getElementById("longitude").value;
+    if (!latitude || !longitude) {
+        alert("위도와 경도가 비어 있습니다. 주소를 다시 검색해주세요.");
+        return false;
+    }
+
+    return true;
+}
