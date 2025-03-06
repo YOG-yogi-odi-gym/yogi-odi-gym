@@ -15,7 +15,7 @@
             background-color: #F1F1F1;
         }
 
-        .side {
+        .side-nav {
             width: 220px;
             height: 800px;
             margin: 25px 0 25px 20px;
@@ -26,7 +26,7 @@
             border-radius: 10px;
         }
 
-        .side-up {
+        .side-nav-up {
             width: 100%;
             height: 320px;
             display: flex;
@@ -35,7 +35,7 @@
             align-items: center;
             border-radius: 10px;
         }
-        .side-down {
+        .side-nav-down {
             width: 100%;
             height: 80px;
             display: flex;
@@ -74,8 +74,8 @@
     </style>
 </head>
 <body th:fragment="side">
-<div class="side">
-    <div class="side-up" style="background-color: white;">
+<div class="side-nav">
+    <div class="side-nav-up" style="background-color: white;">
         <a th:href="@{/dashboard}" id="side_dashboard" class="side-nav-item side-nav-dashboard">
             <i class="bi bi-border-all"></i>
             <span>대시보드</span>
@@ -97,6 +97,9 @@
             <span>캘린더</span>
         </a>
     </div>
-    <div class="side-down"></div>
+    <div class="side-nav-down">
+        <span style="color: gray;">© 2025 여기어디짐</span>
+        <span style="color: gray;">v1.3.0</span>
+    </div>
 </div>
 </body>
