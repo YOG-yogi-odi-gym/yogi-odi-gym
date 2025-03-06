@@ -5,6 +5,7 @@
     <title>강의 등록</title>
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
     <script type="text/javascript" th:src="@{'//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js'}"></script>
     <script type="text/javascript"
             th:src="@{'//dapi.kakao.com/v2/maps/sdk.js?appkey=' + ${@environment.getProperty('kakao.api.scriptKey')} + '&libraries=services'}"></script>
