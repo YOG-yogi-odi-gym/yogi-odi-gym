@@ -1,6 +1,8 @@
 package com.health.yogiodigym.board.dto;
 
 import com.health.yogiodigym.board.entity.Comment;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.time.LocalDateTime;

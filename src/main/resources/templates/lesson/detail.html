@@ -8,16 +8,14 @@
     <script type="text/javascript"
             th:src="@{'//dapi.kakao.com/v2/maps/sdk.js?appkey=' + ${@environment.getProperty('kakao.api.scriptKey')}}"></script>
     <script type="text/javascript" th:src="@{'/js/lesson/bitmaskToDays.js'}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script th:src="@{https://code.jquery.com/jquery-3.5.1.slim.min.js}"></script>
-    <script th:src="@{https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js}"></script>
-    <script th:src="@{https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js}"></script>
-    <style>
+   <style>
         body {
+            width: 100%;
             margin: 0;
             padding: 0;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            justify-content: flex-start !important;
             align-items: center;
             height: 100vh;
             background-color: #f1f1f1;
@@ -369,13 +367,12 @@
             </div>
 
             <div class="card-footer text-center" id="buttonContainer">
-                <button onclick="history.back()">뒤로 가기</button>
-                <button onclick="location.href='/lesson'">강의 목록</button>
-                <button id="chatRoomBtn" style="display: none;" onclick="enterChatRoom()">채팅방 입장</button>
-                <button id="cancelEnrollBtn" style="display: none;" onclick="cancelEnrollment()">수강 취소</button>
-                <button id="enrollBtn" style="display: none;" onclick="enrollLesson()">수강 신청</button>
-                <button id="updateBtn" style="display: none;" onclick="updateLesson()">수정</button>
-                <button id="deleteBtn" style="display: none;" onclick="deleteLesson()">삭제</button>
+                <button type="button" class="btn btn-secondary" onclick="history.back()">이전으로</button>
+                <button class="btn btn-warning" id="chatRoomBtn" style="display: none;" onclick="enterChatRoom()">채팅방 입장</button>
+                <button class="btn btn-danger" id="cancelEnrollBtn" style="display: none;" onclick="cancelEnrollment()">수강 취소</button>
+                <button class="btn btn-primary" id="enrollBtn" style="display: none;" onclick="enrollLesson()">수강 신청</button>
+                <button class="btn btn-success" id="updateBtn" style="display: none;" onclick="updateLesson()">수정</button>
+                <button class="btn btn-danger" id="deleteBtn" style="display: none;" onclick="deleteLesson()">삭제</button>
             </div>
         </div>
     </div>
@@ -397,6 +394,9 @@
         </div>
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{https://code.jquery.com/jquery-3.5.1.slim.min.js}"></script>
+<script th:src="@{https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js}"></script>
 
 </body>
 </html>
