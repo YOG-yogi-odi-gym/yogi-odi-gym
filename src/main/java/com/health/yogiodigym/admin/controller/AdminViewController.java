@@ -24,7 +24,7 @@ public class AdminViewController {
         model.addAttribute("members", adminMemberService.getAllMembers());
         model.addAttribute("lessons", adminLessonService.getAllLessons());
         model.addAttribute("boards", adminBoardService.findAllByOrderByIdDesc());
-        model.addAttribute("memberToMasters", adminMemberToMasterService.findAllMemberToMasters());
+        model.addAttribute("memberToMasters", adminMemberToMasterService.findAllByOrderByEnrollDateAsc());
         model.addAttribute("categories", adminCategoryService.findAll());
 
         return "admin/admin";
