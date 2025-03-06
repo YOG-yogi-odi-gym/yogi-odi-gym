@@ -126,7 +126,16 @@
                     let resultSearch = document.getElementById("resultSearch")
                     resultSearch.innerHTML = ""
 
-                    let lessonNo = page * 10 + 1;
+                    if (lessons.length === 0) {
+                        let noResultRow = document.createElement("tr");
+                        let noResultCell = document.createElement("td");
+                        noResultCell.colSpan = 7;
+                        noResultCell.style.textAlign = "center";
+                        noResultCell.textContent = `"${lessonKeyword}" 의 검색 결과가 없습니다.`;
+                        noResultRow.appendChild(noResultCell);
+                        resultSearch.appendChild(noResultRow);
+                        return;
+                    }
 
                     lessons.forEach(lesson => {
                         let trRow = document.createElement("tr")
@@ -214,6 +223,7 @@
                         trRow.appendChild(tdBtn)
 
                         resultSearch.appendChild(trRow)
+
                     })
 
                     let pagination = document.getElementById("pagination")
