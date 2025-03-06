@@ -16,6 +16,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<?> globalExceptionHandler(CustomException e) {
+        log.warn("{} Occurred: {}", e.getClass().getSimpleName(), e.getMessage());
+
         return ResponseEntity
                 .status(e.getStatus())
                 .body(new HttpResponse(e.getStatus(), e.getMessage(), null));

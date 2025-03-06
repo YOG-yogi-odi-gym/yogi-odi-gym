@@ -20,18 +20,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Modifying
     int deleteByDropDateBeforeAndStatus(@Param("dropDate") LocalDate dropDate, @Param("status") MemberStatus status);
 
-    @Modifying
-    @Query("UPDATE Member m SET m.status = :status, m.dropDate = :dropDate WHERE m.id = :id")
-    void setStatusInactive(@Param("status") MemberStatus status, @Param("dropDate") LocalDate dropDate, @Param("id") Long id);
-
-    @Modifying
-    @Query("UPDATE Member m SET m.profile = :profile WHERE m.id = :id")
-    void setProfile(@Param("profile") String profile, @Param("id") Long id);
-
-    @Modifying
-    @Query("update Member m set m.pwd = :pwd where m.email = :email")
-    int updatePwdByEmail(String pwd, String email);
-
     @Query("SELECT m FROM Member m " +
             "ORDER BY CASE " +
             "WHEN m.status = 'ACTIVE' THEN 1 " +
@@ -54,11 +42,4 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
             "else 6 " +
             "end, m.name asc")
     List<Member> searchMembers(@Param("memberKeyword") String memberKeyword);
-
-    @Modifying
-    @Transactional
-    @Query("UPDATE Member m SET m.status = :status, m.dropDate = :dropDate WHERE m.id IN :memberIds")
-    int setInactiveStatus(@Param("memberIds") List<Long> memberIds,
-                          @Param("status") MemberStatus memberStatus,
-                          @Param("dropDate") LocalDate dropDate);
 }

@@ -1,9 +1,9 @@
 package com.health.yogiodigym.my.controller.rest;
 
-import com.health.yogiodigym.board.dto.BoardDto.*;
+import com.health.yogiodigym.board.dto.BoardDto.BoardDetailDto;
 import com.health.yogiodigym.board.service.BoardService;
 import com.health.yogiodigym.common.response.HttpResponse;
-import com.health.yogiodigym.lesson.dto.LessonDto.*;
+import com.health.yogiodigym.lesson.dto.LessonDto.LessonSearchDto;
 import com.health.yogiodigym.lesson.service.LessonService;
 import com.health.yogiodigym.member.entity.MemberOAuth2User;
 import com.health.yogiodigym.member.service.MemberService;
@@ -26,10 +26,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import static com.health.yogiodigym.common.message.SuccessMessage.*;
 
@@ -56,7 +54,7 @@ public class MyController {
     public ResponseEntity<?> withdrawal(@RequestBody(required = false) Map<String, String> checkPwd, @AuthenticationPrincipal MemberOAuth2User principal,
                                         HttpServletRequest request, HttpServletResponse response) {
 
-        if(checkPwd != null && !checkPwd.isEmpty()) {
+        if (checkPwd != null && !checkPwd.isEmpty()) {
             memberService.checkPassword(checkPwd.get("pwd"), principal.getPassword());
         }
         memberService.registwithdrawal(principal.getMember().getId(), request, response);
@@ -87,7 +85,7 @@ public class MyController {
     @PostMapping("/profile")
     public ResponseEntity<?> profile(@RequestParam(value = "profile") MultipartFile profile,
                                      @AuthenticationPrincipal MemberOAuth2User principal,
-                                     HttpServletRequest request, HttpServletResponse response){
+                                     HttpServletRequest request, HttpServletResponse response) {
         ncpStorageService.deleteImageByUrl(principal.getMember().getProfile());
         String saveFileURL = ncpStorageService.uploadImage(profile, NCPStorageServiceImpl.DirectoryPath.PROFILE);
         memberService.updateProfile(saveFileURL, principal.getMember().getId());
@@ -126,7 +124,7 @@ public class MyController {
                                            @RequestParam(defaultValue = "10") int size,
                                            @AuthenticationPrincipal MemberOAuth2User loginUser) {
 
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC,"id"));
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
         Page<LessonSearchDto> lessons = lessonService.searchMyLessons(loginUser.getMember().getId(), lessonKeyword, searchColumn, days, categories, pageable);
 
         return ResponseEntity.ok().body(new HttpResponse(HttpStatus.OK, SEARCH_LESSON_SUCCESS.getMessage(), lessons));

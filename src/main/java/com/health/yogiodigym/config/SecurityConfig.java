@@ -50,7 +50,7 @@ public class SecurityConfig {
                         .permitAll()
                         .defaultSuccessUrl("/dashboard", true)
                         .failureHandler((request, response, exception) -> {
-                            log.error("로그인 실패: " + exception.getMessage(), exception);
+                            log.info("로그인 실패: " + exception.getMessage());
 
                             String errorMessage;
                             if(exception instanceof BadCredentialsException) {

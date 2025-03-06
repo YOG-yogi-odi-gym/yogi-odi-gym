@@ -82,12 +82,7 @@ public class MemberController {
     public ResponseEntity<?> sendCode(@Valid @RequestBody EmailVerifyDto emailVerifyDto) {
         log.info("send-code input: {}", emailVerifyDto.toString());
 
-        Optional<Member> joinedMember = memberService.checkJoined(emailVerifyDto.getEmail());
-        if(joinedMember.isPresent()){
-            throw new MemberExistException();
-        }
-
-        memberService.emailAuthentication(emailVerifyDto.getEmail());
+        memberService.sendCode(emailVerifyDto);
 
         return ResponseEntity.ok().body(new HttpResponse(HttpStatus.OK, SEND_MAILCODE_SUCCESS.getMessage(), null));
     }
@@ -96,16 +91,7 @@ public class MemberController {
     public ResponseEntity<?> findPwd(@Valid @RequestBody EmailVerifyDto emailVerifyDto) {
         log.info("find-pwd input: {}", emailVerifyDto.toString());
 
-        Optional<Member> joinedMember = memberService.checkJoined(emailVerifyDto.getEmail());
-        if(joinedMember.isEmpty()){
-            throw new EmailNotFoundException();
-        }
-
-        if(joinedMember.get().getPwd() == null || joinedMember.get().getPwd().isEmpty()){
-            throw new SocialMemberPwdChangeException();
-        }
-
-        memberService.emailAuthentication(emailVerifyDto.getEmail());
+        memberService.findPwd(emailVerifyDto);
 
         return ResponseEntity.ok().body(new HttpResponse(HttpStatus.OK, SEND_MAILCODE_SUCCESS.getMessage(), null));
     }
@@ -130,10 +116,6 @@ public class MemberController {
     @PutMapping("/pwd-change")
     public ResponseEntity<?> pwdChange(@Valid @RequestBody PasswordChangeDto passwordChangeDto) {
         log.info("pwd-change input: {}", passwordChangeDto.toString());
-
-        if (memberService.checkJoined(passwordChangeDto.getEmail()).isEmpty()) {
-            throw new EmailNotFoundException();
-        }
 
         memberService.pwdChange(passwordChangeDto);
 

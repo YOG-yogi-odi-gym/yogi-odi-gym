@@ -1,8 +1,7 @@
 package com.health.yogiodigym.member.service.impl;
 
-import com.health.yogiodigym.common.exception.EmailNotFoundException;
-import com.health.yogiodigym.common.exception.MemberExistException;
-import com.health.yogiodigym.common.exception.WrongPasswordException;
+import com.health.yogiodigym.common.exception.*;
+import com.health.yogiodigym.member.dto.EmailVerifyDto;
 import com.health.yogiodigym.member.dto.PasswordChangeDto;
 import com.health.yogiodigym.member.dto.RegistMemberDto;
 import com.health.yogiodigym.member.dto.RegistOAuthMemberDto;
@@ -99,8 +98,6 @@ public class MemberServiceImpl implements MemberService {
 
         MemberOAuth2User principal = (MemberOAuth2User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Member currentMember = principal.getMember();
-        updateMemberDto.setPwd(passwordEncoder.encode(updateMemberDto.getPwd()));
-
         currentMember.updateMember(updateMemberDto);
 
         memberRepository.save(currentMember);
@@ -116,22 +113,37 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Optional<Member> checkJoined(String email) {
-        return memberRepository.findByEmail(email);
+    public void findPwd(EmailVerifyDto emailVerifyDto) {
+        Optional<Member> joinedMember = memberRepository.findByEmail(emailVerifyDto.getEmail());
+        if(joinedMember.isEmpty()){
+            throw new EmailNotFoundException();
+        }
+
+        if(joinedMember.get().getPwd() == null || joinedMember.get().getPwd().isEmpty()){
+            throw new SocialMemberPwdChangeException();
+        }
+
+        emailAuthentication(emailVerifyDto.getEmail());
+    }
+
+    @Override
+    public void sendCode(EmailVerifyDto emailVerifyDto) {
+        memberRepository.findByEmail(emailVerifyDto.getEmail())
+                .ifPresent(member -> { throw new MemberExistException(); });
+
+        emailAuthentication(emailVerifyDto.getEmail());
     }
 
     @Override
     public void pwdChange(PasswordChangeDto passwordChangeDto) {
-        String newPwd = passwordEncoder.encode(passwordChangeDto.getPwd());
-        String newEmail = passwordChangeDto.getEmail();
+        Member changePwdMember = memberRepository.
+                findByEmail(passwordChangeDto.getEmail()).orElseThrow(() -> new EmailNotFoundException());
 
-        if (0 == memberRepository.updatePwdByEmail(newPwd, newEmail)) {
-            throw new EmailNotFoundException();
-        }
+        String newPwd = passwordEncoder.encode(passwordChangeDto.getPwd());
+        changePwdMember.setPwd(newPwd);
     }
 
-    @Override
-    public void emailAuthentication(String email) {
+    private void emailAuthentication(String email) {
         String code = emailService.makeCode();
 
         emailService.sendCodeToMail(email, code);
@@ -219,7 +231,9 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void registwithdrawal(Long id, HttpServletRequest request, HttpServletResponse response) {
-        memberRepository.setStatusInactive(INACTIVE, LocalDate.now(), id);
+        Member withdrawalMember =  memberRepository.findById(id).orElseThrow(() -> new MemberNotFoundException(id));
+
+        withdrawalMember.setInactive();
         new SecurityContextLogoutHandler().logout(request, response, SecurityContextHolder.getContext().getAuthentication());
     }
 
@@ -232,6 +246,8 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void updateProfile(String profile, Long id) {
-        memberRepository.setProfile(profile, id);
+        Member updateProfileMember = memberRepository.findById(id).orElseThrow(() -> new MemberNotFoundException(id));
+
+        updateProfileMember.setProfile(profile);
     }
 }
