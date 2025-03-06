@@ -66,6 +66,8 @@ public class BoardDto {
         }
 
         public BoardDetailDto(Board board, int commentCount) {
+            this(board);
+            this.commentCount = commentCount;
         }
 
         public String getFormattedCreateDateTime() {
