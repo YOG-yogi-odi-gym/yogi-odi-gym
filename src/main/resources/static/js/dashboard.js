@@ -145,7 +145,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     label: '회원 평균',
                     data: calorieAverageData,
                     borderColor: '#F4A26C',
-                    backgroundColor: 'rgba(32, 178, 170, 0.1)',
+                    backgroundColor: 'rgba(255, 245, 235, 0.3)',
                     borderWidth: 2.5,
                     pointRadius: 5,
                     pointBackgroundColor: '#F4A26C',

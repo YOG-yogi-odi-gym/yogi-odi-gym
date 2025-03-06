@@ -1,4 +1,5 @@
 body {
+    font-family: 'Poppins', 'Noto Sans KR', sans-serif;
     width: 100%;
     margin: 0;
     padding: 0;
@@ -53,8 +54,17 @@ body {
     padding: 20px;
 }
 
-.today-best, .my-lesson {
-    border: none;
+#exerciseChart, #calorieChart {
+    max-height: 310px;
+    height: 310px;
+}
+
+.exercise-graph h4, .calorie-graph h4 {
+    color: #333;
+    font-size: 1.2em;
+    font-weight: 600;
+    border-bottom: 3px solid #eeeeee;
+    padding-bottom: 10px;
 }
 
 .today-best h4, .my-lesson h4 {
@@ -125,7 +135,9 @@ body {
     transform: translateY(-2px);
 }
 
-#exerciseChart, #calorieChart {
-    max-height: 330px;
-    height: 330px;
+.today-best-list, .my-lesson-list,
+.today-best-list li, .my-lesson-list li,
+.today-best-list li a, .my-lesson-list li a,
+.today-best-list li a span, .my-lesson-list li a span {
+    font-family: 'Poppins', 'Noto Sans KR', sans-serif;
 }

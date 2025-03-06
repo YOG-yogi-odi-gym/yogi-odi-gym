@@ -1,5 +1,6 @@
 package com.health.yogiodigym.admin.service.impl;
 
+import com.health.yogiodigym.admin.dto.MemberToMasterDto;
 import com.health.yogiodigym.admin.dto.MemberToMasterDto.*;
 import com.health.yogiodigym.admin.service.service.AdminMemberToMasterService;
 import com.health.yogiodigym.member.entity.Authority;
@@ -27,9 +28,9 @@ public class AdminMemberToMasterServiceImpl implements AdminMemberToMasterServic
 
     @Override
     @Transactional(readOnly = true)
-    public List<MemberToMasterResponseDto> findAllMemberToMasters() {
+    public List<MemberToMasterResponseDto> findAllByOrderByEnrollDateAsc() {
 
-        return memberToMasterRepository.findAll()
+        return memberToMasterRepository.findAllByOrderByEnrollDateAsc()
                 .stream()
                 .map(MemberToMasterResponseDto::from)
                 .collect(Collectors.toList());

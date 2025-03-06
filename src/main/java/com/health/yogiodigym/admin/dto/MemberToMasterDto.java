@@ -3,6 +3,7 @@ package com.health.yogiodigym.admin.dto;
 import com.health.yogiodigym.my.entity.MemberToMaster;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.Set;
 
 public class MemberToMasterDto {
@@ -19,6 +20,8 @@ public class MemberToMasterDto {
         private String memberName;
         private String memberEmail;
         private Set<String> certificate;
+        private LocalDate enrollDate;
+
 
         public static MemberToMasterResponseDto from(MemberToMaster memberToMaster) {
 
@@ -27,6 +30,7 @@ public class MemberToMasterDto {
                     .memberId(memberToMaster.getMember().getId())
                     .memberName(memberToMaster.getMember().getName())
                     .memberEmail(memberToMaster.getMember().getEmail())
+                    .enrollDate(memberToMaster.getEnrollDate())
                     .certificate(memberToMaster.getCertificate())
                     .build();
         }
