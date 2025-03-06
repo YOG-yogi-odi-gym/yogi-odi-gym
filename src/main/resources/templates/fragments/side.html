@@ -84,6 +84,15 @@
             <i class="bi bi-people-fill"></i>
             <span>게시판</span>
         </a>
+<!--        <div class="side-nav-item side-nav-board" id="boardButton">-->
+<!--            <i class="bi bi-people-fill"></i>-->
+<!--            <span>게시판</span>-->
+<!--        </div>-->
+<!--        <ul id="boardList" style="display: none;">-->
+<!--            <li><a href="/board/list/1">자유 게시판</a></li>-->
+<!--            <li><a href="/board/list/2">공지 게시판</a></li>-->
+<!--            <li><a href="/board/list/3">질문 게시판</a></li>-->
+<!--        </ul>-->
         <a th:href="@{/lesson}" id="side_lesson" class="side-nav-item side-nav-courses">
             <i class="bi bi-search"></i>
             <span>강의 찾기</span>
@@ -102,4 +111,18 @@
         <span style="color: gray;">v1.3.0</span>
     </div>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const boardButton = document.getElementById('boardButton');
+        const boardList = document.getElementById('boardList');
+
+        boardButton.addEventListener('click', function() {
+            if (boardList.style.display === 'none') {
+                boardList.style.display = 'block';
+            } else {
+                boardList.style.display = 'none';
+            }
+        });
+    });
+</script>
 </body>

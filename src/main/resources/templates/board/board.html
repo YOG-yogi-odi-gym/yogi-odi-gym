@@ -65,6 +65,37 @@
             border-radius: 0 0 10px 10px;
         }
 
+        .table {
+            border-collapse: collapse;
+            width: 100%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .table thead th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            font-size: 0.8rem;
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .table tbody td {
+            padding: 15px 15px;
+            font-size: 0.8rem;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f1f5f9;
+        }
+
+        .table tbody td:nth-child(2) {
+            text-align: left;
+        }
+
     </style>
     <script>
         window.onload = function () {
@@ -237,12 +268,10 @@
 
     <div class="main">
         <div th:replace="~{fragments/side :: side}"></div>
-
         <script>
             document.getElementById("side_board").style.color = "blue";
             document.getElementById("side_board").style.background = "skyblue"
         </script>
-
         <link rel="stylesheet" th:href="@{/css/board/board.css}">
         <link rel="stylesheet" th:href="@{/css/mainTool.css}">
 
@@ -285,7 +314,7 @@
                 </div>
             </div>
             <div class="card-body">
-                <table class="table table-striped mt-4">
+                <table class="table table-bordered table-hover table-sm mt-4">
                     <thead>
                     <tr>
                         <th style="width: 60px; text-align: center;">번호</th>
