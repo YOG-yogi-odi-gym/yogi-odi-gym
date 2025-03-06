@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{css/mainform.css}">
     <link rel="stylesheet" th:href="@{css/dashboard.css}">
 
     <script th:inline="javascript">
@@ -21,7 +22,7 @@
     <div th:replace="~{fragments/navbar :: custom-navbar}"></div>
     <div class="main">
         <div th:replace="~{fragments/side :: side}"></div>
-        <div class="content">
+        <div class="content" style="background-color: #F1F1F1">
             <div class="content-up" style="margin-bottom: 20px">
                 <div class="exercise-graph" style="margin-right: 20px">
                     <h4>운동량</h4>
