@@ -3,7 +3,7 @@ package com.health.yogiodigym.chat.service.impl;
 import static com.health.yogiodigym.chat.config.ChatConstants.ENTER_CHAT_ROOM_MESSAGE_PREFIX;
 import static com.health.yogiodigym.chat.config.ChatConstants.QUIT_CHAT_ROOM_MESSAGE_SUFFIX;
 
-import com.health.yogiodigym.chat.dto.MessageDto.MessageRequestDto;
+import com.health.yogiodigym.chat.dto.MessageDto.MessageResponseDto;
 import com.health.yogiodigym.chat.entity.ChatMessage;
 import com.health.yogiodigym.common.exception.LessonNotFoundException;
 import com.health.yogiodigym.lesson.entity.Lesson;
@@ -24,6 +24,8 @@ import com.health.yogiodigym.common.exception.MemberNotInChatRoomException;
 import com.health.yogiodigym.lesson.repository.LessonRepository;
 import com.health.yogiodigym.member.entity.Member;
 import com.health.yogiodigym.member.repository.MemberRepository;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -55,6 +57,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         ChatParticipant chatParticipant = ChatParticipant.builder()
                 .member(member)
                 .chatRoom(chatRoom)
+                .lastReadMessageId(0L)
                 .build();
         chatParticipantRepository.save(chatParticipant);
 
@@ -168,11 +171,13 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     }
 
     private void sendChatMessage(Member member, String roomId, String content) {
-        MessageRequestDto message = MessageRequestDto.builder()
+        MessageResponseDto message = MessageResponseDto.builder()
                 .senderId(member.getId())
                 .senderName(member.getName())
                 .roomId(roomId)
                 .message(content)
+                .profileUrl(member.getProfile())
+                .sendDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")))
                 .build();
         kafkaProducerService.sendMessage(message);
     }
