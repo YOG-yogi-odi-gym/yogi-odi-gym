@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>test</title>
+    <title>헬스장 검색</title>
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <script type="text/javascript"
@@ -104,6 +104,19 @@
 
                     let gymNo = page * 10 + 1;
 
+                    if (gyms.content.length === 0) {
+                        let noResultRow = document.createElement("tr");
+                        let noResultCell = document.createElement("td");
+                        let pagination = document.getElementById("pagination")
+                        pagination.innerHTML = ""
+                        noResultCell.colSpan = 4;
+                        noResultCell.style.textAlign = "center";
+                        noResultCell.textContent = `"${gymKeyword}" 의 검색 결과가 없습니다.`;
+                        noResultRow.appendChild(noResultCell);
+                        resultSearch.appendChild(noResultRow);
+                        return;
+                    }
+
                     gyms.content.forEach(gym => {
                         let gymTrRow = document.createElement("tr")
                         let gymTdNo = document.createElement("td")
@@ -114,12 +127,12 @@
                         gymTdName.style.whiteSpace = "nowrap";
                         gymTdName.style.overflow = "hidden";
                         gymTdName.style.textOverflow = "ellipsis";
-                        gymTdName.style.maxWidth = "300px"; // 조정 가능
+                        gymTdName.style.maxWidth = "300px";
 
                         gymTdOldAddress.style.whiteSpace = "nowrap";
                         gymTdOldAddress.style.overflow = "hidden";
                         gymTdOldAddress.style.textOverflow = "ellipsis";
-                        gymTdOldAddress.style.maxWidth = "300px"; // 조정 가능
+                        gymTdOldAddress.style.maxWidth = "300px";
 
                         let modalLink = document.createElement("a")
                         modalLink.href = "#"
