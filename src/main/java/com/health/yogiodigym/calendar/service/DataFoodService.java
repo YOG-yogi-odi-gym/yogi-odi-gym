@@ -10,6 +10,6 @@ public interface DataFoodService {
 
     List<DataFoodDto> findByNameContainingIgnoreCase(String name);
 
-    List<DataFoodDto>  findAll();
+    List<DataFoodDto> findAll();
 
 }

@@ -65,6 +65,9 @@ public class BoardDto {
             this.edit = board.isEdit();
         }
 
+        public BoardDetailDto(Board board, int commentCount) {
+        }
+
         public String getFormattedCreateDateTime() {
             if (this.createDateTime == null) {
                 return "등록일 없음";  // null 처리
