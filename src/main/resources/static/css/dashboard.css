@@ -124,3 +124,8 @@ body {
     background-color: #f44336;
     transform: translateY(-2px);
 }
+
+#exerciseChart, #calorieChart {
+    max-height: 330px;
+    height: 330px;
+}
