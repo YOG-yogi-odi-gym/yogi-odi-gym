@@ -80,7 +80,7 @@
         let csrfToken = "[[${_csrf.token}]]"
 
         function handleEnter(event) {
-            if (event.keyCode === 13) {  // Enter 키 감지
+            if (event.keyCode === 13) {
                 lessonSearch();
             }
         }
@@ -385,12 +385,10 @@
 
     <div class="main">
         <div th:replace="~{fragments/side :: side}"></div>
-
         <script>
-            document.getElementById("side_lesson").style.color = "blue";
-            document.getElementById("side_lesson").style.background = "skyblue"
+            document.getElementById("side_lesson").style.color = "#f1f1f1";
+            document.getElementById("side_lesson").style.background = "#adb5bd"
         </script>
-
         <link rel="stylesheet" th:href="@{/css/gyms.css}">
         <link rel="stylesheet" th:href="@{/css/lesson/lessonSearch.css}">
         <link rel="stylesheet" th:href="@{/css/mainTool.css}">

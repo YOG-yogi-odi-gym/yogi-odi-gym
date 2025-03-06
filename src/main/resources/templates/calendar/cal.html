@@ -164,13 +164,10 @@
     <div th:replace="~{fragments/navbar :: custom-navbar}"></div>
     <div class="main">
         <div th:replace="~{fragments/side :: side}"></div>
-
         <script>
-            document.getElementById("side_calendar").style.color = "blue";
-            document.getElementById("side_calendar").style.background = "skyblue"
+            document.getElementById("side_calendar").style.color = "#f1f1f1";
+            document.getElementById("side_calendar").style.background = "#adb5bd"
         </script>
-
-
         <div class="content">
             <div sec:authorize="isAuthenticated()">
                 <input type="hidden" id="memberId" th:value="${#authentication.principal.member.id}" />
@@ -307,7 +304,6 @@
     Open Modal
 </button>
 
-<!-- 모달 -->
 <div class="modal fade" id="eventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
