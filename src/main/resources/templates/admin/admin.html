@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{css/admin.css}">
 </head>
 <body>
@@ -110,13 +111,13 @@
                     </tr>
                     </thead>
                     <tbody id="applyTableBody">
-                    <tr th:each="memberToMaster : ${memberToMasters}" style="cursor: default;" th:data-apply_file="${memberToMaster.file}">
+                    <tr th:each="memberToMaster : ${memberToMasters}" style="cursor: default;"
+                        th:data-apply_file="${#strings.replace(#strings.replace(memberToMaster.certificate, '[', ''), ']', '')}">
                         <td class="applyName" th:text="${memberToMaster.memberName}"></td>
                         <td class="applyEmail" th:text="${memberToMaster.memberEmail}"></td>
-                        <td>
-                            <input type="hidden" class="applyId" th:value="${memberToMaster.id}">
-                            <input type="hidden" class="applyMemberId" th:value="${memberToMaster.memberId}">
-                        </td>
+                        <td class="applyTime" th:text="${memberToMaster.enrollDate}"></td>
+                        <input type="hidden" class="applyId" th:value="${memberToMaster.id}">
+                        <input type="hidden" class="applyMemberId" th:value="${memberToMaster.memberId}">
                     </tr>
                     </tbody>
                 </table>
@@ -167,13 +168,11 @@
         </div>
 
         <div class="modal fade" id="applyDetailModal" tabindex="-1" role="dialog" aria-labelledby="applyDetailModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
+            <div class="modal-dialog" role="document" style="max-width: 50%">
                 <div class="modal-content" style="border-radius: 10px;">
                     <div class="modal-header">
                         <h5 class="modal-title" id="applyDetailModalLabel">강사 신청</h5>
-                        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <form id="applyDetailForm">
@@ -190,8 +189,7 @@
                             </div>
                             <hr>
                             <div class="form-group">
-                                <label for="applyFile">자격증</label><br>
-                                <a href="#" id="applyFile" target="_blank">첨부 파일</a><br>
+                                <label>자격증</label><br>
                                 <div id="applyImgContainer"></div>
                             </div>
                         </form>
@@ -210,9 +208,7 @@
                 <div class="modal-content" style="border-radius: 10px;">
                     <div class="modal-header">
                         <h5 class="modal-title" id="categoryModalLabel">카테고리 추가</h5>
-                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <form id="categoryForm">
@@ -242,9 +238,7 @@
                 <div class="modal-content" style="border-radius: 10px;">
                     <div class="modal-header">
                         <h5 class="modal-title" id="updateCategoryModalLabel">카테고리 수정</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <form id="updateCategoryForm">
