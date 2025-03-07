@@ -12,9 +12,9 @@
     border-radius: 10px;
 }
 
-.modal-header {
-    background-color: #f1f1f1;
+.modal-header, .modal-footer {
     border-radius: 10px 10px 0 0;
+    background-color: #f1f1f1;
 }
 
 .modal-footer {
@@ -22,7 +22,7 @@
     border-radius: 0 0 10px 10px;
 }
 
-.card {
+.card, .main-card {
     border-radius: 10px;
     border: none;
 }
@@ -58,9 +58,12 @@
     text-decoration: none;
 }
 
-.card-header {
+.card-header, .card-body, .card-footer {
     background: white;
     border: none;
+}
+
+.card-header {
     padding-top: 20px;
     padding-bottom: 5px;
 }
@@ -68,13 +71,6 @@
 .card-body {
     font-size: 12px;
     padding: 5px 16px 16px 16px;
-    background: white;
-    border: none;
-}
-
-.card-footer {
-    background: white;
-    border: none;
 }
 
 .form-group {
@@ -82,11 +78,7 @@
     padding-bottom: 10px;
 }
 
-.form-control {
-    font-size: 12px;
-}
-
-button {
+.form-control, button {
     font-size: 13px;
 }
 
@@ -117,4 +109,51 @@ th:nth-child(3), td:nth-child(3) {
 .small-btn {
     padding: 4px 10px;
     font-size: 14px;
+}
+
+.main-card {
+    width: 920px;
+    height: 800px;
+}
+
+#resultSearch tr {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
+    display: block;
+    padding: 15px;
+    width: 888px;
+    transition: transform 0.2s ease-in-out;
+}
+
+#resultSearch tr:hover {
+    background-color: #eee;
+    transform: translateY(-5px);
+}
+
+#resultSearch tr:hover td {
+    background-color: #eee;
+}
+
+#resultSearch td {
+    display: table-cell;
+    border: none;
+    padding: 5px 0;
+    text-align: left;
+}
+
+#resultSearch td:nth-child(1) { width: 55px; }
+#resultSearch td:nth-child(2) { width: 410px; }
+#resultSearch td:nth-child(3) { width: 65px; }
+#resultSearch td:nth-child(4) { width: 100px; }
+#resultSearch td:nth-child(5) { width: 80px; }
+#resultSearch td:nth-child(6) { width: 80px; }
+#resultSearch td:nth-child(7) { width: 90px; }
+
+#resultSearch td:before {
+    font-weight: bold;
+    display: inline-block;
+    width: 80px;
 }

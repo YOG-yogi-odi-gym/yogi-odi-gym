@@ -22,6 +22,7 @@
     <div th:replace="~{fragments/navbar :: custom-navbar}"></div>
     <div class="main">
         <div th:replace="~{fragments/side :: side}"></div>
+        <link rel="stylesheet" th:href="@{/css/mainTool.css}">
         <script>
             document.getElementById("side_dashboard").style.color = "#f1f1f1";
             document.getElementById("side_dashboard").style.background = "#adb5bd"
