@@ -36,6 +36,9 @@
             font-weight: bolder;
         }
 
+        .card-body {
+            align-items: center;
+        }
 
     </style>
     <script>
@@ -106,12 +109,16 @@
                     <a th:href="@{/member/regist}" class="btn btn-lg w-100 mb-3" style="background-color: #27AE60; border-radius: 30px">
                         회원가입
                     </a>
+
+                    <a th:href="@{/member/find-pwd}" style="font-size: 12px">
+                        비밀번호 번호를 잊어버리셨나요?
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<div th:replace="fragments/modal :: modalFragment"></div>
+<div th:replace="~{fragments/modal :: modalFragment}"></div>
 </body>
 </html>

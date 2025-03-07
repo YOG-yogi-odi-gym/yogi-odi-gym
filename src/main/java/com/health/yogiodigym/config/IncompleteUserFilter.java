@@ -1,4 +1,4 @@
-package com.health.yogiodigym.member.config;
+package com.health.yogiodigym.config;
 
 import com.health.yogiodigym.member.entity.MemberOAuth2User;
 import jakarta.servlet.FilterChain;
@@ -17,7 +17,7 @@ import static com.health.yogiodigym.member.status.MemberStatus.INCOMPLETE;
 public class IncompleteUserFilter extends OncePerRequestFilter {
 
     private static final List<String> EXCLUDED_PATHS = List.of(
-            "/member/regist", "/member/login", "/login", "/api/member/regist", "/api/member/oAuthRegist"
+            "/member/regist", "/member/login", "/login", "/api/member/regist", "/api/member/auth-regist"
     );
 
     private static final List<String> EXCLUDED_PATTERNS = List.of(

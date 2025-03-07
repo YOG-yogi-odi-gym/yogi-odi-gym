@@ -2,6 +2,7 @@ package com.health.yogiodigym.admin.service.impl;
 
 import com.health.yogiodigym.admin.dto.MemberDto.*;
 import com.health.yogiodigym.admin.service.service.AdminMemberService;
+import com.health.yogiodigym.common.exception.MemberNotFoundException;
 import com.health.yogiodigym.member.status.MemberStatus;
 import com.health.yogiodigym.member.entity.Member;
 import com.health.yogiodigym.member.repository.MemberRepository;
@@ -34,18 +35,9 @@ public class AdminMemberServiceImpl implements AdminMemberService {
     @Override
     @Transactional
     public void setInactiveStatus(List<Long> memberIds) {
-        memberRepository.setInactiveStatus(memberIds, MemberStatus.INACTIVE, LocalDate.now());
+        for(Long memberId : memberIds){
+            Member inActiveMember = memberRepository.findById(memberId).orElseThrow(() -> new MemberNotFoundException(memberId));
+            inActiveMember.setInactive();
+        }
     }
-
-//    @Scheduled(cron = "00 00 00 * * *")
-//    @Override
-//    public void deleteInactiveStatus() {
-//        LocalDate threeDaysAgo = LocalDate.now().minusDays(3);
-//        List<Member> membersToDelete = memberRepository.findByStatusAndDropDateBefore(MemberStatus.INACTIVE, threeDaysAgo);
-//
-//        if(!membersToDelete.isEmpty()) {
-//            memberRepository.deleteAll(membersToDelete);
-//            System.out.println("삭제된 회원 수 : "+ membersToDelete.size());
-//        }
-//    }
 }

@@ -25,6 +25,26 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       group-id: chat-room
 
+  mail:
+    host: smtp.naver.com
+    port: 465
+    username: ENC(Fi1nTnA6Fv9u/6yzXpkQ6OgkGroVPEFrAkimx5mh9cM=)
+    password: ENC(IzfpKLfwDbkCCIoV5jaG1nfZlefguY4x)
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls: false
+          ssl: true
+          timeout: "5000"
+          connectiontimeout: "5000"
+          writetimeout: 5000
+    default-encoding: UTF-8
+    auth-code-expiration-millis: 300000
+
+  thymeleaf:
+    cache: false
+
   security:
     oauth2:
       client:
