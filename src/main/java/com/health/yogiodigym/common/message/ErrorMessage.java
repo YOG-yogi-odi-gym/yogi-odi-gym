@@ -30,7 +30,8 @@ public enum ErrorMessage {
     SEND_MAIL_FAIL_ERROR("코드메일 전송에 실패했습니다."),
     EMAILCODE_NOT_FOUND("인증코드를 찾지 못했습니다"),
     CODE_NOT_MATCH_ERROR("인증코드가 일치하지 않습니다."),
-    SOCIAL_MEMBER_PWD_CHANGE_ERROR("소셜회원은 비밀번호 변경을 하실 수 없습니다.");
+    SOCIAL_MEMBER_PWD_CHANGE_ERROR("소셜회원은 비밀번호 변경을 하실 수 없습니다."),
+    PASSWORD_EMPTY_ERROR("비밀번호가 비어있습니다.");
 
     private final String message;
 }

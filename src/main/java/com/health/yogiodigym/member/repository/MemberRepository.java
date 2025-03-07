@@ -1,9 +1,8 @@
 package com.health.yogiodigym.member.repository;
 
 import com.health.yogiodigym.admin.dto.MemberDto.MemberResponseDto;
-import com.health.yogiodigym.member.status.MemberStatus;
 import com.health.yogiodigym.member.entity.Member;
-import jakarta.transaction.Transactional;
+import com.health.yogiodigym.member.status.MemberStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
