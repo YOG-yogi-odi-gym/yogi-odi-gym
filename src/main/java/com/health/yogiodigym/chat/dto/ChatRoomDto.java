@@ -19,21 +19,17 @@ public class ChatRoomDto {
         private boolean isGroupChat;
         private int notReadMessageCnt;
 
-        public ChatRoomResponseDto(Lesson lesson, int notReadMessageCnt) {
-            ChatRoom chatRoom = lesson.getChatRoom();
-            this.id = chatRoom.getId();
-            this.roomId = chatRoom.getRoomId();
-            this.lessonTitle = lesson.getTitle();
-            this.isGroupChat = chatRoom.isGroupChat();
-            this.notReadMessageCnt = notReadMessageCnt;
-        }
-
         public ChatRoomResponseDto(Lesson lesson) {
             ChatRoom chatRoom = lesson.getChatRoom();
             this.id = chatRoom.getId();
             this.roomId = chatRoom.getRoomId();
             this.lessonTitle = lesson.getTitle();
             this.isGroupChat = chatRoom.isGroupChat();
+        }
+
+        public ChatRoomResponseDto(Lesson lesson, int notReadMessageCnt) {
+            this(lesson);
+            this.notReadMessageCnt = notReadMessageCnt;
         }
     }
 }
