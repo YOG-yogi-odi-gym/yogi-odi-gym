@@ -9,9 +9,61 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f4f4f4;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+
+    .container {
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        width: 350px;
+        text-align: center;
+    }
+
+    label {
+        font-size: 14px;
+        font-weight: bold;
+        display: block;
+        margin-bottom: 5px;
+        text-align: left;
+    }
+
+    select {
+        width: 100%;
+        padding: 8px;
+        font-size: 14px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background: #fff;
+    }
+
+    .btn-primary {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        font-weight: bold;
+        background-color: #007bff;
+        border: none;
+        border-radius: 5px;
+        color: white;
+        transition: background 0.3s;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+</style>
 <body>
 <div class="container mt-4">
-
     <label for="foodSelect">음식 선택:</label>
     <select id="foodSelect" placeholder="음식을 선택하세요"></select>
 
@@ -36,14 +88,54 @@
                 data: { name: query, limit: 100 },
                 dataType: "json",
                 success: function (response) {
+
                     callback(response.data);
                 },
                 error: function () {
                     callback();
                 }
             });
+        },
+        render: {
+            option: function(data, escape) {
+                return `
+                <div class="ts-option p-2 border-bottom bg-white text-dark">
+                    <strong>${escape(data.name)}</strong>
+                </div>
+            `;
+            },
+            item: function(data, escape) {
+                return `<div class="ts-item badge bg-primary text-white px-2 py-1 rounded">${escape(data.name)}</div>`;
+            }
         }
     });
+
+    // 스타일 수정 (Bootstrap 5 스타일 적용)
+    const style = document.createElement("style");
+    style.innerHTML = `
+    .ts-dropdown {
+        background-color: white !important;
+        z-index: 1050 !important;
+        border: 1px solid #dee2e6;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .ts-option {
+        cursor: pointer;
+        transition: background-color 0.2s ease-in-out;
+    }
+
+    .ts-option:hover {
+        background-color: #f8f9fa;
+    }
+
+    .ts-item {
+        display: inline-block;
+        font-size: 0.9rem;
+    }
+`;
+    document.head.appendChild(style);
+
 
     foodSelect.on("change", function () {
         let selectedId = foodSelect.getValue();

@@ -1,9 +1,8 @@
 package com.health.yogiodigym.member.repository;
 
 import com.health.yogiodigym.admin.dto.MemberDto.MemberResponseDto;
-import com.health.yogiodigym.member.status.MemberStatus;
 import com.health.yogiodigym.member.entity.Member;
-import jakarta.transaction.Transactional;
+import com.health.yogiodigym.member.status.MemberStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -19,14 +18,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     @Modifying
     int deleteByDropDateBeforeAndStatus(@Param("dropDate") LocalDate dropDate, @Param("status") MemberStatus status);
-
-    @Modifying
-    @Query("UPDATE Member m SET m.status = :status, m.dropDate = :dropDate WHERE m.id = :id")
-    void setStatusInactive(@Param("status") MemberStatus status, @Param("dropDate") LocalDate dropDate, @Param("id") Long id);
-
-    @Modifying
-    @Query("UPDATE Member m SET m.profile = :profile WHERE m.id = :id")
-    void setProfile(@Param("profile") String profile, @Param("id") Long id);
 
     @Query("SELECT m FROM Member m " +
             "ORDER BY CASE " +
@@ -50,11 +41,4 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
             "else 6 " +
             "end, m.name asc")
     List<Member> searchMembers(@Param("memberKeyword") String memberKeyword);
-
-    @Modifying
-    @Transactional
-    @Query("UPDATE Member m SET m.status = :status, m.dropDate = :dropDate WHERE m.id IN :memberIds")
-    int setInactiveStatus(@Param("memberIds") List<Long> memberIds,
-                          @Param("status") MemberStatus memberStatus,
-                          @Param("dropDate") LocalDate dropDate);
 }

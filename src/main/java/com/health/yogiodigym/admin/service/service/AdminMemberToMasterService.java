@@ -6,7 +6,8 @@ import java.util.List;
 
 public interface AdminMemberToMasterService {
 
-    List<MemberToMasterResponseDto> findAllMemberToMasters();
+
+    List<MemberToMasterResponseDto> findAllByOrderByEnrollDateAsc();
 
     void setMasterStatus(Long applyMemberId);
 

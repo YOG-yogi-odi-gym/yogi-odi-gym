@@ -13,6 +13,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.health.yogiodigym.chat.dto.MessageDto.MessageRequestDto;
+import com.health.yogiodigym.chat.dto.MessageDto.MessageResponseDto;
 import com.health.yogiodigym.lesson.entity.Lesson;
 import com.health.yogiodigym.lesson.entity.LessonEnrollment;
 import com.health.yogiodigym.lesson.repository.LessonEnrollmentRepository;
@@ -26,10 +27,14 @@ import com.health.yogiodigym.chat.service.impl.ChatRoomServiceImpl;
 import com.health.yogiodigym.common.exception.AlreadyChatParticipantException;
 import com.health.yogiodigym.common.exception.ChatRoomNotFoundException;
 import com.health.yogiodigym.common.exception.MemberNotInChatRoomException;
+import com.health.yogiodigym.lesson.repository.LessonRepository;
+import com.health.yogiodigym.member.auth.Role;
 import com.health.yogiodigym.member.entity.Member;
 import com.health.yogiodigym.member.repository.MemberRepository;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -57,6 +62,9 @@ class ChatRoomServiceTest {
 
     @Mock
     private LessonEnrollmentRepository lessonEnrollmentRepository;
+
+    @Mock
+    private LessonRepository lessonRepository;
 
     @Mock
     private KafkaProducerService kafkaProducerService;
@@ -95,7 +103,7 @@ class ChatRoomServiceTest {
 
             // then
             verify(chatParticipantRepository, times(1)).save(any(ChatParticipant.class));
-            verify(kafkaProducerService, times(1)).sendMessage(any(MessageRequestDto.class));
+            verify(kafkaProducerService, times(1)).sendMessage(any(MessageResponseDto.class));
         }
 
         @Test
@@ -232,6 +240,14 @@ class ChatRoomServiceTest {
             );
             when(lessonEnrollmentRepository.findAllByMember(any(Member.class))).thenReturn(enrolls);
 
+            ChatParticipant mockChatParticipant = ChatParticipant.builder()
+                    .member(mockMember)
+                    .chatRoom(chatRoom1)
+                    .lastReadMessageId(1L)
+                    .build();
+            when(chatParticipantRepository.findByMemberAndChatRoom(any(Member.class), any(ChatRoom.class)))
+                    .thenReturn(Optional.of(mockChatParticipant));
+
             // when
             List<ChatRoomResponseDto> chatRoomsResponse = chatRoomService.getChatRooms(mock(Member.class));
 
@@ -255,8 +271,10 @@ class ChatRoomServiceTest {
         @DisplayName("채팅방 회원 강퇴 성공")
         void testKickMember() {
             // given
-            Member mockInstructor = Member.builder().id(instructorId).build();
-            when(memberRepository.findById(anyLong())).thenReturn(Optional.of(mockInstructor));
+            Member mockInstructor = Member.builder().id(instructorId).roles(new HashSet<>(Set.of(Role.ROLE_MASTER))).build();
+            Lesson mockLesson = Lesson.builder().id(1L).master(mockInstructor).build();
+            when(lessonRepository.findByChatRoom(any(ChatRoom.class)))
+                    .thenReturn(Optional.of(mockLesson));
 
             ChatRoom mockChatRoom = ChatRoom.builder()
                     .id(chatRoomId)
@@ -265,17 +283,24 @@ class ChatRoomServiceTest {
                     .build();
             when(chatRoomRepository.findByRoomId(anyString())).thenReturn(Optional.of(mockChatRoom));
 
+            when(memberRepository.findById(anyLong())).thenReturn(Optional.of(mockInstructor));
+
             ChatParticipant chatParticipant = ChatParticipant.builder()
                     .member(mockInstructor)
                     .chatRoom(mockChatRoom)
                     .build();
             when(chatParticipantRepository.findByMemberAndChatRoom(any(), any())).thenReturn(Optional.of(chatParticipant));
 
+            LessonEnrollment mockLessonEnrollment = LessonEnrollment.builder().id(1L).build();
+            when(lessonEnrollmentRepository.findByLessonAndMember(any(Lesson.class), any(Member.class)))
+                    .thenReturn(Optional.of(mockLessonEnrollment));
+
             // when
             chatRoomService.kickMember(mockInstructor, memberId, roomId);
 
             // then
             verify(chatParticipantRepository, times(1)).delete(chatParticipant);
+            verify(lessonEnrollmentRepository, times(1)).delete(mockLessonEnrollment);
         }
 
         @Test
@@ -283,6 +308,13 @@ class ChatRoomServiceTest {
         void testInstructorNotInChatRoomWhenKickMember() {
             // given
             Member instructor = Member.builder().id(instructorId).build();
+
+            Lesson mockLesson = Lesson.builder()
+                    .id(1L)
+                    .master(instructor)
+                    .build();
+            when(lessonRepository.findByChatRoom(any(ChatRoom.class)))
+                    .thenReturn(Optional.of(mockLesson));
 
             ChatRoom mockChatRoom = ChatRoom.builder()
                     .id(chatRoomId)
@@ -342,9 +374,9 @@ class ChatRoomServiceTest {
             // then
             verify(chatParticipantRepository, times(1)).delete(mockChatParticipant);
 
-            ArgumentCaptor<MessageRequestDto> messageArgumentCaptor = ArgumentCaptor.forClass(MessageRequestDto.class);
+            ArgumentCaptor<MessageResponseDto> messageArgumentCaptor = ArgumentCaptor.forClass(MessageResponseDto.class);
             verify(kafkaProducerService, times(1)).sendMessage(messageArgumentCaptor.capture());
-            MessageRequestDto message = messageArgumentCaptor.getValue();
+            MessageResponseDto message = messageArgumentCaptor.getValue();
             assertThat(message.getSenderId()).isEqualTo(mockMember.getId());
             assertThat(message.getRoomId()).isEqualTo(roomId);
             assertThat(message.getMessage()).isEqualTo(mockMember.getName() + QUIT_CHAT_ROOM_MESSAGE_SUFFIX);

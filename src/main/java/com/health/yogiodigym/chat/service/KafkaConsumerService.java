@@ -1,7 +1,6 @@
 package com.health.yogiodigym.chat.service;
 
 import com.health.yogiodigym.chat.config.ChatConstants;
-import com.health.yogiodigym.chat.dto.MessageDto.MessageRequestDto;
 import com.health.yogiodigym.chat.dto.MessageDto.MessageResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,16 +14,13 @@ import org.springframework.stereotype.Service;
 public class KafkaConsumerService {
 
     private final SimpMessagingTemplate messagingTemplate;
-    private final ChatMessageService chatMessageService;
 
     @KafkaListener(topics = ChatConstants.CHAT_TOPIC, groupId = "#{T(java.util.UUID).randomUUID().toString()}")
-    public void listen(MessageRequestDto message) {
+    public void listen(MessageResponseDto message) {
 
         log.info("수신한 메시지: {}", message);
 
-        MessageResponseDto messageResponse = chatMessageService.saveMessage(message);
-
-        messagingTemplate.convertAndSend("/topic/" + message.getRoomId(), messageResponse);
+        messagingTemplate.convertAndSend("/topic/" + message.getRoomId(), message);
     }
 
 }

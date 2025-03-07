@@ -1,25 +1,25 @@
 package com.health.yogiodigym.board.service.impl;
 
+import com.health.yogiodigym.board.dto.BoardDto.BoardDetailDto;
+import com.health.yogiodigym.board.dto.BoardDto.BoardRequestDto;
 import com.health.yogiodigym.board.entity.Board;
-import com.health.yogiodigym.board.dto.BoardDto.*;
 import com.health.yogiodigym.board.repository.BoardRepository;
+import com.health.yogiodigym.board.repository.CommentRepository;
 import com.health.yogiodigym.board.service.BoardService;
 import com.health.yogiodigym.common.exception.BoardNotFoundException;
 import com.health.yogiodigym.common.exception.CategoryNotFoundException;
-import com.health.yogiodigym.common.exception.LessonNotFoundException;
-import com.health.yogiodigym.common.exception.MemberNotFoundException;
 import com.health.yogiodigym.lesson.entity.Category;
 import com.health.yogiodigym.lesson.repository.CategoryRepository;
 import com.health.yogiodigym.member.entity.Member;
-import com.health.yogiodigym.member.repository.MemberRepository;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +28,7 @@ public class BoardServiceImpl implements BoardService {
 
     private final BoardRepository boardRepository;
     private final CategoryRepository categoryRepository;
+    private final CommentRepository commentRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -102,6 +103,18 @@ public class BoardServiceImpl implements BoardService {
         boardRepository.save(board);
     }
 
+    @Transactional(readOnly = true)
+    public List<BoardDetailDto> getBoardsTop10() {
+        List<Board> boards = boardRepository.findTop5ByOrderByViewDescIdDesc();
+
+        return boards.stream()
+                .map(board -> {
+                    int commentCount = Math.toIntExact(commentRepository.countByBoardId(board.getId()));
+                    return new BoardDetailDto(board, commentCount);
+                })
+                .collect(Collectors.toList());
+    }
+
     private boolean isKeywordEmpty(String keyword) {
         return keyword == null || keyword.isEmpty();
     }
@@ -115,8 +128,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     private Page<Board> searchOrFallback(String keyword, String column, List<Long> categories, Pageable pageable) {
-        Page<Board> boardPage = boardRepository.searchBoards(keyword, column, categories, pageable);
-        return boardPage.isEmpty() ? findBoardsByCategory(categories == null, categories, pageable) : boardPage;
+        return boardRepository.searchBoards(keyword, column, categories, pageable);
     }
 
     private Page<Board> findMyBoardsByCategory(Long id, boolean allCategories, List<Long> categories, Pageable pageable) {
@@ -125,7 +137,6 @@ public class BoardServiceImpl implements BoardService {
     }
 
     private Page<Board> mySearchOrFallback(Long id, String keyword, String column, List<Long> categories, Pageable pageable) {
-        Page<Board> boardPage = boardRepository.searchMyBoards(id, keyword, column, categories, pageable);
-        return boardPage.isEmpty() ? findBoardsByCategory(categories == null, categories, pageable) : boardPage;
+        return boardRepository.searchMyBoards(id, keyword, column, categories, pageable);
     }
 }

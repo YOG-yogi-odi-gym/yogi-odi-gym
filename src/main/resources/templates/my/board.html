@@ -1,222 +1,305 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>내 게시글</title>
-  <meta name="_csrf" th:content="${_csrf.token}"/>
-  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
-  <script type="text/javascript"
-          th:src="@{'//dapi.kakao.com/v2/maps/sdk.js?appkey=' + ${@environment.getProperty('kakao.api.scriptKey')}}"></script>
-  <link th:href="@{https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css}" rel="stylesheet">
-  <script th:src="@{https://code.jquery.com/jquery-3.5.1.slim.min.js}"></script>
-  <script th:src="@{https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js}"></script>
-  <script th:src="@{https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js}"></script>
-  <link rel="stylesheet" th:href="@{/css/board/board.css}">
-  <link rel="stylesheet" th:href="@{/css/mainTool.css}">
-
-  <script>
-    window.onload = function () {
-      boardSearch()
-    }
-
-    let currentPage = 0;
-    const pageSize = 10;
-    const csrfToken = $("meta[name='_csrf']").attr("content");
-    const csrfHeader = $("meta[name='_csrf_header']").attr("content");
-
-    function boardSearch(page = 0) {
-      currentPage = page;
-
-      let boardKeyword = document.getElementById("boardKeyword").value
-      let searchColumn = document.getElementById("searchColumn").value
-
-      let selectedCategory = document.querySelector("input[name='categories']:checked")
-      let categoryList = selectedCategory ? [selectedCategory.value] : []
-
-      let queryParams = new URLSearchParams({
-        boardKeyword: boardKeyword,
-        searchColumn: searchColumn,
-        page: page,
-        size: pageSize
-      })
-
-      if (categoryList.length > 0) {
-        queryParams.append("categories", categoryList.join(","));
-      }
-
-      fetch(`/api/my/board?${queryParams.toString()}`, {
-        method: 'GET',
-        headers: {
-          [csrfHeader]: csrfToken
+    <meta charset="UTF-8">
+    <title>내 게시글</title>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <script type="text/javascript"
+            th:src="@{'//dapi.kakao.com/v2/maps/sdk.js?appkey=' + ${@environment.getProperty('kakao.api.scriptKey')}}"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f1f1f1;
         }
-      })
-              .then(response => response.json())
-              .then(data => {
-                let boards = data.data
 
-                let resultSearch = document.getElementById("resultSearch")
-                resultSearch.innerHTML = ""
+        .container-fluid {
+            max-width: 1200px;
+            width: 1200px;
+            height: 900px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            border-radius: 10px;
+            background-color: #f1f1f1;
+        }
 
-                let boardNo = page * 10 + 1;
+        .main {
+            width: 1200px;
+            height: 850px;
+            display: flex;
+            justify-content: flex-start;
+        }
 
-                boards.content.forEach(board => {
-                  let boardTrRow = document.createElement("tr")
-                  let boardTdNo = document.createElement("td")
-                  let boardTdTitle = document.createElement("td")
-                  let boardTdMember = document.createElement("td")
-                  let boardTdCreateDate = document.createElement("td")
+        .content {
+            display: flex;
+            flex-direction: column;
+            width: 920px;
+            height: 800px;
+            margin: 25px 20px 25px 20px;
+            background-color: #F1F1F1;
+            border-radius: 10px;
+        }
 
-                  let detailLink = document.createElement("a")
-                  detailLink.href = `/board/${board.id}`
-                  detailLink.textContent = board.title
-                  boardTdTitle.appendChild(detailLink)
+        .main-card {
+            width: 920px;
+            height: 800px;
+            border-radius: 10px;
+        }
 
-                  boardTdNo.textContent = board.id
-                  boardTdMember.textContent = board.memberName
-                  boardTdCreateDate.textContent = timeAgo(board.createDateTime)
+        .main-card .card-header {
+            border-radius: 10px 10px 0 0;
+        }
 
-                  boardTrRow.appendChild(boardTdNo)
-                  boardTrRow.appendChild(boardTdTitle)
-                  boardTrRow.appendChild(boardTdMember)
-                  boardTrRow.appendChild(boardTdCreateDate)
+        .main-card .card-footer {
+            border-radius: 0 0 10px 10px;
+        }
 
-                  resultSearch.appendChild(boardTrRow)
-                })
+    </style>
+    <script>
+        window.onload = function () {
+            boardSearch()
+        }
 
-                let pagination = document.getElementById("pagination")
-                pagination.innerHTML = ""
+        let currentPage = 0;
+        const pageSize = 10;
+        const csrfToken = $("meta[name='_csrf']").attr("content");
+        const csrfHeader = $("meta[name='_csrf_header']").attr("content");
 
-                let totalPages = boards.totalPages
-                let startPage = Math.floor(currentPage / 10) * 10
-                let endPage = Math.min(totalPages, startPage + 10)
+        function boardSearch(page = 0) {
+            currentPage = page;
 
-                let prevBtn = document.createElement("button")
-                prevBtn.textContent = "이전"
-                prevBtn.onclick = () => boardSearch(Math.max(0, startPage - 10))
-                prevBtn.disabled = startPage === 0
-                pagination.appendChild(prevBtn)
+            let boardKeyword = document.getElementById("boardKeyword").value
+            let searchColumn = document.getElementById("searchColumn").value
 
+            let selectedCategory = document.querySelector("input[name='categories']:checked")
+            let categoryList = selectedCategory ? [selectedCategory.value] : []
 
-                for (let i = startPage; i < endPage; i++) {
-                  let pageBtn = document.createElement("button")
-                  pageBtn.textContent = i + 1
-                  pageBtn.onclick = () => boardSearch(i)
-                  if (i === currentPage) {
-                    pageBtn.style.fontWeight = "bold"
-                  }
-                  pagination.appendChild(pageBtn)
+            let queryParams = new URLSearchParams({
+                boardKeyword: boardKeyword,
+                searchColumn: searchColumn,
+                page: page,
+                size: pageSize
+            })
+
+            if (categoryList.length > 0) {
+                queryParams.append("categories", categoryList.join(","));
+            }
+
+            fetch(`/api/my/board?${queryParams.toString()}`, {
+                method: 'GET',
+                headers: {
+                    [csrfHeader]: csrfToken
                 }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    let boards = data.data
 
-                let nextBtn = document.createElement("button")
-                nextBtn.textContent = "다음"
-                nextBtn.onclick = () => boardSearch(Math.min(totalPages - 1, startPage + 10))
-                nextBtn.disabled = endPage >= totalPages
-                pagination.appendChild(nextBtn)
+                    let resultSearch = document.getElementById("resultSearch")
+                    resultSearch.innerHTML = ""
 
-              })
-    }
+                    if (boards.content.length === 0) {
+                        let noResultRow = document.createElement("tr");
+                        let noResultCell = document.createElement("td");
+                        let pagination = document.getElementById("pagination")
+                        pagination.innerHTML = ""
+                        noResultCell.colSpan = 5;
+                        noResultCell.style.textAlign = "center";
+                        noResultCell.textContent = `"${boardKeyword}" 의 검색 결과가 없습니다.`;
+                        noResultRow.appendChild(noResultCell);
+                        resultSearch.appendChild(noResultRow);
+                        return;
+                    }
 
-    function timeAgo(dateTime) {
-      const now = new Date()
-      const past = new Date(dateTime)
-      const diffInSeconds = Math.floor((now - past) / 1000)
+                    boards.content.forEach(board => {
+                        let boardTrRow = document.createElement("tr")
+                        let boardTdNo = document.createElement("td")
+                        let boardTdTitle = document.createElement("td")
+                        let boardTdMember = document.createElement("td")
+                        let boardTdCreateDate = document.createElement("td")
+                        let boardTdView = document.createElement("td")
 
-      if (diffInSeconds < 60) {
-        return `${diffInSeconds}초 전`
-      }
+                        let detailLink = document.createElement("a")
+                        detailLink.href = `/board/${board.id}`
+                        detailLink.textContent = board.title
+                        boardTdTitle.appendChild(detailLink)
 
-      const diffInMinutes = Math.floor(diffInSeconds / 60)
-      if (diffInMinutes < 60) {
-        return `${diffInMinutes}분 전`
-      }
+                        boardTdNo.textContent = board.id
+                        boardTdMember.textContent = board.memberName
+                        boardTdCreateDate.textContent = timeAgo(board.createDateTime)
+                        boardTdView.textContent = board.view
 
-      const diffInHours = Math.floor(diffInMinutes / 60);
-      if (diffInHours < 24) {
-        return `${diffInHours}시간 전`
-      }
+                        boardTdNo.style.textAlign = "center"
+                        boardTdMember.style.textAlign = "center"
+                        boardTdCreateDate.style.textAlign = "center"
+                        boardTdView.style.textAlign = "center"
 
-      const diffInDays = Math.floor(diffInHours / 24);
-      if (diffInDays < 30) {
-        return `${diffInDays}일 전`
-      }
+                        boardTrRow.appendChild(boardTdNo)
+                        boardTrRow.appendChild(boardTdTitle)
+                        boardTrRow.appendChild(boardTdMember)
+                        boardTrRow.appendChild(boardTdCreateDate)
+                        boardTrRow.appendChild(boardTdView)
 
-      const diffInMonths = Math.floor(diffInDays / 30);
-      if (diffInMonths < 12) {
-        return `${diffInMonths}개월 전`
-      }
+                        resultSearch.appendChild(boardTrRow)
+                    })
 
-      const diffInYears = Math.floor(diffInMonths / 12);
-      return `${diffInYears}년 전`
-    }
+                    let pagination = document.getElementById("pagination")
+                    pagination.innerHTML = ""
 
-    function limitCheckboxSelection(checkbox) {
-      let checkboxes = document.querySelectorAll("input[name='categories']");
-      selectedCategory = checkbox.checked ? checkbox.value : null
-      document.getElementById("boardKeyword").value = null
-      checkboxes.forEach(function (item) {
-        if (item !== checkbox) {
-          item.checked = false;
+                    let totalPages = boards.totalPages
+                    let startPage = Math.floor(currentPage / 10) * 10
+                    let endPage = Math.min(totalPages, startPage + 10)
+
+                    let prevBtn = document.createElement("button")
+                    prevBtn.textContent = "이전"
+                    prevBtn.onclick = () => boardSearch(Math.max(0, startPage - 10))
+                    prevBtn.disabled = startPage === 0
+                    pagination.appendChild(prevBtn)
+
+
+                    for (let i = startPage; i < endPage; i++) {
+                        let pageBtn = document.createElement("button")
+                        pageBtn.textContent = i + 1
+                        pageBtn.onclick = () => boardSearch(i)
+                        if (i === currentPage) {
+                            pageBtn.style.fontWeight = "bold"
+                        }
+                        pagination.appendChild(pageBtn)
+                    }
+
+                    let nextBtn = document.createElement("button")
+                    nextBtn.textContent = "다음"
+                    nextBtn.onclick = () => boardSearch(Math.min(totalPages - 1, startPage + 10))
+                    nextBtn.disabled = endPage >= totalPages
+                    pagination.appendChild(nextBtn)
+
+                })
         }
-      })
-      boardSearch()
-    }
-  </script>
+
+        function timeAgo(dateTime) {
+            const now = new Date()
+            const past = new Date(dateTime)
+            const diffInSeconds = Math.floor((now - past) / 1000)
+
+            if (diffInSeconds < 60) {
+                return `${diffInSeconds}초 전`
+            }
+
+            const diffInMinutes = Math.floor(diffInSeconds / 60)
+            if (diffInMinutes < 60) {
+                return `${diffInMinutes}분 전`
+            }
+
+            const diffInHours = Math.floor(diffInMinutes / 60);
+            if (diffInHours < 24) {
+                return `${diffInHours}시간 전`
+            }
+
+            const diffInDays = Math.floor(diffInHours / 24);
+            if (diffInDays < 30) {
+                return `${diffInDays}일 전`
+            }
+
+            const diffInMonths = Math.floor(diffInDays / 30);
+            if (diffInMonths < 12) {
+                return `${diffInMonths}개월 전`
+            }
+
+            const diffInYears = Math.floor(diffInMonths / 12);
+            return `${diffInYears}년 전`
+        }
+
+        function limitCheckboxSelection(checkbox) {
+            let checkboxes = document.querySelectorAll("input[name='categories']");
+            selectedCategory = checkbox.checked ? checkbox.value : null
+            document.getElementById("boardKeyword").value = null
+            checkboxes.forEach(function (item) {
+                if (item !== checkbox) {
+                    item.checked = false;
+                }
+            })
+            boardSearch()
+        }
+    </script>
 </head>
 <body>
-<div class="container custom-container">
-  <div th:replace="~{navi/header :: header}"></div>
+<div class="container-fluid">
+    <div th:replace="~{fragments/navbar :: custom-navbar}"></div>
 
-  <div class="main-container">
-    <div th:replace="~{navi/sidebar :: sidebar}"></div>
+    <div class="main">
+        <div th:replace="~{fragments/side :: side}"></div>
 
-    <div class="card main-card">
-      <div class="card-header">
-        <div class="form-group row">
-          <div class="col-sm-2">
-            <select id="searchColumn" class="form-control">
-              <option value="title">제목</option>
-              <option value="name">작성자</option>
-              <option value="context">내용</option>
-            </select>
-          </div>
-          <div class="col-sm-8">
-            <input type="text" id="boardKeyword" class="form-control" placeholder="Enter name">
-          </div>
-          <button onclick="boardSearch()" class="btn btn-primary small-btn">Search</button>
+        <script>
+            document.getElementById("side_board").style.color = "blue";
+            document.getElementById("side_board").style.background = "skyblue"
+        </script>
+
+        <link rel="stylesheet" th:href="@{/css/board/board.css}">
+        <link rel="stylesheet" th:href="@{/css/mainTool.css}">
+
+        <div class="content card main-card">
+            <div class="card-header">
+                <div class="form-group row d-flex align-items-center">
+                    <div class="col-sm-2">
+                        <select id="searchColumn" class="form-control">
+                            <option value="title">제목</option>
+                            <option value="name">작성자</option>
+                            <option value="context">내용</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-8">
+                        <input type="text" id="boardKeyword" class="form-control" placeholder="Enter name">
+                    </div>
+                    <div class="col-sm-2">
+                        <button onclick="boardSearch()" class="btn btn-primary small-btn w-100">Search</button>
+                    </div>
+                </div>
+                <div class="checkbox-container">
+                    <label id="search-label">카테고리</label>
+                    <div class="radio-option">
+                        <input type="radio" th:name="categories" th:id="categoryAll" value="999"
+                               onclick="limitCheckboxSelection(this)" checked>
+                        <label th:for="categoryAll" class="radio-label">All</label>
+                    </div>
+                    <div th:each="category : ${categories}">
+                        <input type="radio" th:name="categories" th:id="'category-'+${category.id}"
+                               th:value="${category.id}"
+                               onclick="limitCheckboxSelection(this)">
+                        <label th:for="'category-' + ${category.id}" th:text="${category.name}"></label>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped mt-4">
+                    <thead>
+                    <tr>
+                        <th style="width: 60px; text-align: center;">번호</th>
+                        <th>제목</th>
+                        <th style="width: 90px; text-align: center;">작성자</th>
+                        <th style="width: 140px; text-align: center;">작성일</th>
+                        <th style="width: 90px; text-align: center;">조회수</th>
+                    </tr>
+                    </thead>
+                    <tbody id="resultSearch"></tbody>
+                </table>
+
+            </div>
+            <div class="card-footer">
+                <div id="pagination" class="mt-3"></div>
+            </div>
         </div>
-        <div class="checkbox-container">
-          <label id="search-label">카테고리</label>
-          <div class="radio-option">
-            <input type="radio" th:name="categories" th:id="categoryAll" value="999" onclick="limitCheckboxSelection(this)" checked>
-            <label th:for="categoryAll" class="radio-label">All</label>
-          </div>
-          <div th:each="category : ${categories}">
-            <input type="radio" th:name="categories" th:id="'category-'+${category.id}"
-                   th:value="${category.id}"
-                   onclick="limitCheckboxSelection(this)">
-            <label th:for="'category-' + ${category.id}" th:text="${category.name}"></label>
-          </div>
-        </div>
-      </div>
-      <div class="card-body">
-        <table class="table table-striped mt-4">
-          <thead>
-          <tr>
-            <th>번호</th>
-            <th>제목</th>
-            <th>작성자</th>
-            <th>작성일</th>
-          </tr>
-          </thead>
-          <tbody id="resultSearch"></tbody>
-        </table>
-
-      </div>
-      <div class="card-footer">
-        <div id="pagination" class="mt-3"></div>
-      </div>
     </div>
-  </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js}"></script>
+
 </body>
 </html>

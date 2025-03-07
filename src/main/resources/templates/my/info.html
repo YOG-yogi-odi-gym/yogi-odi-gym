@@ -7,9 +7,10 @@
     <script type="text/javascript" th:src="@{'//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js'}"></script>
     <script type="text/javascript"
             th:src="@{'//dapi.kakao.com/v2/maps/sdk.js?appkey=' + ${@environment.getProperty('kakao.api.scriptKey')} + '&libraries=services'}"></script>
-    <script type="text/javascript" th:src="@{'/js/latLonApi.js'}"></script>
+    <script type="text/javascript" th:src="@{'/js/lesson/latLonApi.js'}"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.js"></script>
 
     <style>
         body {
@@ -22,7 +23,7 @@
             background-color: #f1f1f1;
         }
 
-        .container {
+        .container-fulid {
             width: 1200px;
             height: 900px;
             display: flex;
@@ -173,10 +174,6 @@
             overflow-y: auto;
         }
 
-        #upload-form .certificate {
-            display: none;
-        }
-
     </style>
     <script>
         const csrfToken = $("meta[name='_csrf']").attr("content");
@@ -203,45 +200,38 @@
                 fileInput.type = "file";
                 fileInput.name = "certificate";
                 fileInput.accept = "image/*,application/pdf";
-                fileInput.classList.add("d-none"); // 숨김 (보이지도 클릭도 안 됨)
+                fileInput.classList.add("d-none");
 
-                // 파일 선택 시 이벤트
                 fileInput.addEventListener("change", function () {
                     if (fileInput.files.length > 0) {
                         const fileItem = document.createElement("div");
                         fileItem.classList.add("d-flex", "justify-content-between", "align-items-center", "mt-1");
-                        fileItem.style.width = "100%"; // 🎯 부모 요소 전체 너비 차지
+                        fileItem.style.width = "100%"; //
 
-                        // 파일 이름을 감싸는 div
                         const fileNameContainer = document.createElement("div");
-                        fileNameContainer.classList.add("px-2", "py-1", "rounded", "bg-light", "border", "flex-grow-1"); // 🎯 flex-grow-1 추가
-                        fileNameContainer.style.borderRadius = "5px"; // 추가적인 border-radius
+                        fileNameContainer.classList.add("px-2", "py-1", "rounded", "bg-light", "border", "flex-grow-1");
+                        fileNameContainer.style.borderRadius = "5px";
 
-                        // 파일 이름 표시
                         const fileName = document.createElement("span");
                         fileName.textContent = fileInput.files[0].name;
 
-                        // 삭제 버튼
                         const deleteButton = document.createElement("button");
                         deleteButton.textContent = "삭제";
                         deleteButton.classList.add("btn", "btn-danger", "btn-sm", "ms-2");
 
-                        // 삭제 버튼 클릭 시 파일 제거
                         deleteButton.addEventListener("click", function () {
                             fileContainer.removeChild(fileItem);
                             certificateForm.removeChild(fileInput);
                         });
 
-                        // 요소 추가
-                        fileNameContainer.appendChild(fileName); // div 안에 파일명 추가
-                        fileItem.appendChild(fileNameContainer); // fileItem에 추가
+                        fileNameContainer.appendChild(fileName);
+                        fileItem.appendChild(fileNameContainer);
                         fileItem.appendChild(deleteButton);
                         fileContainer.appendChild(fileItem);
                         certificateForm.appendChild(fileInput);
                     }
                 });
 
-                // body에 추가 후 클릭 이벤트 실행 (파일 선택 창 열기)
                 document.body.appendChild(fileInput);
                 fileInput.click();
             });
@@ -611,7 +601,7 @@
     </script>
 </head>
 <body>
-<div class="container">
+<div class="container-fulid">
    <div th:replace="~{fragments/navbar :: custom-navbar}"></div>
 
     <div class="BB">

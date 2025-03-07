@@ -62,7 +62,8 @@ public class LessonServiceImpl implements LessonService {
         Page<Lesson> lessons;
 
         if (!hasKeyword && !hasDays && !hasCategories) {
-            lessons = lessonRepository.findByMasterId(id, pageable);
+            Page<LessonEnrollment> enrollments = lessonEnrollmentRepository.findByMember_Id(id, pageable);
+            lessons = enrollments.map(LessonEnrollment::getLesson);
         } else if (hasCategories) {
             lessons = lessonRepository.searchMyLessonsByCategories(id, lessonKeyword, searchColumn, days, categories, pageable);
         } else {

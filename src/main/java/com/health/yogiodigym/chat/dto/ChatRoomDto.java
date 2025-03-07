@@ -17,6 +17,7 @@ public class ChatRoomDto {
         private String roomId;
         private String lessonTitle;
         private boolean isGroupChat;
+        private int notReadMessageCnt;
 
         public ChatRoomResponseDto(Lesson lesson) {
             ChatRoom chatRoom = lesson.getChatRoom();
@@ -24,6 +25,11 @@ public class ChatRoomDto {
             this.roomId = chatRoom.getRoomId();
             this.lessonTitle = lesson.getTitle();
             this.isGroupChat = chatRoom.isGroupChat();
+        }
+
+        public ChatRoomResponseDto(Lesson lesson, int notReadMessageCnt) {
+            this(lesson);
+            this.notReadMessageCnt = notReadMessageCnt;
         }
     }
 }

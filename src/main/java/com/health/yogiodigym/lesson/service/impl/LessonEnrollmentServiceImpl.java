@@ -24,7 +24,6 @@ public class LessonEnrollmentServiceImpl implements LessonEnrollmentService {
     private final LessonRepository lessonRepository;
     private final MemberRepository memberRepository;
     private final ChatRoomService chatRoomService;
-    private final LessonServiceImpl lessonService;
 
     @Override
     public boolean enrollLesson(Long memberId, Long lessonId) {

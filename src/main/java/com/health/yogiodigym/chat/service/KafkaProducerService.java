@@ -2,7 +2,7 @@ package com.health.yogiodigym.chat.service;
 
 import static com.health.yogiodigym.chat.config.ChatConstants.CHAT_TOPIC;
 
-import com.health.yogiodigym.chat.dto.MessageDto.MessageRequestDto;
+import com.health.yogiodigym.chat.dto.MessageDto.MessageResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -11,9 +11,9 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class KafkaProducerService {
 
-    private final KafkaTemplate<String, MessageRequestDto> kafkaTemplate;
+    private final KafkaTemplate<String, MessageResponseDto> kafkaTemplate;
 
-    public void sendMessage(MessageRequestDto message) {
+    public void sendMessage(MessageResponseDto message) {
         kafkaTemplate.send(CHAT_TOPIC, message);
     }
 }

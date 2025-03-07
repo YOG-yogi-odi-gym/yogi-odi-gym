@@ -1,12 +1,12 @@
 package com.health.yogiodigym.admin.service.impl;
 
-import com.health.yogiodigym.admin.dto.MemberToMasterDto.*;
+import com.health.yogiodigym.admin.dto.MemberToMasterDto.MemberToMasterResponseDto;
 import com.health.yogiodigym.admin.service.service.AdminMemberToMasterService;
 import com.health.yogiodigym.member.entity.Authority;
 import com.health.yogiodigym.member.entity.Member;
-import com.health.yogiodigym.my.entity.MemberToMaster;
 import com.health.yogiodigym.member.repository.AuthorityRepository;
 import com.health.yogiodigym.member.repository.MemberRepository;
+import com.health.yogiodigym.my.entity.MemberToMaster;
 import com.health.yogiodigym.my.repository.MemberToMasterRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,9 +27,9 @@ public class AdminMemberToMasterServiceImpl implements AdminMemberToMasterServic
 
     @Override
     @Transactional(readOnly = true)
-    public List<MemberToMasterResponseDto> findAllMemberToMasters() {
+    public List<MemberToMasterResponseDto> findAllByOrderByEnrollDateAsc() {
 
-        return memberToMasterRepository.findAll()
+        return memberToMasterRepository.findAllByOrderByEnrollDateAsc()
                 .stream()
                 .map(MemberToMasterResponseDto::from)
                 .collect(Collectors.toList());

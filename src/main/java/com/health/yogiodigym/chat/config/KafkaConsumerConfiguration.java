@@ -1,6 +1,6 @@
 package com.health.yogiodigym.chat.config;
 
-import com.health.yogiodigym.chat.dto.MessageDto.MessageRequestDto;
+import com.health.yogiodigym.chat.dto.MessageDto.MessageResponseDto;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -25,15 +25,15 @@ public class KafkaConsumerConfiguration {
     private final Environment env;
 
     @Bean
-    ConcurrentKafkaListenerContainerFactory<String, MessageRequestDto> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, MessageRequestDto> factory = new ConcurrentKafkaListenerContainerFactory<>();
+    ConcurrentKafkaListenerContainerFactory<String, MessageResponseDto> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, MessageResponseDto> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         return factory;
     }
 
     @Bean
-    public ConsumerFactory<String, MessageRequestDto> consumerFactory() {
-        JsonDeserializer<MessageRequestDto> deserializer = new JsonDeserializer<>();
+    public ConsumerFactory<String, MessageResponseDto> consumerFactory() {
+        JsonDeserializer<MessageResponseDto> deserializer = new JsonDeserializer<>();
         deserializer.addTrustedPackages("*");
 
         Map<String, Object> consumerConfigurations = new HashMap<>();

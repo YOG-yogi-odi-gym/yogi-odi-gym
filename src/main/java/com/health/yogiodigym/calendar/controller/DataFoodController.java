@@ -1,7 +1,7 @@
 package com.health.yogiodigym.calendar.controller;
 
 import com.health.yogiodigym.calendar.dto.DataFoodDto;
-import com.health.yogiodigym.calendar.service.impl.DataFoodServiceImpl;
+import com.health.yogiodigym.calendar.service.DataFoodService;
 import com.health.yogiodigym.common.response.HttpResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,11 +17,11 @@ import static com.health.yogiodigym.common.message.SuccessMessage.*;
 @RequiredArgsConstructor
 public class DataFoodController {
 
-    private final DataFoodServiceImpl dataFoodServiceImpl;
+    private final DataFoodService dataFoodService;
 
     @GetMapping("/all")
     public ResponseEntity<?> findAll() {
-        List<DataFoodDto> datafoods= dataFoodServiceImpl.findAll();;
+        List<DataFoodDto> datafoods= dataFoodService.findAll();;
 
         return ResponseEntity
                 .ok()
@@ -30,7 +30,7 @@ public class DataFoodController {
 
     @GetMapping("/search")
     public ResponseEntity<?> findByNameContainingIgnoreCase(String name) {
-        List<DataFoodDto> datafood=  dataFoodServiceImpl.findByNameContainingIgnoreCase(name);
+        List<DataFoodDto> datafood=  dataFoodService.findByNameContainingIgnoreCase(name);
 
         return ResponseEntity
                 .ok()

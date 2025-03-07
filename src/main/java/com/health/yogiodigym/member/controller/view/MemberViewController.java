@@ -32,4 +32,10 @@ public class MemberViewController {
 
         return "member/regist";
     }
+
+    @GetMapping("/find-pwd")
+    public String findPwd() {
+
+        return "member/find_pwd";
+    }
 }
