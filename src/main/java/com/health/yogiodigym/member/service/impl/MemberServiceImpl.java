@@ -95,14 +95,22 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void updateMember(UpdateMemberDto updateMemberDto, HttpServletRequest request, HttpServletResponse response) {
+        MemberOAuth2User principal = (MemberOAuth2User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        CheckNewPwdMatchBeforePwd(updateMemberDto.getPwd(), principal.getPassword());
+
         updateMemberDto.setPwd(passwordEncoder.encode(updateMemberDto.getPwd()));
 
-        MemberOAuth2User principal = (MemberOAuth2User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Member currentMember = principal.getMember();
         currentMember.updateMember(updateMemberDto);
 
         memberRepository.save(currentMember);
         updateAuthentication(principal.getMember().getEmail(), request, response);
+    }
+
+    private void CheckNewPwdMatchBeforePwd(String pwd, String beforePwd) {
+        if (passwordEncoder.matches(pwd, beforePwd)) {
+            throw new BeforePwdMatchException();
+        }
     }
 
     @Override
@@ -200,13 +208,6 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public void checkPassword(String pwd, String principalPwd) {
-        if (!passwordEncoder.matches(pwd, principalPwd)) {
-            throw new WrongPasswordException();
-        }
-    }
-
-    @Override
     public void registwithdrawal(String checkPwd, HttpServletRequest request, HttpServletResponse response) {
         MemberOAuth2User principal = (MemberOAuth2User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -220,6 +221,14 @@ public class MemberServiceImpl implements MemberService {
         withdrawalMember.setInactive();
         new SecurityContextLogoutHandler().logout(request, response, SecurityContextHolder.getContext().getAuthentication());
     }
+
+    @Override
+    public void checkPassword(String pwd, String principalPwd) {
+        if (!passwordEncoder.matches(pwd, principalPwd)) {
+            throw new WrongPasswordException();
+        }
+    }
+
 
     @Override
     public void withdrawInactiveMembers() {
