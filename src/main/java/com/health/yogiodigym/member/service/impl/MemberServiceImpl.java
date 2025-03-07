@@ -33,11 +33,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
-import static com.health.yogiodigym.member.auth.Role.ROLE_USER;
 import static com.health.yogiodigym.member.status.EnrollMasterStatus.WAIT;
-import static com.health.yogiodigym.member.status.MemberStatus.ACTIVE;
 import static com.health.yogiodigym.member.status.MemberStatus.INACTIVE;
 
 @Slf4j
@@ -114,12 +113,9 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void findPwd(EmailVerifyDto emailVerifyDto) {
-        Optional<Member> joinedMember = memberRepository.findByEmail(emailVerifyDto.getEmail());
-        if(joinedMember.isEmpty()){
-            throw new EmailNotFoundException();
-        }
+        Member joinedMember = memberRepository.findByEmail(emailVerifyDto.getEmail()).orElseThrow(() -> new EmailNotFoundException());
 
-        if(joinedMember.get().getPwd() == null || joinedMember.get().getPwd().isEmpty()){
+        if(joinedMember.getPwd() == null || joinedMember.getPwd().isEmpty()){
             throw new SocialMemberPwdChangeException();
         }
 
@@ -151,28 +147,18 @@ public class MemberServiceImpl implements MemberService {
     }
 
     private void insertMember(RegistMemberDto registMemberDto, String saveFileURL) {
-        String encodedPassword = null;
-        if (registMemberDto.getPwd() != null && !registMemberDto.getPwd().isEmpty()) {
-            encodedPassword = passwordEncoder.encode(registMemberDto.getPwd());
-        }
-
-        Member registMember = Member.builder()
-                .name(registMemberDto.getName())
-                .email(registMemberDto.getEmail())
-                .pwd(encodedPassword)
-                .gender(registMemberDto.getGender())
-                .weight(registMemberDto.getWeight())
-                .height(registMemberDto.getHeight())
-                .addr(registMemberDto.getAddr())
-                .latitude(registMemberDto.getLatitude())
-                .longitude(registMemberDto.getLongitude())
-                .joinDate(LocalDate.now())
-                .profile(saveFileURL)
-                .status(ACTIVE)
-                .roles(EnumSet.of(ROLE_USER))
-                .build();
+        registMemberDto.setPwd(encodePassword(registMemberDto.getPwd()));
+        Member registMember = Member.buildRegistMember(registMemberDto, saveFileURL);
 
         memberRepository.save(registMember);
+    }
+
+    private String encodePassword(String originPwd) {
+        if (originPwd == null || originPwd.isEmpty()) {
+            throw new PasswordEmptyException();
+        }
+
+        return passwordEncoder.encode(originPwd);
     }
 
     @Override
@@ -188,20 +174,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     private void insertOAuth2Member(RegistOAuthMemberDto registOAuthMemberDto, String saveFileURL) {
-        Member registMember = Member.builder()
-                .name(registOAuthMemberDto.getName())
-                .email(registOAuthMemberDto.getEmail())
-                .gender(registOAuthMemberDto.getGender())
-                .weight(registOAuthMemberDto.getWeight())
-                .height(registOAuthMemberDto.getHeight())
-                .addr(registOAuthMemberDto.getAddr())
-                .latitude(registOAuthMemberDto.getLatitude())
-                .longitude(registOAuthMemberDto.getLongitude())
-                .joinDate(LocalDate.now())
-                .profile(saveFileURL)
-                .status(ACTIVE)
-                .roles(EnumSet.of(ROLE_USER))
-                .build();
+        Member registMember = Member.buildRegistOAuthMember(registOAuthMemberDto, saveFileURL);
 
         memberRepository.save(registMember);
     }
