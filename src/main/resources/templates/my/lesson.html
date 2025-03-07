@@ -302,7 +302,7 @@
         <link rel="stylesheet" th:href="@{/css/lessonSearch.css}">
         <link rel="stylesheet" th:href="@{/css/mainTool.css}">
         <div class="content card main-card">
-            <div class="card-header">
+            <div class="card-header" style="background-color: white">
                 <div class="form-group row d-flex align-items-center">
                     <div class="col-sm-2">
                         <select id="searchColumn" class="form-control">
@@ -359,7 +359,6 @@
                             th:if="${role == 'master'}">강의 등록
                     </button>
                 </div>
-
             </div>
             <div class="card-body">
                 <table class="table mt-4">
@@ -375,11 +374,13 @@
                     </tr>
                     </thead>
                     <tbody id="resultSearch"></tbody>
+                </table>
             </div>
         </div>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-        <script th:src="@{https://code.jquery.com/jquery-3.5.1.slim.min.js}"></script>
-        <script th:src="@{https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js}"></script>
-
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{https://code.jquery.com/jquery-3.5.1.slim.min.js}"></script>
+<script th:src="@{https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js}"></script>
 </body>
 </html>
