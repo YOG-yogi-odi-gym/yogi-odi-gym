@@ -23,13 +23,16 @@
             background-color: #f1f1f1;
         }
 
-        .container-fulid {
+        .container-fluid {
+            max-width: 1200px;
             width: 1200px;
             height: 900px;
             display: flex;
-            justify-content: center;
-            align-items: center;
             flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            border-radius: 10px;
+            background-color: #f1f1f1;
         }
 
         .BB {
@@ -601,7 +604,7 @@
     </script>
 </head>
 <body>
-<div class="container-fulid">
+<div class="container-fluid">
    <div th:replace="~{fragments/navbar :: custom-navbar}"></div>
 
     <div class="BB">

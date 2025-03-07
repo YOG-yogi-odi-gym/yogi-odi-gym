@@ -66,12 +66,16 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void enrollMaster(MultipartFile[] certificate) {
+        MemberOAuth2User principal = (MemberOAuth2User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        memberToMasterRepository.findByMemberId(principal.getMember().getId()).ifPresent(memberToMaster -> {
+            throw new AlreadyEnrollMasterException();
+        });
+
         Set<String> certificates = new HashSet<>();
         for (MultipartFile file : certificate) {
             addCertificateURL(file, certificates);
         }
-
-        MemberOAuth2User principal = (MemberOAuth2User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         MemberToMaster addEnrollMaster = MemberToMaster.builder()
                 .member(principal.getMember())
