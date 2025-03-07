@@ -69,7 +69,8 @@
         }
 
         .side-nav-item:hover {
-            background-color: #007bff;
+            background-color: #adb5bd;
+            color: #f1f1f1;
         }
     </style>
 </head>
@@ -84,6 +85,15 @@
             <i class="bi bi-people-fill"></i>
             <span>게시판</span>
         </a>
+<!--        <div class="side-nav-item side-nav-board" id="boardButton">-->
+<!--            <i class="bi bi-people-fill"></i>-->
+<!--            <span>게시판</span>-->
+<!--        </div>-->
+<!--        <ul id="boardList" style="display: none;">-->
+<!--            <li><a href="/board/list/1">자유 게시판</a></li>-->
+<!--            <li><a href="/board/list/2">공지 게시판</a></li>-->
+<!--            <li><a href="/board/list/3">질문 게시판</a></li>-->
+<!--        </ul>-->
         <a th:href="@{/lesson}" id="side_lesson" class="side-nav-item side-nav-courses">
             <i class="bi bi-search"></i>
             <span>강의 찾기</span>
