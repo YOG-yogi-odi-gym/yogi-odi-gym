@@ -28,10 +28,13 @@ import com.health.yogiodigym.common.exception.AlreadyChatParticipantException;
 import com.health.yogiodigym.common.exception.ChatRoomNotFoundException;
 import com.health.yogiodigym.common.exception.MemberNotInChatRoomException;
 import com.health.yogiodigym.lesson.repository.LessonRepository;
+import com.health.yogiodigym.member.auth.Role;
 import com.health.yogiodigym.member.entity.Member;
 import com.health.yogiodigym.member.repository.MemberRepository;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -268,7 +271,8 @@ class ChatRoomServiceTest {
         @DisplayName("채팅방 회원 강퇴 성공")
         void testKickMember() {
             // given
-            Lesson mockLesson = Lesson.builder().id(1L).build();
+            Member mockInstructor = Member.builder().id(instructorId).roles(new HashSet<>(Set.of(Role.ROLE_MASTER))).build();
+            Lesson mockLesson = Lesson.builder().id(1L).master(mockInstructor).build();
             when(lessonRepository.findByChatRoom(any(ChatRoom.class)))
                     .thenReturn(Optional.of(mockLesson));
 
@@ -279,7 +283,6 @@ class ChatRoomServiceTest {
                     .build();
             when(chatRoomRepository.findByRoomId(anyString())).thenReturn(Optional.of(mockChatRoom));
 
-            Member mockInstructor = Member.builder().id(instructorId).build();
             when(memberRepository.findById(anyLong())).thenReturn(Optional.of(mockInstructor));
 
             ChatParticipant chatParticipant = ChatParticipant.builder()
