@@ -27,7 +27,7 @@
         if (color2Map[id]) {
             return color2Map[id];
         }
-        
+
         const letters = '0123456789ABCDEF';
         let color = '#';
         for (let i = 0; i < 6; i++) {
@@ -37,7 +37,6 @@
         color2Map[id] = color;
         return color;
     }
-
 
     function saveMemo(memoId, selectedDate, memberId) {
         let title = $(`#memoTitle_${memoId}`).val();
