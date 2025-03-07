@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-
 @Getter
 @Setter
 @Builder
@@ -17,11 +16,13 @@ import lombok.ToString;
 @NoArgsConstructor
 public class ChatParticipantDto {
     private Long memberId;
+    private Long instructorId;
     private String memberName;
     private String profileUrl;
 
-    public ChatParticipantDto(Member member) {
+    public ChatParticipantDto(Member member, Long instructorId) {
         this.memberId = member.getId();
+        this.instructorId = instructorId;
         this.memberName = member.getName();
         this.profileUrl = member.getProfile();
     }
