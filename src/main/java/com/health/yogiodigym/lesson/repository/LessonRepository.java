@@ -53,13 +53,6 @@ public interface LessonRepository extends JpaRepository<Lesson, Long> {
             Pageable pageable);
 
     @Query("""
-                SELECT l FROM Lesson l
-                JOIN LessonEnrollment le ON le.lesson.id = l.id
-                WHERE le.member.id = :id
-            """)
-    Page<Lesson> findByMemberId(@Param("id") Long id, Pageable pageable);
-
-    @Query("""
             SELECT l FROM Lesson l
             JOIN LessonEnrollment le ON le.lesson.id = l.id
             WHERE le.member.id = :id

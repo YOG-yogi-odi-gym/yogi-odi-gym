@@ -126,7 +126,6 @@ public class MyController {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
         Page<LessonSearchDto> lessons = lessonService.searchMyLessons(loginUser.getMember().getId(), lessonKeyword, searchColumn, days, categories, pageable);
 
-        System.out.println(loginUser.getMember().getId());
         return ResponseEntity.ok().body(new HttpResponse(HttpStatus.OK, SEARCH_LESSON_SUCCESS.getMessage(), lessons));
     }
 }
