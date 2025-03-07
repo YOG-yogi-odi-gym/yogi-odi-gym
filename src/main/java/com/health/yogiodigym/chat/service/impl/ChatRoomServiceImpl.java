@@ -3,13 +3,9 @@ package com.health.yogiodigym.chat.service.impl;
 import static com.health.yogiodigym.chat.config.ChatConstants.ENTER_CHAT_ROOM_MESSAGE_PREFIX;
 import static com.health.yogiodigym.chat.config.ChatConstants.QUIT_CHAT_ROOM_MESSAGE_SUFFIX;
 
+import com.health.yogiodigym.chat.dto.ChatRoomDto.ChatRoomResponseDto;
 import com.health.yogiodigym.chat.dto.MessageDto.MessageResponseDto;
 import com.health.yogiodigym.chat.entity.ChatMessage;
-import com.health.yogiodigym.common.exception.LessonNotFoundException;
-import com.health.yogiodigym.lesson.entity.Lesson;
-import com.health.yogiodigym.lesson.entity.LessonEnrollment;
-import com.health.yogiodigym.lesson.repository.LessonEnrollmentRepository;
-import com.health.yogiodigym.chat.dto.ChatRoomDto.ChatRoomResponseDto;
 import com.health.yogiodigym.chat.entity.ChatParticipant;
 import com.health.yogiodigym.chat.entity.ChatRoom;
 import com.health.yogiodigym.chat.repository.ChatMessageRepository;
@@ -19,9 +15,17 @@ import com.health.yogiodigym.chat.service.ChatRoomService;
 import com.health.yogiodigym.chat.service.KafkaProducerService;
 import com.health.yogiodigym.common.exception.AlreadyChatParticipantException;
 import com.health.yogiodigym.common.exception.ChatRoomNotFoundException;
+import com.health.yogiodigym.common.exception.ForbiddenException;
+import com.health.yogiodigym.common.exception.KickInstructorException;
+import com.health.yogiodigym.common.exception.LessonNotFoundException;
 import com.health.yogiodigym.common.exception.MemberNotFoundException;
 import com.health.yogiodigym.common.exception.MemberNotInChatRoomException;
+import com.health.yogiodigym.common.exception.MemberNotInLessonException;
+import com.health.yogiodigym.lesson.entity.Lesson;
+import com.health.yogiodigym.lesson.entity.LessonEnrollment;
+import com.health.yogiodigym.lesson.repository.LessonEnrollmentRepository;
 import com.health.yogiodigym.lesson.repository.LessonRepository;
+import com.health.yogiodigym.member.auth.Role;
 import com.health.yogiodigym.member.entity.Member;
 import com.health.yogiodigym.member.repository.MemberRepository;
 import java.time.LocalDateTime;
@@ -81,6 +85,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         ChatParticipant chatParticipant = ChatParticipant.builder()
                 .chatRoom(chatRoom)
                 .member(member)
+                .lastReadMessageId(0L)
                 .build();
         chatParticipantRepository.save(chatParticipant);
 
@@ -131,14 +136,28 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     public void kickMember(Member instructor, Long memberId, String chatRoomId) {
         ChatRoom chatRoom = chatRoomRepository.findByRoomId(chatRoomId)
                 .orElseThrow(() -> new ChatRoomNotFoundException(chatRoomId));
+        Lesson lesson = lessonRepository.findByChatRoom(chatRoom)
+                .orElseThrow(LessonNotFoundException::new);
+
+        if (lesson.getMaster().getId().equals(memberId)) {
+            throw new KickInstructorException();
+        }
         chatParticipantRepository.findByMemberAndChatRoom(instructor, chatRoom)
                 .orElseThrow(() -> new MemberNotInChatRoomException(instructor.getId()));
+
+        if (!instructor.getRoles().contains(Role.ROLE_MASTER)) {
+            throw new ForbiddenException();
+        }
 
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException(memberId));
         ChatParticipant memberParticipant = chatParticipantRepository.findByMemberAndChatRoom(member, chatRoom)
                 .orElseThrow(() -> new MemberNotInChatRoomException(memberId));
         chatParticipantRepository.delete(memberParticipant);
+
+        LessonEnrollment lessonEnrollment = lessonEnrollmentRepository.findByLessonAndMember(lesson, member)
+                .orElseThrow(MemberNotInLessonException::new);
+        lessonEnrollmentRepository.delete(lessonEnrollment);
     }
 
     @Override
