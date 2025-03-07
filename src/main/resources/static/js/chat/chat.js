@@ -125,8 +125,13 @@ function showMessage(message, isRead) {
     let senderName = document.createElement("strong");
     senderName.textContent = message.senderName;
 
-    messageHeader.appendChild(profileImg);
-    messageHeader.appendChild(senderName);
+    if (senderId === message.senderId) {
+        messageHeader.appendChild(senderName);
+        messageHeader.appendChild(profileImg);
+    } else {
+        messageHeader.appendChild(profileImg);
+        messageHeader.appendChild(senderName);
+    }
 
     let messageTime = document.createElement("div");
     messageTime.classList.add("message-time");

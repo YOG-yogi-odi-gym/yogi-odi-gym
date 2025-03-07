@@ -1,33 +1,43 @@
 body {
+    font-family: 'Poppins', 'Noto Sans KR', sans-serif;
+    width: 100%;
     margin: 0;
     padding: 0;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: flex-start !important;
     align-items: center;
-    background-color: #F1F1F1;
+    height: 100vh;
+    background-color: #f1f1f1;
 }
 
-.custom-container {
+.container-fluid {
     max-width: 1200px;
+    width: 1200px;
     height: 900px;
     display: flex;
-    align-items: center;
     flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    border-radius: 10px;
+    background-color: #f1f1f1;
 }
 
-.header-container{
+.main {
     width: 1200px;
-    height: 60px;
-    border-radius: 0 0 12px 12px;
-    margin-bottom: 20px;
+    height: 850px;
+    display: flex;
+    justify-content: flex-start;
 }
 
-.main-container{
-    width: 1160px;
-    height: 800px;
+.content {
     display: flex;
-    justify-content: center;
-    align-items: flex-start;
+    flex-direction: column;
+    width: 920px;
+    height: 800px;
+    margin: 25px 20px 25px 20px;
+    background-color: white;
+    border-radius: 10px;
 }
 
 .side-card{
@@ -78,7 +88,6 @@ body {
 .nav-item {
     display: flex;
     align-items: center;
-    /* justify-content: center; */
     width: 180px;
     height: 40px;
     margin: 10px 0 0 15px;
@@ -86,7 +95,7 @@ body {
     color: rgba(0, 0, 0, 0.87);
     border-radius: 5px;
     transition: background-color 0.3s;
-    text-decoration: none; /* 링크 스타일 제거 */
+    text-decoration: none;
 }
 
 .nav-item i {
@@ -94,7 +103,6 @@ body {
     margin: 0  15px 0 15px;
 }
 
-/* a 태그 호버 효과 */
 .nav-item:hover {
     background-color: #007bff;
 }
