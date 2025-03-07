@@ -1,0 +1,353 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #F1F1F1;
+        }
+
+        .container {
+            width: 600px;
+            height: 900px;
+            background-color: #F1F1F1;
+            border-radius: 10px;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="email"] {
+            background-color: #F1F1F1;
+        }
+
+        .card-body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .btn-success {
+            background-color: #27AE60 !important;
+            border-color: #27AE60 !important;
+        }
+
+        #timer {
+            margin: 5px 0 5px 6px;
+        }
+
+        button {
+            margin-top: 6px;
+        }
+    </style>
+    <script>
+        const csrfToken = $("meta[name='_csrf']").attr("content");
+        const csrfHeader = $("meta[name='_csrf_header']").attr("content");
+
+        let emailcodeModal;
+        let modalDiv;
+
+        let timeInSeconds = 300;
+        let timerInterval;
+        let emailValue;
+
+        $(document).ready(function () {
+            emailcodeModal = new bootstrap.Modal(document.body.querySelector("#emailcode-modal"));
+            modalDiv = new bootstrap.Modal(document.querySelector("#modalDiv"));
+
+            document.getElementById("profile").addEventListener("change", function (event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const preview = document.getElementById("preview");
+                        preview.src = e.target.result;
+                        preview.style.display = "block";
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+
+        function goLogin(authenticated) {
+            const logoutForm = document.querySelector("#logoutForm");
+
+            if (authenticated === 'true') {
+                logoutForm.submit();
+            } else {
+                window.location.href = "/member/login";
+            }
+        }
+
+        function showEmailcodeModal() {
+            emailValue = document.body.querySelector("#email").value;
+            document.body.querySelector("#wrong-code").textContent = "";
+
+            let url = "/api/member/find-pwd"
+            let headers = {
+                "Content-Type": "application/json",
+                [csrfHeader]: csrfToken
+            };
+
+            fetch(url, {
+                method: "POST",
+                headers: headers,
+                body: JSON.stringify({email: emailValue})
+            })
+                .then(response => {
+                    if (response.status !== 200) {
+                        return response.json().then(errorData => {
+                            throw new Error(errorData.message || '이메일 전송 실패');
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    startTimer();
+                    emailcodeModal.show();
+                    console.log("Success:", data);
+                })
+                .catch(error => {
+                    document.querySelector("#modalMessage").textContent = error.message;
+                    document.querySelector("#modalLabel").textContent = "인증 오류";
+                    modalDiv.show();
+                    console.error("Error:", error.message);
+                });
+        }
+
+        function checkMailcode() {
+            emailValue = document.body.querySelector("#email").value;
+            let code = document.body.querySelector("#emailcode").value;
+            const errorView = document.body.querySelector("#wrong-code");
+
+            let url = "/api/member/mail-verify"
+            let headers = {
+                "Content-Type": "application/json",
+                [csrfHeader]: csrfToken
+            };
+
+            fetch(url, {
+                method: "POST",
+                headers: headers,
+                body: JSON.stringify({email: emailValue, code: code})
+            })
+                .then(response => {
+                    if (response.status !== 200) {
+                        return response.json().then(errorData => {
+                            throw new Error(errorData.message || '인증 실패');
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    let codeCheckBtn = document.body.querySelector("#code-check-btn");
+                    emailcodeModal.hide();
+
+                    codeCheckBtn.disabled = true;
+                    codeCheckBtn.classList.remove("btn-success");
+                    codeCheckBtn.classList.add("btn-secondary");
+
+                    document.body.querySelector("#pwd-change-div").style.display = 'block';
+                    document.body.querySelector("#email").setAttribute("disabled", "true");
+
+                    document.querySelector("#modalMessage").textContent = data.message;
+                    document.querySelector("#modalLabel").textContent = "인증 성공";
+                    modalDiv.show();
+                    console.log("Success:", data);
+                })
+                .catch(error => {
+                    errorView.textContent = error.message;
+                    console.error("Error:", error.message);
+                });
+        }
+
+        function pwdChange() {
+            let pwd = document.body.querySelector("#pwd").value;
+            let pwd2 = document.body.querySelector("#pwd2").value;
+
+            let url = "/api/member/pwd-change"
+            let headers = {
+                "Content-Type": "application/json",
+                [csrfHeader]: csrfToken
+            };
+
+            fetch(url, {
+                method: "PUT",
+                headers: headers,
+                body: JSON.stringify({email: emailValue, pwd: pwd, pwd2: pwd2})
+            })
+                .then(response => {
+                    if (response.status !== 200) {
+                        return response.json().then(errorData => {
+                            const errorMessage = errorData.message || '유효성 검사 오류';
+                            const errors = errorData.data;
+                            throw { message: errorMessage, errors: errors };
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    document.body.querySelector("#pwd-change-div").style.display = 'block';
+
+                    alert(data.message);
+                    window.location.href = '/member/login';
+                })
+                .catch(error => {
+                    document.querySelector("#modalMessage").textContent = error.message;
+                    document.querySelector("#modalLabel").textContent = "비밀번호 변경 실패";
+
+                    console.error("Error:", error);
+                    let errors = error.errors;
+
+                    const errorMap = errors.reduce((acc, error) => {
+                        acc[error.field] = error.defaultMessage;
+                        return acc;
+                    }, {})
+
+                    const errorArray = [
+                        errorMap['email'],
+                        errorMap['pwd'],
+                        errorMap['pwd2'],
+                        errorMap['passwordMatching'],
+                    ];
+
+                    const errorArrayFiltered = errorArray.filter(Boolean);
+
+                    if (errorArrayFiltered.length > 0) {
+                        document.querySelector("#modalMessage").textContent = errorArrayFiltered[0];
+                        modalDiv.show();
+                    }
+
+                    console.error("Error:", error.message);
+                });
+        }
+
+        function startTimer() {
+            timeInSeconds = 300;
+            if (timerInterval) {
+                clearInterval(timerInterval);
+            }
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        function updateTimer() {
+            const minutes = Math.floor(timeInSeconds / 60);
+            const seconds = timeInSeconds % 60;
+            const timerElement = document.getElementById("timer");
+
+            timerElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
+            if (timeInSeconds === 0) {
+                clearInterval(timerInterval);
+                timerElement.textContent = "인증시간 종료"
+            } else {
+                timeInSeconds--;
+            }
+        }
+    </script>
+    <title>Document</title>
+</head>
+<body>
+<div class="container">
+    <div class="card mx-auto border-0"
+         style="max-width: 1200px; padding-bottom: 50px">
+        <div class="card mx-auto border-0"
+             style="max-width: 350px;">
+            <div class="card-body">
+                <h4 class="mb-4" style="margin-top: 50px">비밀번호 찾기</h4>
+                <form id="registForm" th:action="@{/member/regist}" method="post" enctype="multipart/form-data">
+
+                    <div class="mb-2">
+                        <label for="email" class="form-label">이메일</label>
+                        <div class="input-group">
+                            <input type="email" id="email" name="email" class="form-control"
+                                   placeholder="example@mail.com"
+                                   th:value="${#authentication.principal != 'anonymousUser' ? #authentication.principal.member.email : ''}"
+                                   th:readonly="${#authentication.principal != 'anonymousUser'}" required>
+                            <input sec:authorize="isAnonymous()" type="button" class="btn btn-success"
+                                   id="code-check-btn"
+                                   onclick="showEmailcodeModal()"
+                                   value="인증">
+                        </div>
+                    </div>
+
+                    <div sec:authorize="isAnonymous()" style="display: none" id="pwd-change-div">
+                        <div class="mb-2">
+                            <label for="pwd" class="form-label">비밀번호</label>
+                            <input type="password" id="pwd" name="pwd" class="form-control" placeholder="password"
+                                   required>
+                        </div>
+
+                        <div class="mb-2">
+                            <label for="pwd2" class="form-label">비밀번호 확인</label>
+                            <input type="password" id="pwd2" name="pwd2" class="form-control"
+                                   placeholder="password check" required>
+                        </div>
+
+                        <button type="button" onclick="pwdChange()" class="btn btn-success w-100 mb-2">
+                            비밀번호 수정
+                        </button>
+                    </div>
+
+                    <div class="btn-div">
+                        <button type="button"
+                                onclick="goLogin(this.getAttribute('data-authenticated'))"
+                                th:data-authenticated="${#authorization.expression('isAuthenticated()') ? 'true' : 'false'}"
+                                class="btn btn-secondary w-100 mb-2">
+                            돌아가기
+                        </button>
+                    </div>
+                </form>
+                <form th:action="@{/logout}" method="post" id="logoutForm"></form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="emailcode-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+     aria-labelledby="emailcode-label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="emailcode-label">이메일 인증</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="pwd" class="form-label" id="pwd-label">인증코드</label>
+                    <input type="password" id="emailcode" name="emailcode" class="form-control" placeholder="code"
+                           style="background-color: #F1F1F1"
+                           required>
+                    <p id="timer">5:00</p>
+                    <p id="wrong-code" style="color: red; margin-top: 5px"></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="emailcode-submit" onclick="checkMailcode()">확인
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="~{fragments/modal :: modalFragment}"></div>
+</body>
+</html>

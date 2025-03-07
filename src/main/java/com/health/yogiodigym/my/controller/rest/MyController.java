@@ -1,9 +1,9 @@
 package com.health.yogiodigym.my.controller.rest;
 
-import com.health.yogiodigym.board.dto.BoardDto.*;
+import com.health.yogiodigym.board.dto.BoardDto.BoardDetailDto;
 import com.health.yogiodigym.board.service.BoardService;
 import com.health.yogiodigym.common.response.HttpResponse;
-import com.health.yogiodigym.lesson.dto.LessonDto.*;
+import com.health.yogiodigym.lesson.dto.LessonDto.LessonSearchDto;
 import com.health.yogiodigym.lesson.service.LessonService;
 import com.health.yogiodigym.member.entity.MemberOAuth2User;
 import com.health.yogiodigym.member.service.MemberService;
@@ -26,10 +26,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import static com.health.yogiodigym.common.message.SuccessMessage.*;
 
@@ -55,12 +53,10 @@ public class MyController {
     @PostMapping("/withdrawal")
     public ResponseEntity<?> withdrawal(@RequestBody(required = false) Map<String, String> checkPwd, @AuthenticationPrincipal MemberOAuth2User principal,
                                         HttpServletRequest request, HttpServletResponse response) {
+        String pwd = checkPwd.get("pwd");
+        log.info("withdrawal input: {}", pwd);
 
-        if(checkPwd != null && !checkPwd.isEmpty()) {
-            memberService.checkPassword(checkPwd.get("pwd"), principal.getPassword());
-        }
-        memberService.registwithdrawal(principal.getMember().getId(), request, response);
-
+        memberService.registwithdrawal(pwd, request, response);
         return ResponseEntity.ok().body(new HttpResponse(HttpStatus.OK, WITHDRAWAL_SUCCESS.getMessage(), null));
     }
 
@@ -69,8 +65,8 @@ public class MyController {
                                   HttpServletRequest request, HttpServletResponse response) {
         log.info("update member: {}", updateMemberDto);
 
-        memberService.updateMember(updateMemberDto);
-        memberService.updateAuthentication(principal.getMember().getEmail(), request, response);
+        memberService.updateMember(updateMemberDto, request, response);
+
         return ResponseEntity.ok().body(new HttpResponse(HttpStatus.OK, MEMBER_UPDATE_SUCCESS.getMessage(), null));
     }
 
@@ -79,25 +75,26 @@ public class MyController {
                                        HttpServletRequest request, HttpServletResponse response) {
         log.info("update member: {}", updateOAuthMemberDto);
 
-        memberService.updateOAuthMember(updateOAuthMemberDto);
-        memberService.updateAuthentication(principal.getMember().getEmail(), request, response);
+        memberService.updateOAuthMember(updateOAuthMemberDto, request, response);
+
         return ResponseEntity.ok().body(new HttpResponse(HttpStatus.OK, MEMBER_UPDATE_SUCCESS.getMessage(), null));
     }
 
     @PostMapping("/profile")
     public ResponseEntity<?> profile(@RequestParam(value = "profile") MultipartFile profile,
                                      @AuthenticationPrincipal MemberOAuth2User principal,
-                                     HttpServletRequest request, HttpServletResponse response){
+                                     HttpServletRequest request, HttpServletResponse response) {
         ncpStorageService.deleteImageByUrl(principal.getMember().getProfile());
         String saveFileURL = ncpStorageService.uploadImage(profile, NCPStorageServiceImpl.DirectoryPath.PROFILE);
-        memberService.updateProfile(saveFileURL, principal.getMember().getId());
-        memberService.updateAuthentication(principal.getMember().getEmail(), request, response);
+
+        memberService.updateProfile(saveFileURL, principal.getMember().getId(), request, response);
 
         return ResponseEntity.ok().body(new HttpResponse(HttpStatus.OK, PROFILE_UPDATE_SUCCESS.getMessage(), null));
     }
 
     @PostMapping("/master")
     public ResponseEntity<?> master(@RequestParam("certificate") MultipartFile[] certificate) {
+
         memberService.enrollMaster(certificate);
 
         return ResponseEntity.ok().body(new HttpResponse(HttpStatus.OK, ENROLL_MASTER_SUCCESS.getMessage(), null));
@@ -126,7 +123,7 @@ public class MyController {
                                            @RequestParam(defaultValue = "10") int size,
                                            @AuthenticationPrincipal MemberOAuth2User loginUser) {
 
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC,"id"));
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
         Page<LessonSearchDto> lessons = lessonService.searchMyLessons(loginUser.getMember().getId(), lessonKeyword, searchColumn, days, categories, pageable);
 
         return ResponseEntity.ok().body(new HttpResponse(HttpStatus.OK, SEARCH_LESSON_SUCCESS.getMessage(), lessons));
