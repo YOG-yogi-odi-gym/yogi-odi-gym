@@ -56,11 +56,7 @@ public class MyController {
         String pwd = checkPwd.get("pwd");
         log.info("withdrawal input: {}", pwd);
 
-        if (pwd != null && !pwd.isEmpty()) {
-            memberService.checkPassword(pwd, principal.getPassword());
-        }
-        memberService.registwithdrawal(principal.getMember().getId(), request, response);
-
+        memberService.registwithdrawal(pwd, request, response);
         return ResponseEntity.ok().body(new HttpResponse(HttpStatus.OK, WITHDRAWAL_SUCCESS.getMessage(), null));
     }
 
@@ -69,8 +65,8 @@ public class MyController {
                                   HttpServletRequest request, HttpServletResponse response) {
         log.info("update member: {}", updateMemberDto);
 
-        memberService.updateMember(updateMemberDto);
-        memberService.updateAuthentication(principal.getMember().getEmail(), request, response);
+        memberService.updateMember(updateMemberDto, request, response);
+
         return ResponseEntity.ok().body(new HttpResponse(HttpStatus.OK, MEMBER_UPDATE_SUCCESS.getMessage(), null));
     }
 
@@ -79,8 +75,8 @@ public class MyController {
                                        HttpServletRequest request, HttpServletResponse response) {
         log.info("update member: {}", updateOAuthMemberDto);
 
-        memberService.updateOAuthMember(updateOAuthMemberDto);
-        memberService.updateAuthentication(principal.getMember().getEmail(), request, response);
+        memberService.updateOAuthMember(updateOAuthMemberDto, request, response);
+
         return ResponseEntity.ok().body(new HttpResponse(HttpStatus.OK, MEMBER_UPDATE_SUCCESS.getMessage(), null));
     }
 
@@ -90,14 +86,15 @@ public class MyController {
                                      HttpServletRequest request, HttpServletResponse response) {
         ncpStorageService.deleteImageByUrl(principal.getMember().getProfile());
         String saveFileURL = ncpStorageService.uploadImage(profile, NCPStorageServiceImpl.DirectoryPath.PROFILE);
-        memberService.updateProfile(saveFileURL, principal.getMember().getId());
-        memberService.updateAuthentication(principal.getMember().getEmail(), request, response);
+
+        memberService.updateProfile(saveFileURL, principal.getMember().getId(), request, response);
 
         return ResponseEntity.ok().body(new HttpResponse(HttpStatus.OK, PROFILE_UPDATE_SUCCESS.getMessage(), null));
     }
 
     @PostMapping("/master")
     public ResponseEntity<?> master(@RequestParam("certificate") MultipartFile[] certificate) {
+
         memberService.enrollMaster(certificate);
 
         return ResponseEntity.ok().body(new HttpResponse(HttpStatus.OK, ENROLL_MASTER_SUCCESS.getMessage(), null));

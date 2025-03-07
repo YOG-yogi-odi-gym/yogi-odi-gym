@@ -1,18 +1,13 @@
 package com.health.yogiodigym.member.service.impl;
 
 
-import com.health.yogiodigym.common.exception.CustomException;
 import com.health.yogiodigym.common.exception.SendCodeToMailException;
 import com.health.yogiodigym.member.service.EmailService;
-import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import lombok.extern.slf4j.XSlf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMailMessage;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 

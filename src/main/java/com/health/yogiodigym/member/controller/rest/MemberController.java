@@ -1,20 +1,14 @@
 package com.health.yogiodigym.member.controller.rest;
 
-import com.health.yogiodigym.common.exception.CodeNotMatchException;
-import com.health.yogiodigym.common.exception.EmailNotFoundException;
-import com.health.yogiodigym.common.exception.MemberExistException;
-import com.health.yogiodigym.common.exception.SocialMemberPwdChangeException;
 import com.health.yogiodigym.common.response.HttpResponse;
 import com.health.yogiodigym.member.dto.EmailVerifyDto;
 import com.health.yogiodigym.member.dto.PasswordChangeDto;
 import com.health.yogiodigym.member.dto.RegistMemberDto;
 import com.health.yogiodigym.member.dto.RegistOAuthMemberDto;
-import com.health.yogiodigym.member.entity.Member;
 import com.health.yogiodigym.member.entity.MemberOAuth2User;
 import com.health.yogiodigym.member.service.MemberService;
 import com.health.yogiodigym.member.service.NCPStorageService;
 import com.health.yogiodigym.member.service.impl.NCPStorageServiceImpl;
-import com.health.yogiodigym.member.service.impl.RedisEmailcodeServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -26,8 +20,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Optional;
-
 import static com.health.yogiodigym.common.message.SuccessMessage.*;
 
 @Slf4j
@@ -38,7 +30,6 @@ public class MemberController {
 
     private final MemberService memberService;
     private final NCPStorageService ncpStorageService;
-    private final RedisEmailcodeServiceImpl redisEmailcodeService;
 
     @PostMapping("/regist")
     public ResponseEntity<?> regist(@Valid @ModelAttribute RegistMemberDto registMemberDto,
@@ -50,9 +41,7 @@ public class MemberController {
 
         String saveFileURL = ncpStorageService.uploadImage(profile, NCPStorageServiceImpl.DirectoryPath.PROFILE);
 
-        memberService.registWithEmail(registMemberDto, saveFileURL);
-
-        memberService.updateAuthentication(registMemberDto.getEmail(), request, response);
+        memberService.registWithEmail(registMemberDto, saveFileURL, request, response);
 
         return ResponseEntity.ok().body(new HttpResponse(HttpStatus.OK, REGIST_SUCCESS.getMessage(), null));
     }
@@ -71,9 +60,7 @@ public class MemberController {
             saveFileURL = principal.getMember().getProfile();
         }
 
-        memberService.registWithOAuth2(registOAuthMemberDto, saveFileURL);
-
-        memberService.updateAuthentication(registOAuthMemberDto.getEmail(), request, response);
+        memberService.registWithOAuth2(registOAuthMemberDto, saveFileURL, request, response);
 
         return ResponseEntity.ok().body(new HttpResponse(HttpStatus.OK, REGIST_SUCCESS.getMessage(), null));
     }
@@ -100,15 +87,7 @@ public class MemberController {
     public ResponseEntity<?> mailVerify(@Valid @RequestBody EmailVerifyDto emailVerifyDto) {
         log.info("mail-verify input: {}", emailVerifyDto.toString());
 
-        String code = emailVerifyDto.getCode();
-        String email = emailVerifyDto.getEmail();
-        String redisCode = redisEmailcodeService.getCode(email);
-
-        log.info("redisCode = {}", redisCode);
-
-        if (!code.equals(redisCode)) {
-            throw new CodeNotMatchException();
-        }
+        memberService.mailVerify(emailVerifyDto);
 
         return ResponseEntity.ok().body(new HttpResponse(HttpStatus.OK, MAIL_VERIFY_SUCCESS.getMessage(), null));
     }

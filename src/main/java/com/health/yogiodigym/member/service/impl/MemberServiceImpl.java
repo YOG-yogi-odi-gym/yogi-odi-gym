@@ -33,10 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
-import java.util.EnumSet;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static com.health.yogiodigym.member.auth.Role.ROLE_USER;
 import static com.health.yogiodigym.member.status.EnrollMasterStatus.WAIT;
@@ -59,12 +56,13 @@ public class MemberServiceImpl implements MemberService {
     private final SecurityContextRepository securityContextRepository = new HttpSessionSecurityContextRepository();
 
     @Override
-    public void registWithEmail(RegistMemberDto registMemberDto, String saveFileURL) {
+    public void registWithEmail(RegistMemberDto registMemberDto, String saveFileURL, HttpServletRequest request, HttpServletResponse response) {
         memberRepository.findByEmail(registMemberDto.getEmail()).ifPresent(member -> {
             throw new MemberExistException();
         });
 
         insertMember(registMemberDto, saveFileURL);
+        updateAuthentication(registMemberDto.getEmail(), request, response);
     }
 
     @Override
@@ -93,7 +91,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public void updateMember(UpdateMemberDto updateMemberDto) {
+    public void updateMember(UpdateMemberDto updateMemberDto, HttpServletRequest request, HttpServletResponse response) {
         updateMemberDto.setPwd(passwordEncoder.encode(updateMemberDto.getPwd()));
 
         MemberOAuth2User principal = (MemberOAuth2User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -101,15 +99,17 @@ public class MemberServiceImpl implements MemberService {
         currentMember.updateMember(updateMemberDto);
 
         memberRepository.save(currentMember);
+        updateAuthentication(principal.getMember().getEmail(), request, response);
     }
 
     @Override
-    public void updateOAuthMember(UpdateOAuthMemberDto updateOAuthMemberDto) {
+    public void updateOAuthMember(UpdateOAuthMemberDto updateOAuthMemberDto, HttpServletRequest request, HttpServletResponse response) {
         MemberOAuth2User principal = (MemberOAuth2User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Member currentMember = principal.getMember();
         currentMember.updateOAuthMember(updateOAuthMemberDto);
 
         memberRepository.save(currentMember);
+        updateAuthentication(principal.getMember().getEmail(), request, response);
     }
 
     @Override
@@ -176,7 +176,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public void registWithOAuth2(RegistOAuthMemberDto registOAuthMemberDto, String saveFileURL) {
+    public void registWithOAuth2(RegistOAuthMemberDto registOAuthMemberDto, String saveFileURL, HttpServletRequest request, HttpServletResponse response) {
         MemberOAuth2User principal = (MemberOAuth2User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         if (saveFileURL == null) {
@@ -184,6 +184,7 @@ public class MemberServiceImpl implements MemberService {
         }
 
         insertOAuth2Member(registOAuthMemberDto, saveFileURL);
+        updateAuthentication(registOAuthMemberDto.getEmail(), request, response);
     }
 
     private void insertOAuth2Member(RegistOAuthMemberDto registOAuthMemberDto, String saveFileURL) {
@@ -205,8 +206,7 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.save(registMember);
     }
 
-    @Override
-    public void updateAuthentication(String email, HttpServletRequest request, HttpServletResponse response) {
+    private void updateAuthentication(String email, HttpServletRequest request, HttpServletResponse response) {
         MemberOAuth2User updatePrincipal = (MemberOAuth2User) memberDetailsService.loadUserByUsername(email);
 
         Authentication updatedAuthentication = new UsernamePasswordAuthenticationToken(
@@ -230,8 +230,15 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public void registwithdrawal(Long id, HttpServletRequest request, HttpServletResponse response) {
-        Member withdrawalMember =  memberRepository.findById(id).orElseThrow(() -> new MemberNotFoundException(id));
+    public void registwithdrawal(String checkPwd, HttpServletRequest request, HttpServletResponse response) {
+        MemberOAuth2User principal = (MemberOAuth2User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (checkPwd != null && !checkPwd.isEmpty()) {
+            checkPassword(checkPwd, principal.getPassword());
+        }
+        Long principalMemberId = principal.getMember().getId();
+
+        Member withdrawalMember =  memberRepository.findById(principalMemberId).orElseThrow(() -> new MemberNotFoundException(principalMemberId));
 
         withdrawalMember.setInactive();
         new SecurityContextLogoutHandler().logout(request, response, SecurityContextHolder.getContext().getAuthentication());
@@ -245,9 +252,25 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public void updateProfile(String profile, Long id) {
+    public void updateProfile(String profile, Long id, HttpServletRequest request, HttpServletResponse response) {
         Member updateProfileMember = memberRepository.findById(id).orElseThrow(() -> new MemberNotFoundException(id));
 
         updateProfileMember.setProfile(profile);
+
+        MemberOAuth2User principal = (MemberOAuth2User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        updateAuthentication(principal.getMember().getEmail(), request, response);
+    }
+
+    @Override
+    public void mailVerify(EmailVerifyDto emailVerifyDto) {
+        String code = emailVerifyDto.getCode();
+        String email = emailVerifyDto.getEmail();
+        String redisCode = redisEmailcodeService.getCode(email);
+
+        log.info("redisCode = {}", redisCode);
+
+        if (!code.equals(redisCode)) {
+            throw new CodeNotMatchException();
+        }
     }
 }

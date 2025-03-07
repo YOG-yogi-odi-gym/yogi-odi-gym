@@ -13,27 +13,26 @@ import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Map;
 import java.util.Optional;
 
 public interface MemberService {
 
-    void registWithOAuth2(RegistOAuthMemberDto registOAuthMemberDto, String saveFileURL);
+    void registWithOAuth2(RegistOAuthMemberDto registOAuthMemberDto, String saveFileURL, HttpServletRequest request, HttpServletResponse response);
 
-    void registWithEmail(RegistMemberDto registMemberDto, String saveFileURL);
-
-    void updateAuthentication(String email, HttpServletRequest request, HttpServletResponse response);
+    void registWithEmail(RegistMemberDto registMemberDto, String saveFileURL, HttpServletRequest request, HttpServletResponse response);
 
     void checkPassword(String pwd, String principalPwd);
 
-    void registwithdrawal(Long id, HttpServletRequest request, HttpServletResponse response);
+    void registwithdrawal(String checkPwd, HttpServletRequest request, HttpServletResponse response);
 
     void withdrawInactiveMembers();
 
-    void updateProfile(String profile, Long id);
+    void updateProfile(String profile, Long id, HttpServletRequest request, HttpServletResponse response);
 
-    void updateMember(UpdateMemberDto updateMemberDto);
+    void updateMember(UpdateMemberDto updateMemberDto, HttpServletRequest request, HttpServletResponse response);
 
-    void updateOAuthMember(UpdateOAuthMemberDto updateOAuthMemberDto);
+    void updateOAuthMember(UpdateOAuthMemberDto updateOAuthMemberDto, HttpServletRequest request, HttpServletResponse response);
 
     void enrollMaster(MultipartFile[] certificate);
 
@@ -42,4 +41,6 @@ public interface MemberService {
     void findPwd(EmailVerifyDto emailVerifyDto);
 
     void sendCode(EmailVerifyDto emailVerifyDto);
+
+    void mailVerify(EmailVerifyDto emailVerifyDto);
 }
