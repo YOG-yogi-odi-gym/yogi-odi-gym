@@ -10,7 +10,7 @@
             return colorMap[title];
         }
 
-        const letters = '0123456789ABCDEF';
+        const letters = '0123456789ABCDE';
         let color = '#';
         for (let i = 0; i < 6; i++) {
             color += letters[Math.floor(Math.random() * 16)];
@@ -28,7 +28,7 @@
             return color2Map[id];
         }
 
-        const letters = '0123456789ABCDEF';
+        const letters = '0123456789ABCDE';
         let color = '#';
         for (let i = 0; i < 6; i++) {
             color += letters[Math.floor(Math.random() * 16)];
@@ -627,7 +627,7 @@
 
                 let addbtn= `<div class="add-btn-container">`;
                 addbtn += `<div class="add-box" onclick="addExerciseRow('${selectedDate}', ${memberId})">`;
-                addbtn += `<button class="add-btn" ><i class="bi bi-plus"></i></button></div></div>`;
+                addbtn += `<button class="add-btn"><i class="bi bi-plus"></i></button></div></div>`;
 
                 $("#modalContent").html(content);
                 $("#addbtn").html(addbtn);
