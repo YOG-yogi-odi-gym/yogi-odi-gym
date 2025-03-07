@@ -9,6 +9,10 @@ import com.health.yogiodigym.member.entity.MemberOAuth2User;
 import com.health.yogiodigym.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.AccountExpiredException;
+import org.springframework.security.authentication.CredentialsExpiredException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -47,9 +51,12 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
             oAuth2UserInfo = new GoogleUserInfo(oAuthAttributes);
         }
 
-        Member OAuthloginMember = memberRepository.findByEmail(oAuth2UserInfo.getEmail()).orElse(null);
-        if (OAuthloginMember != null) {
-            return new MemberOAuth2User(OAuthloginMember, oAuthAttributes);
+        Member oAuthloginMember = memberRepository.findByEmail(oAuth2UserInfo.getEmail()).orElse(null);
+        if (oAuthloginMember != null) {
+            MemberOAuth2User principal = new MemberOAuth2User(oAuthloginMember, oAuthAttributes);
+            checkAccountStatus(principal);
+
+            return principal;
         } else {
             Member newOAuthMember = Member.builder()
                     .name(oAuth2UserInfo.getName())
@@ -60,6 +67,21 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
                     .build();
 
             return new MemberOAuth2User(newOAuthMember, oAuthAttributes);
+        }
+    }
+
+    private void checkAccountStatus(MemberOAuth2User memberOAuth2User) {
+        if (!memberOAuth2User.isAccountNonExpired()) {
+            throw new AccountExpiredException("Account is expired");
+        }
+        if (!memberOAuth2User.isCredentialsNonExpired()) {
+            throw new CredentialsExpiredException("Credentials are expired");
+        }
+        if (!memberOAuth2User.isEnabled()) {
+            throw new DisabledException("Account is disabled");
+        }
+        if (!memberOAuth2User.isAccountNonLocked()) {
+            throw new LockedException("Account is locked");
         }
     }
 }

@@ -175,7 +175,7 @@
                         const errorMap = errors.reduce((acc, error) => {
                             acc[error.field] = error.defaultMessage;
                             return acc;
-                        }, {})
+                        }, {});
 
                         console.log(errors);
                         const errorArray = [

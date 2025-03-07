@@ -53,9 +53,11 @@ public class MyController {
     @PostMapping("/withdrawal")
     public ResponseEntity<?> withdrawal(@RequestBody(required = false) Map<String, String> checkPwd, @AuthenticationPrincipal MemberOAuth2User principal,
                                         HttpServletRequest request, HttpServletResponse response) {
+        String pwd = checkPwd.get("pwd");
+        log.info("withdrawal input: {}", pwd);
 
-        if (checkPwd != null && !checkPwd.isEmpty()) {
-            memberService.checkPassword(checkPwd.get("pwd"), principal.getPassword());
+        if (pwd != null && !pwd.isEmpty()) {
+            memberService.checkPassword(pwd, principal.getPassword());
         }
         memberService.registwithdrawal(principal.getMember().getId(), request, response);
 
