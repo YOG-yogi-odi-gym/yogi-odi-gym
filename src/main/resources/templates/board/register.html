@@ -8,16 +8,14 @@
     <script type="text/javascript" th:src="@{'//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js'}"></script>
     <script type="text/javascript"
             th:src="@{'//dapi.kakao.com/v2/maps/sdk.js?appkey=' + ${@environment.getProperty('kakao.api.scriptKey')} + '&libraries=services'}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script th:src="@{https://code.jquery.com/jquery-3.5.1.slim.min.js}"></script>
-    <script th:src="@{https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js}"></script>
-    <script th:src="@{https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js}"></script>
     <style>
         body {
+            width: 100%;
             margin: 0;
             padding: 0;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            justify-content: flex-start !important;
             align-items: center;
             height: 100vh;
             background-color: #f1f1f1;
@@ -62,7 +60,30 @@
             border-radius: 0 0 10px 10px;
         }
     </style>
+    <script>
+        function validateForm() {
+            let title = document.getElementById('title').value;
+            let context = document.getElementById('context').value;
+            let categoryId = document.querySelector("input[name='categoryId']:checked");
 
+            if (!title.trim()) {
+                alert("제목을 입력해주세요.");
+                return false;
+            }
+
+            if (!context.trim()) {
+                alert("내용을 입력해주세요.");
+                return false;
+            }
+
+            if (!categoryId) {
+                alert("카테고리를 선택해주세요.");
+                return false;
+            }
+
+            return true;
+        }
+    </script>
 </head>
 <body>
 <div class="container-fluid">
@@ -84,7 +105,7 @@
             <div class="card-header">
                 <h2>게시글 쓰기</h2>
             </div>
-            <form th:action="@{/api/board/register}" method="post">
+            <form th:action="@{/api/board/register}" method="post" onsubmit="return validateForm()">
                 <input type="hidden" name="_csrf" th:value="${_csrf.token}">
                 <div class="card-body">
                     <label for="title">제목</label>
@@ -96,14 +117,14 @@
                         <label id="search-label">카테고리</label>
                         <div th:each="category : ${categories}">
                             <input type="radio" name="categoryId" th:id="'category-'+${category.id}"
-                                   th:value="${category.id}">
+                                   th:value="${category.id}" required>
                             <label th:for="'category-' + ${category.id}" th:text="${category.name}"></label>
                         </div>
                     </div>
 
                     <label>내용</label>
                     <div class="form-group">
-                        <textarea id="context" name="context" class="form-control" rows="9"></textarea>
+                        <textarea id="context" name="context" class="form-control" rows="9" required></textarea>
                     </div>
                 </div>
 
@@ -115,5 +136,9 @@
         </div>
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{https://code.jquery.com/jquery-3.5.1.slim.min.js}"></script>
+<script th:src="@{https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js}"></script>
+
 </body>
 </html>

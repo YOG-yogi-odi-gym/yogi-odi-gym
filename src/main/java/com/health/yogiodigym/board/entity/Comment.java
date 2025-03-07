@@ -2,6 +2,8 @@ package com.health.yogiodigym.board.entity;
 
 import com.health.yogiodigym.member.entity.Member;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import java.time.LocalDateTime;
 

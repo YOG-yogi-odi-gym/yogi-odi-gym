@@ -2,25 +2,24 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>test</title>
+    <title>헬스장 검색</title>
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <script type="text/javascript"
             th:src="@{'//dapi.kakao.com/v2/maps/sdk.js?appkey=' + ${@environment.getProperty('kakao.api.scriptKey')}}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script th:src="@{https://code.jquery.com/jquery-3.5.1.slim.min.js}"></script>
-    <script th:src="@{https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js}"></script>
-    <script th:src="@{https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js}"></script>
     <style>
         body {
+            width: 100%;
             margin: 0;
             padding: 0;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            justify-content: flex-start !important;
             align-items: center;
             height: 100vh;
             background-color: #f1f1f1;
         }
+
         .container-fluid {
             max-width: 1200px;
             width: 1200px;
@@ -32,12 +31,14 @@
             border-radius: 10px;
             background-color: #f1f1f1;
         }
+
         .main {
             width: 1200px;
             height: 850px;
             display: flex;
             justify-content: flex-start;
         }
+
         .content {
             display: flex;
             flex-direction: column;
@@ -47,17 +48,18 @@
             background-color: #F1F1F1;
             border-radius: 10px;
         }
-        .main-card{
+
+        .main-card {
             width: 920px;
             height: 800px;
             border-radius: 10px;
         }
 
-        .main-card .card-header{
+        .main-card .card-header {
             border-radius: 10px 10px 0 0;
         }
 
-        .main-card .card-footer{
+        .main-card .card-footer {
             border-radius: 0 0 10px 10px;
         }
     </style>
@@ -72,6 +74,12 @@
 
         let memberLat = [[${member.latitude}]];
         let memberLon = [[${member.longitude}]];
+
+        function handleEnter(event) {
+            if (event.keyCode === 13) {  // Enter 키 감지
+                gymSearch();
+            }
+        }
 
         function gymSearch(page = 0) {
             currentPage = page;
@@ -96,6 +104,19 @@
 
                     let gymNo = page * 10 + 1;
 
+                    if (gyms.content.length === 0) {
+                        let noResultRow = document.createElement("tr");
+                        let noResultCell = document.createElement("td");
+                        let pagination = document.getElementById("pagination")
+                        pagination.innerHTML = ""
+                        noResultCell.colSpan = 4;
+                        noResultCell.style.textAlign = "center";
+                        noResultCell.textContent = `"${gymKeyword}" 의 검색 결과가 없습니다.`;
+                        noResultRow.appendChild(noResultCell);
+                        resultSearch.appendChild(noResultRow);
+                        return;
+                    }
+
                     gyms.content.forEach(gym => {
                         let gymTrRow = document.createElement("tr")
                         let gymTdNo = document.createElement("td")
@@ -106,12 +127,12 @@
                         gymTdName.style.whiteSpace = "nowrap";
                         gymTdName.style.overflow = "hidden";
                         gymTdName.style.textOverflow = "ellipsis";
-                        gymTdName.style.maxWidth = "300px"; // 조정 가능
+                        gymTdName.style.maxWidth = "300px";
 
                         gymTdOldAddress.style.whiteSpace = "nowrap";
                         gymTdOldAddress.style.overflow = "hidden";
                         gymTdOldAddress.style.textOverflow = "ellipsis";
-                        gymTdOldAddress.style.maxWidth = "300px"; // 조정 가능
+                        gymTdOldAddress.style.maxWidth = "300px";
 
                         let modalLink = document.createElement("a")
                         modalLink.href = "#"
@@ -241,7 +262,8 @@
                         </select>
                     </div>
                     <div class="col-sm-8">
-                        <input type="text" id="gymKeyword" class="form-control" placeholder="Enter name">
+                        <input type="text" id="gymKeyword" class="form-control" placeholder="Enter name"
+                               onkeyup="handleEnter(event)">
                     </div>
                     <div class="col-sm-2">
                         <button onclick="gymSearch()" class="btn btn-primary small-btn w-100">Search</button>
@@ -292,5 +314,9 @@
         </div>
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{https://code.jquery.com/jquery-3.5.1.slim.min.js}"></script>
+<script th:src="@{https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js}"></script>
+
 </body>
 </html>
