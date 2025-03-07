@@ -24,13 +24,17 @@ public enum ErrorMessage {
     CHAT_ROOM_NOT_FOUND("채팅방이 존재하지 않습니다."),
     CATEGORY_NOT_FOUND("카테고리가 존재하지 않습니다."),
     MEMBER_NOT_IN_CHAT_ROOM("채팅방 참여자가 아닙니다."),
+    MEMBER_NOT_IN_LESSON("강의 참여자가 아닙니다."),
+    KICK_INSTRUCTOR_ERROR("강의의 강사는 강퇴할 수 없습니다."),
     ALREADY_CHAT_PARTICIPANT("이미 채팅방에 참여중입니다."),
     WRONG_PASSWORD_ERROR("잘못된 비밀번호입니다."),
     NO_DELETE_PERMISSION("삭제 권한이 없습니다."),
     SEND_MAIL_FAIL_ERROR("코드메일 전송에 실패했습니다."),
     EMAILCODE_NOT_FOUND("인증코드를 찾지 못했습니다"),
     CODE_NOT_MATCH_ERROR("인증코드가 일치하지 않습니다."),
-    SOCIAL_MEMBER_PWD_CHANGE_ERROR("소셜회원은 비밀번호 변경을 하실 수 없습니다.");
+    SOCIAL_MEMBER_PWD_CHANGE_ERROR("소셜회원은 비밀번호 변경을 하실 수 없습니다."),
+    PASSWORD_EMPTY_ERROR("비밀번호가 비어있습니다."),
+    FORBIDDEN_ERROR("권한이 없습니다.");
 
     private final String message;
 }

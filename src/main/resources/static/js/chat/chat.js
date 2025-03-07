@@ -199,3 +199,24 @@ function loadNewReadMessages() {
         }
     });
 }
+
+function kickMember(memberId) {
+    $.ajax({
+        url: `/api/chat-rooms/${chatRoomId}/members/${memberId}`,
+        method: 'DELETE',
+        dataType: 'json',
+        contentType: 'application/json; charset=utf-8',
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+        },
+        success: function(response) {
+            alert(response.message);
+            location.reload();
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            let errorResponse = JSON.parse(jqXHR.responseText);
+            console.log('status: ', errorResponse.status, 'message: ', errorResponse.message);
+            alert(errorResponse.message);
+        }
+    })
+}
