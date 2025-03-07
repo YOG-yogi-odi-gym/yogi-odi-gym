@@ -419,7 +419,33 @@
                         <label th:for="'category-' + ${category.id}" th:text="${category.name}"></label>
                     </div>
                 </div>
+                <div class="search-container">
+                    <div class="day-container">
+                        <label id="search-label">요일 선택</label>
+                        <label class="day-label">
+                            <input type="checkbox" name="days" value="1"> 월
+                        </label>
+                        <label class="day-label">
+                            <input type="checkbox" name="days" value="2"> 화
+                        </label>
+                        <label class="day-label">
+                            <input type="checkbox" name="days" value="4"> 수
+                        </label>
+                        <label class="day-label">
+                            <input type="checkbox" name="days" value="8"> 목
+                        </label>
+                        <label class="day-label">
+                            <input type="checkbox" name="days" value="16"> 금
+                        </label>
+                        <label class="day-label">
+                            <input type="checkbox" name="days" value="32"> 토
+                        </label>
+                        <label class="day-label">
+                            <input type="checkbox" name="days" value="64"> 일
+                        </label>
+                    </div>
 
+                </div>
             </div>
             <div class="card-body">
                 <table class="table table-striped mt-4">
