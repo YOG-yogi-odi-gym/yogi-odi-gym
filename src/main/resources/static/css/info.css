@@ -1,8 +1,3 @@
-.content {
-    display: flex;
-    justify-content: space-between;
-    padding: 20px;
-}
 
 .info-container {
     width: 620px;
@@ -82,7 +77,6 @@
 .profile-btn-container {
     margin-top: 10px;
     display: flex;
-    flex-direction: column;
     align-items: center;
     gap: 10px;
 }
@@ -117,4 +111,39 @@
 #enroll-master-modal .modal-body {
     height: calc(100% - 120px);
     overflow-y: auto;
+}
+
+.content {
+    background-color: #f9f9f9;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+}
+
+.info-container {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    background-color: white;
+}
+
+.profile-container {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    background-color: white;
+}
+
+.info-title h3 {
+    font-size: 24px;
+}
+
+.info-data .info-container-left {
+    padding-right: 10px;
+}
+
+.info-data .info-container-right {
+    padding-left: 10px;
+}
+
+.img-container img {
+    border: 3px solid #ddd;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }

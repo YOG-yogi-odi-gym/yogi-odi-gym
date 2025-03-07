@@ -96,8 +96,47 @@
                     callback();
                 }
             });
+        },
+        render: {
+            option: function(data, escape) {
+                return `
+                <div class="ts-option p-2 border-bottom bg-white text-dark">
+                    <strong>${escape(data.name)}</strong>
+                </div>
+            `;
+            },
+            item: function(data, escape) {
+                return `<div class="ts-item badge bg-primary text-white px-2 py-1 rounded">${escape(data.name)}</div>`;
+            }
         }
     });
+
+    // 스타일 수정 (Bootstrap 5 스타일 적용)
+    const style = document.createElement("style");
+    style.innerHTML = `
+    .ts-dropdown {
+        background-color: white !important;
+        z-index: 1050 !important;
+        border: 1px solid #dee2e6;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .ts-option {
+        cursor: pointer;
+        transition: background-color 0.2s ease-in-out;
+    }
+
+    .ts-option:hover {
+        background-color: #f8f9fa;
+    }
+
+    .ts-item {
+        display: inline-block;
+        font-size: 0.9rem;
+    }
+`;
+    document.head.appendChild(style);
+
 
     foodSelect.on("change", function () {
         let selectedId = foodSelect.getValue();

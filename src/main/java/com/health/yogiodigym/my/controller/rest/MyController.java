@@ -51,7 +51,7 @@ public class MyController {
     }
 
     @PostMapping("/withdrawal")
-    public ResponseEntity<?> withdrawal(@RequestBody(required = false) Map<String, String> checkPwd, @AuthenticationPrincipal MemberOAuth2User principal,
+    public ResponseEntity<?> withdrawal(@RequestBody(required = false) Map<String, String> checkPwd,
                                         HttpServletRequest request, HttpServletResponse response) {
         String pwd = checkPwd.get("pwd");
         log.info("withdrawal input: {}", pwd);
@@ -61,7 +61,7 @@ public class MyController {
     }
 
     @PutMapping("/info")
-    public ResponseEntity<?> info(@Valid @RequestBody UpdateMemberDto updateMemberDto, @AuthenticationPrincipal MemberOAuth2User principal,
+    public ResponseEntity<?> info(@Valid @RequestBody UpdateMemberDto updateMemberDto,
                                   HttpServletRequest request, HttpServletResponse response) {
         log.info("update member: {}", updateMemberDto);
 
@@ -71,7 +71,7 @@ public class MyController {
     }
 
     @PutMapping("/oauthinfo")
-    public ResponseEntity<?> oauthinfo(@Valid @RequestBody UpdateOAuthMemberDto updateOAuthMemberDto, @AuthenticationPrincipal MemberOAuth2User principal,
+    public ResponseEntity<?> oauthinfo(@Valid @RequestBody UpdateOAuthMemberDto updateOAuthMemberDto,
                                        HttpServletRequest request, HttpServletResponse response) {
         log.info("update member: {}", updateOAuthMemberDto);
 
