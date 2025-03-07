@@ -724,7 +724,12 @@
                         <span th:text="${role}"></span>
                     </p>
                     <div class="profile-btn-container">
-                        <button id="enroll-master-btn" class="btn btn-secondary" type="button">강사신청</button>
+                        <button id="enroll-master-btn" class="btn btn-secondary" type="button"
+                                th:style="${#authorization.expression('hasRole(''ROLE_MASTER'')')} ? 'display: none;' : ''">
+                            강사신청
+                        </button>
+
+
                         <form id="profile-form" th:action="@{/api/my/profile}" method="post"
                               enctype="multipart/form-data">
                             <input type="file" id="profile" name="profile" class="form-control d-none"
