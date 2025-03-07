@@ -9,122 +9,6 @@
     <script type="text/javascript"
             th:src="@{'//dapi.kakao.com/v2/maps/sdk.js?appkey=' + ${@environment.getProperty('kakao.api.scriptKey')}}"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <style>
-        body {
-            width: 100%;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start !important;
-            align-items: center;
-            height: 100vh;
-            background-color: #f1f1f1;
-        }
-
-        .container-fluid {
-            max-width: 1200px;
-            width: 1200px;
-            height: 900px;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: center;
-            border-radius: 10px;
-            background-color: #f1f1f1;
-        }
-
-        .main {
-            width: 1200px;
-            height: 850px;
-            display: flex;
-            justify-content: flex-start;
-        }
-
-        .content {
-            display: flex;
-            flex-direction: column;
-            width: 920px;
-            height: 800px;
-            margin: 25px 20px 25px 20px;
-            background-color: #F1F1F1;
-            border-radius: 10px;
-        }
-
-        .main-card {
-            width: 920px;
-            height: 800px;
-            border-radius: 10px;
-        }
-
-        .main-card .card-header {
-            border-radius: 10px 10px 0 0;
-        }
-
-        .main-card .card-footer {
-            border-radius: 0 0 10px 10px;
-        }
-
-        .table {
-            border-collapse: collapse;
-            width: 100%;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        .table thead th {
-            background-color: #f8f9fa;
-            font-weight: 600;
-            font-size: 0.8rem;
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #dee2e6;
-        }
-
-        .table tbody td {
-            padding: 15px 15px;
-            font-size: 0.8rem;
-            border-bottom: 1px solid #dee2e6;
-        }
-
-        .table tbody tr:hover {
-            background-color: #f1f5f9;
-        }
-
-        .table tbody td:nth-child(2) {
-            text-align: left;
-        }
-
-        select.form-control {
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path fill="%23333" d="M1.53 3.59l4.59 4.58 4.59-4.58 1.41 1.41-6 6-6-6z"/></svg>');
-            background-repeat: no-repeat;
-            background-position: right 10px center;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-        }
-
-        select.form-control::-ms-expand {
-            display: none;
-        }
-
-        .checkbox-container {
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .radio-option {
-            display: flex;
-            align-items: center;
-            margin-right: 10px;
-        }
-
-        .radio-option input[type="radio"] {
-            margin-right: 5px;
-        }
-    </style>
     <script>
         window.onload = function () {
             boardSearch()
@@ -312,6 +196,7 @@
             document.getElementById("side_board").style.background = "#adb5bd"
         </script>
         <link rel="stylesheet" th:href="@{/css/board/board.css}">
+        <link rel="stylesheet" th:href="@{/css/mainTool.css}">
 
         <div class="content card main-card">
             <div class="card-header">
@@ -327,8 +212,8 @@
                         <input type="text" id="boardKeyword" class="form-control" placeholder="Enter name"
                                onkeyup="handleEnter(event)">
                     </div>
-                    <div class="col-sm-2 d-flex justify-content-center">
-                        <button onclick="boardSearch()" class="btn btn-primary small-btn w-50">검색</button>
+                    <div class="col-sm-2">
+                        <button onclick="boardSearch()" class="btn btn-primary small-btn w-100">검색</button>
                     </div>
                 </div>
                 <div class="checkbox-container d-flex align-items-center">
