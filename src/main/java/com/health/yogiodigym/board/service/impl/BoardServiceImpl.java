@@ -128,8 +128,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     private Page<Board> searchOrFallback(String keyword, String column, List<Long> categories, Pageable pageable) {
-        Page<Board> boardPage = boardRepository.searchBoards(keyword, column, categories, pageable);
-        return boardPage.isEmpty() ? findBoardsByCategory(categories == null, categories, pageable) : boardPage;
+        return boardRepository.searchBoards(keyword, column, categories, pageable);
     }
 
     private Page<Board> findMyBoardsByCategory(Long id, boolean allCategories, List<Long> categories, Pageable pageable) {
@@ -138,7 +137,6 @@ public class BoardServiceImpl implements BoardService {
     }
 
     private Page<Board> mySearchOrFallback(Long id, String keyword, String column, List<Long> categories, Pageable pageable) {
-        Page<Board> boardPage = boardRepository.searchMyBoards(id, keyword, column, categories, pageable);
-        return boardPage.isEmpty() ? findBoardsByCategory(categories == null, categories, pageable) : boardPage;
+        return boardRepository.searchMyBoards(id, keyword, column, categories, pageable);
     }
 }
