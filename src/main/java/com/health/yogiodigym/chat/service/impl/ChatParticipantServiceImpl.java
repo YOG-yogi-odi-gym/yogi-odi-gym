@@ -6,7 +6,10 @@ import com.health.yogiodigym.chat.repository.ChatParticipantRepository;
 import com.health.yogiodigym.chat.repository.ChatRoomRepository;
 import com.health.yogiodigym.chat.service.ChatParticipantService;
 import com.health.yogiodigym.common.exception.ChatRoomNotFoundException;
+import com.health.yogiodigym.common.exception.LessonNotFoundException;
 import com.health.yogiodigym.common.exception.MemberNotInChatRoomException;
+import com.health.yogiodigym.lesson.entity.Lesson;
+import com.health.yogiodigym.lesson.repository.LessonRepository;
 import com.health.yogiodigym.member.entity.Member;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ChatParticipantServiceImpl implements ChatParticipantService {
 
     private final ChatRoomRepository chatRoomRepository;
+    private final LessonRepository lessonRepository;
     private final ChatParticipantRepository chatParticipantRepository;
 
     @Override
@@ -27,12 +31,15 @@ public class ChatParticipantServiceImpl implements ChatParticipantService {
         ChatRoom chatRoom = chatRoomRepository.findByRoomId(roomId)
                 .orElseThrow(() -> new ChatRoomNotFoundException(roomId));
 
+        Lesson lesson = lessonRepository.findByChatRoom(chatRoom)
+                        .orElseThrow(LessonNotFoundException::new);
+
         chatParticipantRepository.findByMemberAndChatRoom(member, chatRoom)
                         .orElseThrow(() -> new MemberNotInChatRoomException(member.getId()));
 
         return chatParticipantRepository.findAllByChatRoom(chatRoom)
                 .stream()
-                .map(c -> new ChatParticipantDto(c.getMember()))
+                .map(c -> new ChatParticipantDto(c.getMember(), lesson.getMaster().getId()))
                 .toList();
     }
 }
