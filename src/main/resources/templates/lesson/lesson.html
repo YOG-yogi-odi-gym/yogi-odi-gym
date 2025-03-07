@@ -9,6 +9,17 @@
     <script type="text/javascript"
             th:src="@{'//dapi.kakao.com/v2/maps/sdk.js?appkey=' + ${@environment.getProperty('kakao.api.scriptKey')}}"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <style>
+        #resultSearch td:nth-child(1) { width: 50px; text-align: center !important;}
+        #resultSearch td:nth-child(2) { width: 350px; text-align: center !important;}
+        #resultSearch td:nth-child(3) { width: 80px; !important;}
+        #resultSearch td:nth-child(4) { width: 120px; !important;}
+        #resultSearch td:nth-child(5) { width: 80px; !important;}
+        #resultSearch td:nth-child(6) { width: 100px; !important;}
+        #resultSearch td:nth-child(7) { width: 108px; !important;}
+    </style>
+
     <script>
         window.onload = function () {
             lessonSearch();
@@ -23,7 +34,7 @@
         let csrfToken = "[[${_csrf.token}]]"
 
         function handleEnter(event) {
-            if (event.keyCode === 13) {  // Enter 키 감지
+            if (event.keyCode === 13) {
                 lessonSearch();
             }
         }
@@ -118,6 +129,8 @@
                         tdOldAddress.style.textAlign = "center"
                         tdBtn.style.textAlign = "center"
                         tdDistance.style.textAlign = "center"
+
+                        tdTitle.style.maxWidth = "350px"
 
                         if (lesson.masterId === memberId) {
                             tdBtn.textContent = "내 강의";
@@ -413,13 +426,13 @@
                 <table class="table mt-4">
                     <thead>
                     <tr>
-                        <th style="width: 55px; text-align: center;">번호</th>
-                        <th>강의명</th>
-                        <th style="width: 65px; text-align: center;">강사</th>
-                        <th style="width: 100px; text-align: center;">강의일</th>
-                        <th style="width: 80px; text-align: center;">수강인원</th>
-                        <th style="width: 80px; text-align: center;">거리</th>
-                        <th style="width: 90px; text-align: center;">수강신청</th>
+                        <th style="width: 50px; text-align: center;">번호</th>
+                        <th style="width: 350px; text-align: center;">강의명</th>
+                        <th style="width: 80px;">강사</th>
+                        <th style="width: 120px;">강의일</th>
+                        <th style="width: 80px;">수강인원</th>
+                        <th style="width: 100px;">거리</th>
+                        <th style="width: 108px;">수강신청</th>
                     </tr>
                     </thead>
                     <tbody id="resultSearch"></tbody>

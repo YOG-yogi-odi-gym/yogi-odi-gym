@@ -1,0 +1,120 @@
+.content {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.info-container {
+    width: 620px;
+    display: flex;
+    flex-direction: column;
+}
+
+.info-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.info-title h3 {
+    margin: 0;
+}
+
+#edit-btn-box {
+    background-color: #F1F1F1;
+    border-radius: 5px;
+    padding: 6px;
+    cursor: pointer;
+}
+
+#edit-btn-box img {
+    width: 26px;
+    height: 26px;
+}
+
+.info-data {
+    display: flex;
+    gap: 20px;
+}
+
+.info-container-left {
+    flex: 1;
+    max-width: 400px;
+}
+
+.pwd-container {
+    display: none;
+}
+
+.info-container-right {
+    flex: 1;
+    max-width: 200px;
+}
+
+.profile-container {
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.img-container {
+    width: 180px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.img-container img {
+    width: 160px;
+    height: 160px;
+    margin: 10px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.profile-container p {
+    margin: 0;
+    text-align: center;
+}
+
+.profile-btn-container {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.profile-btn-container button,
+.submit-container button {
+    font-size: 14px;
+}
+
+.position-right-container {
+    margin-top: 100px;
+    width: 100%;
+    text-align: right;
+}
+
+.submit-container {
+    margin-top: 29px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+#enroll-master-modal .modal-dialog {
+    height: 600px;
+}
+
+#enroll-master-modal .modal-content {
+    height: 600px;
+    overflow: hidden;
+}
+
+#enroll-master-modal .modal-body {
+    height: calc(100% - 120px);
+    overflow-y: auto;
+}
