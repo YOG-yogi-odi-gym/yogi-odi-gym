@@ -54,9 +54,8 @@ public class SecurityConfig {
                             log.info("로그인 실패: " + exception.getMessage());
 
                             String errorMessage;
-                            if(exception instanceof OAuth2AuthenticationException) {
-                                OAuth2AuthenticationException oauthException = (OAuth2AuthenticationException) exception;
-                                errorMessage = oauthException.getError().getDescription();
+                            if(exception instanceof BadCredentialsException) {
+                                errorMessage = "아이디 또는 비밀번호가 잘못되었습니다.";
                             }else{
                                 errorMessage = exception.getMessage();
                             }
@@ -71,8 +70,9 @@ public class SecurityConfig {
                             log.info("로그인 실패: " + exception.getMessage());
 
                             String errorMessage;
-                            if(exception instanceof BadCredentialsException) {
-                                errorMessage = "아이디 또는 비밀번호가 잘못되었습니다.";
+                            if(exception instanceof OAuth2AuthenticationException) {
+                                OAuth2AuthenticationException oauthException = (OAuth2AuthenticationException) exception;
+                                errorMessage = oauthException.getError().getDescription();
                             }else{
                                 errorMessage = exception.getMessage();
                             }
