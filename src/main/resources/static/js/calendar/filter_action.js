@@ -2,15 +2,42 @@
     const csrfToken = $('meta[name="_csrf"]').attr('content');
     const csrfHeader = $("meta[name='_csrf_header']").attr("content");
 
+    const colorMap = {};
 
-    function getRandomColor() {
+    function getColorForTitle(title) {
+
+        if (colorMap[title]) {
+            return colorMap[title];
+        }
+
         const letters = '0123456789ABCDEF';
         let color = '#';
         for (let i = 0; i < 6; i++) {
             color += letters[Math.floor(Math.random() * 16)];
         }
+
+        colorMap[title] = color;
         return color;
     }
+
+    const color2Map = {};
+
+    function getColorForId(id) {
+
+        if (color2Map[id]) {
+            return color2Map[id];
+        }
+        
+        const letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+
+        color2Map[id] = color;
+        return color;
+    }
+
 
     function saveMemo(memoId, selectedDate, memberId) {
         let title = $(`#memoTitle_${memoId}`).val();
@@ -299,7 +326,7 @@
                     start: new Date(item.date),
                     description: `${item.startTime} - ${item.endTime}`,
                     allDay: true,
-                    color: getRandomColor()
+                    color: getColorForTitle(item.title)
                 }));
 
                 calendar.removeAllEvents();
@@ -385,7 +412,7 @@
                     start: new Date(item.date),
                     description: item.context || "",
                     allDay: true,
-                    color: getRandomColor()
+                    color: getColorForId(item.id)
                 }));
                 calendar.removeAllEvents();
                 calendar.addEventSource(events);
@@ -519,7 +546,7 @@
                     start: new Date(item.date),
                     description: item.context || "",
                     allDay: true,
-                    color: getRandomColor()
+                    color: getColorForId(item.id)
                 }));
                 calendar.removeAllEvents();
                 calendar.addEventSource(events);
@@ -667,7 +694,7 @@
                     start: new Date(item.date),
                     description: item.context || "",
                     allDay: true,
-                    color: getRandomColor()
+                    color: getColorForId(item.id)
                 }));
                 calendar.removeAllEvents();
                 calendar.addEventSource(events);
