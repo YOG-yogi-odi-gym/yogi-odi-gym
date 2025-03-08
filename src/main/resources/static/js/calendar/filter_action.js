@@ -67,7 +67,7 @@
                 $(".fc-MemoButton-button").click();
             },
             error: function () {
-                alert("메모 저장 실패");
+                alert("메모 저장에 실패했습니다.");
             }
         });
     }
@@ -101,8 +101,8 @@
                 $("#openModalBtn").click();
                 $(".fc-MemoButton-button").click();
             },
-            error: function (xhr) {
-                alert("메모 업데이트 실패: " + xhr.responseText);
+            error: function () {
+                alert("메모 업데이트에 실패했습니다.");
             }
         });
     }
@@ -121,8 +121,8 @@
                 $("#openModalBtn").click();
                 $(".fc-MemoButton-button").click();
             },
-            error: function (xhr) {
-                alert("메모 삭제 실패: " + xhr.responseText);
+            error: function () {
+                alert("메모 삭제에 실패했습니다.");
             }
         });
     }
@@ -156,8 +156,8 @@
                 $("#openModalBtn").click();
                 $(".fc-FoodButton-button").click();
             },
-            error: function (xhr) {
-                alert("식단 저장 실패: " + xhr.responseText);
+            error: function () {
+                alert("식단 저장에 실패했습니다.");
             }
         });
     }
@@ -193,8 +193,8 @@
                 $("#openModalBtn").click();
                 $(".fc-FoodButton-button").click();
             },
-            error: function (xhr) {
-                alert("식단 업데이트 실패: " + xhr.responseText);
+            error: function () {
+                alert("식단 업데이트에 실패했습니다.");
             }
         });
     }
@@ -213,8 +213,8 @@
                 $("#openModalBtn").click();
                 $(".fc-FoodButton-button").click();
             },
-            error: function (xhr) {
-                alert("식단 삭제 실패: " + xhr.responseText);
+            error: function () {
+                alert("식단 삭제에 실패했습니다.");
             }
         });
     }
@@ -249,8 +249,8 @@
                 $("#openModalBtn").click();
                 $(".fc-ExerButton-button").click();
             },
-            error: function (xhr) {
-                alert("운동 저장 실패: " + xhr.responseText);
+            error: function () {
+                alert("운동 저장에 실패했습니다.");
             }
         });
     }
@@ -285,8 +285,8 @@
                 $("#openModalBtn").click();
                 $(".fc-ExerButton-button").click();
             },
-            error: function (xhr) {
-                alert("운동 업데이트 실패: " + xhr.responseText);
+            error: function () {
+                alert("운동 업데이트에 실패했습니다.");
             }
         });
     }
@@ -305,8 +305,8 @@
                 $("#openModalBtn").click();
                 $(".fc-ExerButton-button").click();
             },
-            error: function (xhr) {
-                alert("운동 삭제 실패: " + xhr.responseText);
+            error: function () {
+                alert("운동 삭제 실패했습니다.");
             }
         });
     }
