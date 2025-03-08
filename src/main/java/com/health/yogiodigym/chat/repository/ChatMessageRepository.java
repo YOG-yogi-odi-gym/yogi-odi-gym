@@ -2,7 +2,6 @@ package com.health.yogiodigym.chat.repository;
 
 import com.health.yogiodigym.chat.entity.ChatMessage;
 import com.health.yogiodigym.chat.entity.ChatRoom;
-import com.health.yogiodigym.member.entity.Member;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,5 +23,5 @@ public interface ChatMessageRepository extends JpaRepository<ChatMessage, Long> 
                             Long lastReadMessageId,
                             Pageable pageable);
 
-    Long countByMemberAndChatRoom(Member member, ChatRoom chatRoom);
+    Long countByChatRoomAndIdLessThanEqual(ChatRoom chatRoom, Long lastMessageId);
 }
