@@ -118,7 +118,7 @@ function showMessage(message, isRead) {
     messageHeader.classList.add("message-header");
 
     let profileImg = document.createElement("img");
-    profileImg.setAttribute("src", message.profileUrl ? message.profileUrl : "/images/default-profile.png");
+    profileImg.setAttribute("src", message.profileUrl ? message.profileUrl : "/images/source/anonymous.png");
     profileImg.setAttribute("alt", "프로필 사진");
     profileImg.classList.add("profile-pic");
 
