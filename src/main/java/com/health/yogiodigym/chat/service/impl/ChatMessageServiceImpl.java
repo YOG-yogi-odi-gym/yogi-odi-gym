@@ -20,11 +20,13 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -117,11 +119,11 @@ public class ChatMessageServiceImpl implements ChatMessageService {
 
     @Override
     @Transactional(readOnly = true)
-    public int getTotalPage(Member member, String roomId) {
+    public int getTotalPage(String roomId, Long lastMessageId) {
         ChatRoom chatRoom = chatRoomRepository.findByRoomId(roomId)
                 .orElseThrow(() -> new ChatRoomNotFoundException(roomId));
 
-        long totalCount = chatMessageRepository.countByMemberAndChatRoom(member, chatRoom);
+        long totalCount = chatMessageRepository.countByChatRoomAndIdLessThanEqual(chatRoom, lastMessageId);
         return (int) Math.ceil((double) totalCount / PAGE_SIZE);
     }
 

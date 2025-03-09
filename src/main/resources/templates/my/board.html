@@ -5,64 +5,10 @@
     <title>내 게시글</title>
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
     <script type="text/javascript"
             th:src="@{'//dapi.kakao.com/v2/maps/sdk.js?appkey=' + ${@environment.getProperty('kakao.api.scriptKey')}}"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f1f1f1;
-        }
-
-        .container-fluid {
-            max-width: 1200px;
-            width: 1200px;
-            height: 900px;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: center;
-            border-radius: 10px;
-            background-color: #f1f1f1;
-        }
-
-        .main {
-            width: 1200px;
-            height: 850px;
-            display: flex;
-            justify-content: flex-start;
-        }
-
-        .content {
-            display: flex;
-            flex-direction: column;
-            width: 920px;
-            height: 800px;
-            margin: 25px 20px 25px 20px;
-            background-color: #F1F1F1;
-            border-radius: 10px;
-        }
-
-        .main-card {
-            width: 920px;
-            height: 800px;
-            border-radius: 10px;
-        }
-
-        .main-card .card-header {
-            border-radius: 10px 10px 0 0;
-        }
-
-        .main-card .card-footer {
-            border-radius: 0 0 10px 10px;
-        }
-
-    </style>
     <script>
         window.onload = function () {
             boardSearch()
@@ -233,18 +179,16 @@
 <body>
 <div class="container-fluid">
     <div th:replace="~{fragments/navbar :: custom-navbar}"></div>
-
     <div class="main">
         <div th:replace="~{fragments/side :: side}"></div>
 
         <script>
-            document.getElementById("side_board").style.color = "blue";
-            document.getElementById("side_board").style.background = "skyblue"
+            document.getElementById("side_board").style.color = "#f1f1f1";
+            document.getElementById("side_board").style.background = "#adb5bd"
         </script>
 
         <link rel="stylesheet" th:href="@{/css/board/board.css}">
         <link rel="stylesheet" th:href="@{/css/mainTool.css}">
-
         <div class="content card main-card">
             <div class="card-header">
                 <div class="form-group row d-flex align-items-center">
@@ -259,26 +203,26 @@
                         <input type="text" id="boardKeyword" class="form-control" placeholder="Enter name">
                     </div>
                     <div class="col-sm-2">
-                        <button onclick="boardSearch()" class="btn btn-primary small-btn w-100">Search</button>
+                        <button onclick="boardSearch()" class="btn btn-primary small-btn w-100">검색</button>
                     </div>
                 </div>
-                <div class="checkbox-container">
+                <div class="checkbox-container d-flex align-items-center">
                     <label id="search-label">카테고리</label>
                     <div class="radio-option">
                         <input type="radio" th:name="categories" th:id="categoryAll" value="999"
                                onclick="limitCheckboxSelection(this)" checked>
                         <label th:for="categoryAll" class="radio-label">All</label>
                     </div>
-                    <div th:each="category : ${categories}">
+                    <div th:each="category : ${categories}" class="radio-option">
                         <input type="radio" th:name="categories" th:id="'category-'+${category.id}"
                                th:value="${category.id}"
                                onclick="limitCheckboxSelection(this)">
-                        <label th:for="'category-' + ${category.id}" th:text="${category.name}"></label>
+                        <label th:for="'category-' + ${category.id}" th:text="${category.name}" class="radio-label"></label>
                     </div>
                 </div>
             </div>
             <div class="card-body">
-                <table class="table table-striped mt-4">
+                <table class="table table-bordered table-hover table-sm mt-4">
                     <thead>
                     <tr>
                         <th style="width: 60px; text-align: center;">번호</th>

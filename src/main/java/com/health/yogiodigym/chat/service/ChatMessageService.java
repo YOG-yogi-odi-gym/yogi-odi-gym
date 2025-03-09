@@ -17,5 +17,5 @@ public interface ChatMessageService {
 
     Long getLastMessageId(Member member, String roomId);
 
-    int getTotalPage(Member member, String roomId);
+    int getTotalPage(String roomId, Long lastMessageId);
 }

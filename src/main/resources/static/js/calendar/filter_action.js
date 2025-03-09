@@ -10,7 +10,7 @@
             return colorMap[title];
         }
 
-        const letters = '0123456789ABCDEF';
+        const letters = '0123456789ABCDE';
         let color = '#';
         for (let i = 0; i < 6; i++) {
             color += letters[Math.floor(Math.random() * 16)];
@@ -28,7 +28,7 @@
             return color2Map[id];
         }
 
-        const letters = '0123456789ABCDEF';
+        const letters = '0123456789ABCDE';
         let color = '#';
         for (let i = 0; i < 6; i++) {
             color += letters[Math.floor(Math.random() * 16)];
@@ -67,7 +67,7 @@
                 $(".fc-MemoButton-button").click();
             },
             error: function () {
-                alert("메모 저장 실패");
+                alert("메모 저장에 실패했습니다.");
             }
         });
     }
@@ -101,8 +101,8 @@
                 $("#openModalBtn").click();
                 $(".fc-MemoButton-button").click();
             },
-            error: function (xhr) {
-                alert("메모 업데이트 실패: " + xhr.responseText);
+            error: function () {
+                alert("메모 업데이트에 실패했습니다.");
             }
         });
     }
@@ -121,8 +121,8 @@
                 $("#openModalBtn").click();
                 $(".fc-MemoButton-button").click();
             },
-            error: function (xhr) {
-                alert("메모 삭제 실패: " + xhr.responseText);
+            error: function () {
+                alert("메모 삭제에 실패했습니다.");
             }
         });
     }
@@ -156,8 +156,8 @@
                 $("#openModalBtn").click();
                 $(".fc-FoodButton-button").click();
             },
-            error: function (xhr) {
-                alert("식단 저장 실패: " + xhr.responseText);
+            error: function () {
+                alert("식단 저장에 실패했습니다.");
             }
         });
     }
@@ -193,8 +193,8 @@
                 $("#openModalBtn").click();
                 $(".fc-FoodButton-button").click();
             },
-            error: function (xhr) {
-                alert("식단 업데이트 실패: " + xhr.responseText);
+            error: function () {
+                alert("식단 업데이트에 실패했습니다.");
             }
         });
     }
@@ -213,8 +213,8 @@
                 $("#openModalBtn").click();
                 $(".fc-FoodButton-button").click();
             },
-            error: function (xhr) {
-                alert("식단 삭제 실패: " + xhr.responseText);
+            error: function () {
+                alert("식단 삭제에 실패했습니다.");
             }
         });
     }
@@ -249,8 +249,8 @@
                 $("#openModalBtn").click();
                 $(".fc-ExerButton-button").click();
             },
-            error: function (xhr) {
-                alert("운동 저장 실패: " + xhr.responseText);
+            error: function () {
+                alert("운동 저장에 실패했습니다.");
             }
         });
     }
@@ -285,8 +285,8 @@
                 $("#openModalBtn").click();
                 $(".fc-ExerButton-button").click();
             },
-            error: function (xhr) {
-                alert("운동 업데이트 실패: " + xhr.responseText);
+            error: function () {
+                alert("운동 업데이트에 실패했습니다.");
             }
         });
     }
@@ -305,8 +305,8 @@
                 $("#openModalBtn").click();
                 $(".fc-ExerButton-button").click();
             },
-            error: function (xhr) {
-                alert("운동 삭제 실패: " + xhr.responseText);
+            error: function () {
+                alert("운동 삭제 실패했습니다.");
             }
         });
     }
@@ -627,7 +627,7 @@
 
                 let addbtn= `<div class="add-btn-container">`;
                 addbtn += `<div class="add-box" onclick="addExerciseRow('${selectedDate}', ${memberId})">`;
-                addbtn += `<button class="add-btn" ><i class="bi bi-plus"></i></button></div></div>`;
+                addbtn += `<button class="add-btn"><i class="bi bi-plus"></i></button></div></div>`;
 
                 $("#modalContent").html(content);
                 $("#addbtn").html(addbtn);
@@ -678,7 +678,6 @@
     function deleteExerciseRow(exerciseId) {
         $(`#exercise_${exerciseId}`).remove();
     }
-
 
     function getFood() {
         let memberId = document.getElementById('memberId').value;
@@ -735,7 +734,7 @@
                         content += `<input type="text" id="foodCalories_${item.id}" value="${item.calories}" onkeyup="calculateFoodCalories(${item.id})" disabled />`;
                         content += `</div>`;
                         content += `<div>`;
-                        content += `<label for="foodHundredGram_${item.id}">섭취량</label>`;
+                        content += `<label for="foodHundredGram_${item.id}">섭취량(g)</label>`;
                         content += `<input type="text" id="foodHundredGram_${item.id}" value="${item.hundredGram}" onkeyup="calculateFoodCalories(${item.id})" onfocus="calculateFoodCalories(${item.id})"/>`;
                         content += `</div>`;
                         content += `<input type="hidden" id="foodConsumption_${item.id}" value="${item.cal}" disabled/>`;
@@ -803,7 +802,7 @@
                         <input type="text" id="foodCalories_${foodId}" onkeyup="calculateFoodCalories(${foodId})" disabled />
                     </div>
                     <div>
-                        <label for="foodHundredGram_${foodId}">섭취량</label>
+                        <label for="foodHundredGram_${foodId}">섭취량(g)</label>
                         <input type="text" id="foodHundredGram_${foodId}" onkeyup="calculateFoodCalories(${foodId})" onfocus="calculateFoodCalories(${foodId})"/>
                     </div>   
                     <input type="hidden" id="foodConsumption_${foodId}" disabled/>

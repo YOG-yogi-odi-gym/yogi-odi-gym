@@ -2,11 +2,12 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title></title>
+    <title>운동 선택</title>
 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
-
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <style>
@@ -46,34 +47,39 @@
             background: #fff;
         }
 
-        .btn-primary {
-            width: 100%;
-            padding: 10px;
+        .floating-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #007bff;
+            color: white;
             font-size: 16px;
             font-weight: bold;
-            background-color: #007bff;
+            padding: 12px 20px;
             border: none;
-            border-radius: 5px;
-            color: white;
-            transition: background 0.3s;
+            border-radius: 50px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background 0.3s, transform 0.2s;
         }
 
-        .btn-primary:hover {
+        .floating-button:hover {
             background-color: #0056b3;
+            transform: scale(1.05);
         }
 
-</style>
+    </style>
 </head>
 <body>
+
 <div class="container mt-4">
     <label for="exerciseSelect">운동 선택:</label>
     <select id="exerciseSelect" placeholder="운동을 선택하세요"></select>
-
-    <button class="btn btn-primary mt-3" onClick="selectExercise()">선택</button>
 </div>
 
 <input type="hidden" id="selectedExerciseEnergy" />
 <input type="hidden" id="selectedExerciseId" />
+
+<button class="floating-button" onClick="selectExercise()">선택</button>
 
 <script>
     let exerciseSelect = new TomSelect("#exerciseSelect", {
@@ -111,7 +117,6 @@
         }
     });
 
-    // 스타일 수정 (Bootstrap 5 스타일 적용)
     const style = document.createElement("style");
     style.innerHTML = `
     .ts-dropdown {
