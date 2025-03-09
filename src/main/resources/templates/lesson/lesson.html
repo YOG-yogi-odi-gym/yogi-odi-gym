@@ -11,13 +11,13 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
     <style>
-        #resultSearch td:nth-child(1) { width: 50px; text-align: center !important;}
-        #resultSearch td:nth-child(2) { width: 350px; text-align: center !important;}
-        #resultSearch td:nth-child(3) { width: 80px; !important;}
-        #resultSearch td:nth-child(4) { width: 120px; !important;}
-        #resultSearch td:nth-child(5) { width: 80px; !important;}
-        #resultSearch td:nth-child(6) { width: 100px; !important;}
-        #resultSearch td:nth-child(7) { width: 108px; !important;}
+        #resultSearch td:nth-child(1) { text-align: center; width: 50px !important;}
+        #resultSearch td:nth-child(2) { width: 350px !important;}
+        #resultSearch td:nth-child(3) { width: 80px !important;}
+        #resultSearch td:nth-child(4) { width: 120px !important;}
+        #resultSearch td:nth-child(5) { width: 80px !important;}
+        #resultSearch td:nth-child(6) { width: 100px !important;}
+        #resultSearch td:nth-child(7) { width: 108px !important;}
     </style>
 
     <script>
@@ -423,16 +423,16 @@
                 </div>
             </div>
             <div class="card-body">
-                <table class="table mt-4">
-                    <thead>
+                <table class="table">
+                    <thead style="padding-left: 15px">
                     <tr>
                         <th style="width: 50px; text-align: center;">번호</th>
                         <th style="width: 350px; text-align: center;">강의명</th>
-                        <th style="width: 80px;">강사</th>
-                        <th style="width: 120px;">강의일</th>
-                        <th style="width: 80px;">수강인원</th>
-                        <th style="width: 100px;">거리</th>
-                        <th style="width: 108px;">수강신청</th>
+                        <th style="width: 80px; text-align: center;">강사</th>
+                        <th style="width: 120px; text-align: center;">강의일</th>
+                        <th style="width: 80px; text-align: center;">수강인원</th>
+                        <th style="width: 100px; text-align: center;">거리</th>
+                        <th style="width: 108px; text-align: center;">수강신청</th>
                     </tr>
                     </thead>
                     <tbody id="resultSearch"></tbody>

@@ -9,7 +9,7 @@
     <script type="text/javascript"
             th:src="@{'//dapi.kakao.com/v2/maps/sdk.js?appkey=' + ${@environment.getProperty('kakao.api.scriptKey')}}"></script>
     <style>
-        #resultSearch td:nth-child(1) { width: 55px; }
+        #resultSearch td:nth-child(1) { width: 55px; text-align: center; }
         #resultSearch td:nth-child(2) { width: 300px; text-align: center; }
         #resultSearch td:nth-child(3) { width: 380px; }
         #resultSearch td:nth-child(4) { width: 120px; }
@@ -20,7 +20,7 @@
         }
 
         let currentPage = 0;
-        const pageSize = 8;
+        const pageSize = 7;
 
         let memberLat = [[${member.latitude}]];
         let memberLon = [[${member.longitude}]];
@@ -222,10 +222,10 @@
                 <table class="table mt-4">
                     <thead>
                     <tr>
-                        <th style="width: 55px">번호</th>
+                        <th style="width: 55px; text-align: center;">번호</th>
                         <th style="width: 300px; text-align: center;">이름</th>
-                        <th style="width: 380px">주소</th>
-                        <th style="width: 120px">거리</th>
+                        <th style="width: 380px;">주소</th>
+                        <th style="width: 120px;">거리</th>
                     </tr>
                     </thead>
                     <tbody id="resultSearch"></tbody>
