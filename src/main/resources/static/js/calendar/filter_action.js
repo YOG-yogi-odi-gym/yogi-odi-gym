@@ -679,7 +679,6 @@
         $(`#exercise_${exerciseId}`).remove();
     }
 
-
     function getFood() {
         let memberId = document.getElementById('memberId').value;
 
@@ -735,7 +734,7 @@
                         content += `<input type="text" id="foodCalories_${item.id}" value="${item.calories}" onkeyup="calculateFoodCalories(${item.id})" disabled />`;
                         content += `</div>`;
                         content += `<div>`;
-                        content += `<label for="foodHundredGram_${item.id}">섭취량</label>`;
+                        content += `<label for="foodHundredGram_${item.id}">섭취량(g)</label>`;
                         content += `<input type="text" id="foodHundredGram_${item.id}" value="${item.hundredGram}" onkeyup="calculateFoodCalories(${item.id})" onfocus="calculateFoodCalories(${item.id})"/>`;
                         content += `</div>`;
                         content += `<input type="hidden" id="foodConsumption_${item.id}" value="${item.cal}" disabled/>`;
@@ -803,7 +802,7 @@
                         <input type="text" id="foodCalories_${foodId}" onkeyup="calculateFoodCalories(${foodId})" disabled />
                     </div>
                     <div>
-                        <label for="foodHundredGram_${foodId}">섭취량</label>
+                        <label for="foodHundredGram_${foodId}">섭취량(g)</label>
                         <input type="text" id="foodHundredGram_${foodId}" onkeyup="calculateFoodCalories(${foodId})" onfocus="calculateFoodCalories(${foodId})"/>
                     </div>   
                     <input type="hidden" id="foodConsumption_${foodId}" disabled/>

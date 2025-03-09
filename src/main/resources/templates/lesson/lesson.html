@@ -5,64 +5,19 @@
     <title>강의</title>
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
     <script type="text/javascript"
             th:src="@{'//dapi.kakao.com/v2/maps/sdk.js?appkey=' + ${@environment.getProperty('kakao.api.scriptKey')}}"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
     <style>
-        body {
-            width: 100%;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start !important;
-            align-items: center;
-            height: 100vh;
-            background-color: #f1f1f1;
-        }
-
-        .container-fluid {
-            max-width: 1200px;
-            width: 1200px;
-            height: 900px;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: center;
-            border-radius: 10px;
-            background-color: #f1f1f1;
-        }
-
-        .main {
-            width: 1200px;
-            height: 850px;
-            display: flex;
-            justify-content: flex-start;
-        }
-
-        .content {
-            display: flex;
-            flex-direction: column;
-            width: 920px;
-            height: 800px;
-            margin: 25px 20px 25px 20px;
-            background-color: #F1F1F1;
-            border-radius: 10px;
-        }
-
-        .main-card {
-            width: 920px;
-            height: 800px;
-            border-radius: 10px;
-        }
-
-        .main-card .card-header {
-            border-radius: 10px 10px 0 0;
-        }
-
-        .main-card .card-footer {
-            border-radius: 0 0 10px 10px;
-        }
+        #resultSearch td:nth-child(1) { width: 50px; text-align: center !important;}
+        #resultSearch td:nth-child(2) { width: 350px; text-align: center !important;}
+        #resultSearch td:nth-child(3) { width: 80px; !important;}
+        #resultSearch td:nth-child(4) { width: 120px; !important;}
+        #resultSearch td:nth-child(5) { width: 80px; !important;}
+        #resultSearch td:nth-child(6) { width: 100px; !important;}
+        #resultSearch td:nth-child(7) { width: 108px; !important;}
     </style>
 
     <script>
@@ -71,7 +26,7 @@
         }
 
         let currentPage = 0
-        const pageSize = 10
+        const pageSize = 6;
 
         let memberLat = [[${member.getLatitude}]]
         let memberLon = [[${member.getLongitude}]]
@@ -79,7 +34,7 @@
         let csrfToken = "[[${_csrf.token}]]"
 
         function handleEnter(event) {
-            if (event.keyCode === 13) {  // Enter 키 감지
+            if (event.keyCode === 13) {
                 lessonSearch();
             }
         }
@@ -175,12 +130,13 @@
                         tdBtn.style.textAlign = "center"
                         tdDistance.style.textAlign = "center"
 
+                        tdTitle.style.maxWidth = "350px"
+
                         if (lesson.masterId === memberId) {
                             tdBtn.textContent = "내 강의";
                             tdBtn.style.fontWeight = "bold";
-                            tdBtn.style.display = "flex";
-                            tdBtn.style.alignItems = "center";
-                            tdBtn.style.justifyContent = "center";
+                            tdBtn.style.textAlign = "center";
+                            tdBtn.style.verticalAlign = "middle";
                         } else {
                             let lessonBtn = document.createElement("button");
                             lessonBtn.style.padding = "0px";
@@ -398,12 +354,12 @@
         <div th:replace="~{fragments/side :: side}"></div>
 
         <script>
-            document.getElementById("side_lesson").style.color = "blue";
-            document.getElementById("side_lesson").style.background = "skyblue"
+            document.getElementById("side_lesson").style.color = "#f1f1f1";
+            document.getElementById("side_lesson").style.background = "#adb5bd"
         </script>
 
         <link rel="stylesheet" th:href="@{/css/gyms.css}">
-        <link rel="stylesheet" th:href="@{/css/lesson/lessonSearch.css}">
+        <link rel="stylesheet" th:href="@{/css/lessonSearch.css}">
         <link rel="stylesheet" th:href="@{/css/mainTool.css}">
 
         <div class="content card main-card">
@@ -420,7 +376,7 @@
                                onkeyup="handleEnter(event)">
                     </div>
                     <div class="col-sm-2">
-                        <button onclick="lessonSearch()" class="btn btn-primary small-btn w-100">Search</button>
+                        <button onclick="lessonSearch()" class="btn btn-primary small-btn w-100">검색</button>
                     </div>
                 </div>
 
@@ -462,21 +418,21 @@
 
                     <button onclick="location.href='/lesson/register'"
                             class="btn btn-success small-btn btn-lesson-register"
-                            th:disabled="${role != 'master'}">강의 등록
+                            th:if="${role == 'master'}">강의 등록
                     </button>
                 </div>
             </div>
             <div class="card-body">
-                <table class="table table-striped mt-4">
+                <table class="table mt-4">
                     <thead>
                     <tr>
-                        <th style="width: 55px; text-align: center;">번호</th>
-                        <th>강의명</th>
-                        <th style="width: 65px; text-align: center;">강사</th>
-                        <th style="width: 100px; text-align: center;">강의일</th>
-                        <th style="width: 80px; text-align: center;">수강인원</th>
-                        <th style="width: 80px; text-align: center;">거리</th>
-                        <th style="width: 90px; text-align: center;">수강신청</th>
+                        <th style="width: 50px; text-align: center;">번호</th>
+                        <th style="width: 350px; text-align: center;">강의명</th>
+                        <th style="width: 80px;">강사</th>
+                        <th style="width: 120px;">강의일</th>
+                        <th style="width: 80px;">수강인원</th>
+                        <th style="width: 100px;">거리</th>
+                        <th style="width: 108px;">수강신청</th>
                     </tr>
                     </thead>
                     <tbody id="resultSearch"></tbody>
