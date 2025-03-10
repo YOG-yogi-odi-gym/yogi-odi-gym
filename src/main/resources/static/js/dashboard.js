@@ -71,8 +71,7 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             scales: {
                 y: {
-                    min: 0,
-                    max: 120,
+                    beginAtZero: false,
                     ticks: {
                         stepSize: 30,
                         font: {
@@ -178,8 +177,7 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             scales: {
                 y: {
-                    min: 0,
-                    max: 1000,
+                    beginAtZero: false,
                     ticks: {
                         stepSize: 250,
                         font: {
