@@ -34,7 +34,9 @@ public enum ErrorMessage {
     CODE_NOT_MATCH_ERROR("인증코드가 일치하지 않습니다."),
     SOCIAL_MEMBER_PWD_CHANGE_ERROR("소셜회원은 비밀번호 변경을 하실 수 없습니다."),
     PASSWORD_EMPTY_ERROR("비밀번호가 비어있습니다."),
-    FORBIDDEN_ERROR("권한이 없습니다.");
+    FORBIDDEN_ERROR("권한이 없습니다."),
+    ALREADY_ENROLL_MASTER_ERROR("이미 강사신청에 완료되셨습니다."),
+    MATCH_BEFORE_PASSWORD_ERROR("이전 비밀번호와 일치할 수 없습니다.");
 
     private final String message;
 }
