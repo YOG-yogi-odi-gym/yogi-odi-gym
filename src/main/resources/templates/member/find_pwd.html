@@ -73,19 +73,6 @@
         $(document).ready(function () {
             emailcodeModal = new bootstrap.Modal(document.body.querySelector("#emailcode-modal"));
             modalDiv = new bootstrap.Modal(document.querySelector("#modalDiv"));
-
-            document.getElementById("profile").addEventListener("change", function (event) {
-                const file = event.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function (e) {
-                        const preview = document.getElementById("preview");
-                        preview.src = e.target.result;
-                        preview.style.display = "block";
-                    };
-                    reader.readAsDataURL(file);
-                }
-            });
         });
 
         function goLogin(authenticated) {

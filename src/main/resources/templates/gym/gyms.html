@@ -20,7 +20,7 @@
         }
 
         let currentPage = 0;
-        const pageSize = 7;
+        const pageSize = 6;
 
         let memberLat = [[${member.latitude}]];
         let memberLon = [[${member.longitude}]];
@@ -52,7 +52,7 @@
                     let resultSearch = document.getElementById("resultSearch")
                     resultSearch.innerHTML = ""
 
-                    let gymNo = page * 10 + 1;
+                    let gymNo = pageSize * 10 + 1;
 
                     if (gyms.content.length === 0) {
                         let noResultRow = document.createElement("tr");
