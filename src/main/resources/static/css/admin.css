@@ -63,6 +63,11 @@ body {
     border: 1px solid #ccc;
 }
 
+table {
+    width: 100%;
+    table-layout: fixed;
+}
+
 .table-wrap {
     width: 50%;
     height: 100%;
@@ -88,16 +93,20 @@ body {
 }
 
 .table tbody td {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
     vertical-align: middle;
     text-align: center;
 }
 
 .table th, .table td {
+    text-overflow: ellipsis;
     word-wrap: break-word;
     padding: 2px 5px;
 }
 
-#memberTable th:nth-child(1) { width: 15px; }
+#memberTable th:nth-child(1) { width: 30px; }
 #memberTable th:nth-child(2) { width: 100px; }
 #memberTable th:nth-child(3) { width: 150px; }
 #memberTable th:nth-child(4) { width: 100px; }
@@ -107,12 +116,20 @@ body {
 #lessonTable th:nth-child(3) { width: 100px; }
 
 #boardTable th:nth-child(1) { width: 30px; }
+#boardTable th:nth-child(2) { width: 250px; }
 
 #applyTable th:nth-child(1) { width: 100px; }
 #applyTable th:nth-child(2) { width: 200px; }
 
 #categoryTable-les th:nth-child(1) { width: 30px; }
 #categoryTable-board th:nth-child(1) { width: 30px; }
+
+#memberTable td:nth-child(3) { width: 150px; }
+#lessonTable td:nth-child(2) { width: 200px; }
+#boardTable td:nth-child(2) { width: 250px; !important; }
+#applyTable td:nth-child(2) { width: 200px; }
+#categoryTable-les td:nth-child(2) { width: 150px; }
+#categoryTable-board td:nth-child(2) { width: 150px; }
 
 .search-container {
     width: 100%;
@@ -141,4 +158,8 @@ body {
     display: flex;
     margin-top: 10px;
     align-self: flex-end;
+}
+
+table {
+    width: 100%;
 }

@@ -34,7 +34,7 @@ public class ChatViewController {
         Long lastMessageId = chatMessageService.getLastMessageId(member, roomId);
         model.addAttribute("lastMessageId", lastMessageId);
         model.addAttribute("roomId", roomId);
-        model.addAttribute("totalPage", chatMessageService.getTotalPage(member, roomId));
+        model.addAttribute("totalPage", chatMessageService.getTotalPage(roomId, lastMessageId));
         model.addAttribute("chatParticipants", chatParticipantService.getChatParticipants(member, roomId));
         model.addAttribute("chatRooms", chatRoomService.getChatRooms(member));
         model.addAttribute("chatRoomDetail", chatRoomService.getChatRoomDetail(roomId));

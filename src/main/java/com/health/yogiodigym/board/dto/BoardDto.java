@@ -71,7 +71,7 @@ public class BoardDto {
 
         public String getFormattedCreateDateTime() {
             if (this.createDateTime == null) {
-                return "등록일 없음";  // null 처리
+                return "등록일 없음";
             }
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             return this.createDateTime.format(formatter);
