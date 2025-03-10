@@ -1,10 +1,11 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Noto+Sans+KR:wght@300;400;700&display=swap"
+          rel="stylesheet">
     <script type="text/javascript" th:src="@{'//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js'}"></script>
     <script type="text/javascript"
             th:src="@{'//dapi.kakao.com/v2/maps/sdk.js?appkey=' + ${@environment.getProperty('kakao.api.scriptKey')} + '&libraries=services'}"></script>
@@ -230,6 +231,14 @@
                         return response.json();
                     })
                     .then(data => {
+                        const file = document.body.querySelector("#profile").files[0];
+                        if (file) {
+                            const reader = new FileReader();
+                            reader.onload = function(e) {
+                                document.querySelector("#nav-profile").src = e.target.result;
+                            };
+                            reader.readAsDataURL(file);
+                        }
                         document.getElementById("save-profile-btn").style.display = "none";
                         alert(data.message);
                     })
@@ -291,8 +300,6 @@
                                 const errorArray = [
                                     errorMap['name'],
                                     errorMap['email'],
-                                    errorMap['pwd'],
-                                    errorMap['pwd2'],
                                     errorMap['passwordMatching'],
                                     errorMap['gender'],
                                     errorMap['weight'],
@@ -358,6 +365,9 @@
                                     document.querySelector("#modalMessage").textContent = errorArrayFiltered[0];
                                     modalDiv.show();
                                 }
+                            } else if (jsonErrors.status === 409) {
+                                document.querySelector("#modalMessage").textContent = jsonErrors.message;
+                                modalDiv.show();
                             }
                         })
                 }
@@ -416,11 +426,11 @@
             pwdField.value = '';
             if (request == '삭제') {
                 pwdModalLabel.textContent = '경고';
-                if(oAuthMember){
+                if (oAuthMember) {
                     pwdModalLabel.textContent = '경고';
                     pwdLabel.style.display = 'none';
                     pwdField.style.display = 'none';
-                }else{
+                } else {
                     pwdLabel.style.display = 'block';
                     pwdField.style.display = 'block';
                 }
@@ -439,7 +449,7 @@
 </head>
 <body>
 <div class="container-fluid">
-   <div th:replace="~{fragments/navbar :: custom-navbar}"></div>
+    <div th:replace="~{fragments/navbar :: custom-navbar}"></div>
 
     <div class="main">
         <div th:replace="~{fragments/side :: side}"></div>
@@ -491,7 +501,8 @@
                             <div class="pwd-container">
                                 <div class="mb-3">
                                     <label for="pwd1" class="form-label">비밀번호</label>
-                                    <input type="password" id="pwd1" name="pwd" class="form-control" placeholder="password"
+                                    <input type="password" id="pwd1" name="pwd" class="form-control"
+                                           placeholder="password"
                                            required disabled>
                                 </div>
 
@@ -543,7 +554,8 @@
                                 <button id="save-profile-btn" class="btn btn-info" type="button" style="display: none">
                                     사진저장
                                 </button>
-                                <button id="update-member-btn" class="btn btn-success" type="button" style="display: none">
+                                <button id="update-member-btn" class="btn btn-success" type="button"
+                                        style="display: none">
                                     정보저장
                                 </button>
                             </div>
@@ -560,7 +572,10 @@
                             <span th:text="${role}"></span>
                         </p>
                         <div class="profile-btn-container">
-                            <button id="enroll-master-btn" class="btn btn-secondary" type="button">강사신청</button>
+                            <button id="enroll-master-btn" class="btn btn-secondary" type="button"
+                                    th:style="${#authorization.expression('hasRole(''ROLE_MASTER'')')} ? 'display: none;' : ''">
+                                강사신청
+                            </button>
                             <form id="profile-form" th:action="@{/api/my/profile}" method="post"
                                   enctype="multipart/form-data">
                                 <input type="file" id="profile" name="profile" class="form-control d-none"
@@ -604,7 +619,8 @@
     </div>
 </div>
 
-<div class="modal fade" id="enroll-master-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="enroll-master-label" aria-hidden="true">
+<div class="modal fade" id="enroll-master-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+     aria-labelledby="enroll-master-label" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
