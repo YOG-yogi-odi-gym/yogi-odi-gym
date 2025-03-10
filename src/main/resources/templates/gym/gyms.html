@@ -52,7 +52,7 @@
                     let resultSearch = document.getElementById("resultSearch")
                     resultSearch.innerHTML = ""
 
-                    let gymNo = pageSize * 10 + 1;
+                    let gymNo = page * pageSize + 1;
 
                     if (gyms.content.length === 0) {
                         let noResultRow = document.createElement("tr");
