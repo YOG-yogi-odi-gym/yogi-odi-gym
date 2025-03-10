@@ -305,3 +305,8 @@
     align-items: center;
     margin-bottom: 4px;
 }
+
+#unReadMessagesContainer {
+    display: flex;
+    flex-direction: column;
+}
