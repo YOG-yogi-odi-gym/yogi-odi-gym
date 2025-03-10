@@ -60,7 +60,7 @@
     <div class="dropdown">
         <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton"
                 data-bs-toggle="dropdown" aria-expanded="false">
-            <img th:src="${#authentication.principal.member.profile != null ? #authentication.principal.member.profile : '/images/source/anonymous.png'}"
+            <img id="nav-profile" th:src="${#authentication.principal.member.profile != null ? #authentication.principal.member.profile : '/images/source/anonymous.png'}"
                  alt="사진" style="width: 35px;height: 35px;border-radius: 50%;" class="profile-image">
             <span class="profile-name" th:text="${#authentication.principal.member.name}"/>
         </button>

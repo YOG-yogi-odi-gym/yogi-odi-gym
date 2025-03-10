@@ -231,6 +231,14 @@
                         return response.json();
                     })
                     .then(data => {
+                        const file = document.body.querySelector("#profile").files[0];
+                        if (file) {
+                            const reader = new FileReader();
+                            reader.onload = function(e) {
+                                document.querySelector("#nav-profile").src = e.target.result;
+                            };
+                            reader.readAsDataURL(file);
+                        }
                         document.getElementById("save-profile-btn").style.display = "none";
                         alert(data.message);
                     })
