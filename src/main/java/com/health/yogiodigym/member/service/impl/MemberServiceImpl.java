@@ -96,7 +96,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public void updateMember(UpdateMemberDto updateMemberDto, HttpServletRequest request, HttpServletResponse response) {
         MemberOAuth2User principal = (MemberOAuth2User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        CheckNewPwdMatchBeforePwd(updateMemberDto.getPwd(), principal.getPassword());
+        checkNewPwdMatchBeforePwd(updateMemberDto.getPwd(), principal.getPassword());
 
         updateMemberDto.setPwd(passwordEncoder.encode(updateMemberDto.getPwd()));
 
@@ -107,7 +107,7 @@ public class MemberServiceImpl implements MemberService {
         updateAuthentication(principal.getMember().getEmail(), request, response);
     }
 
-    private void CheckNewPwdMatchBeforePwd(String pwd, String beforePwd) {
+    private void checkNewPwdMatchBeforePwd(String pwd, String beforePwd) {
         if (passwordEncoder.matches(pwd, beforePwd)) {
             throw new BeforePwdMatchException();
         }
